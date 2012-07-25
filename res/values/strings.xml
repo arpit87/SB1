@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Mystrangerbuddy</string>
+    <string name="url_strangerbuddy">www.strangerbuddy.com</string>
+    <string name="title1">StrangerBuddy</string>
+    <color name="black">#0000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="dark_gray">#808080</color>
+    <string name="slogan">Share,anything everything</string>
+    <string name="buttonlogin">Login</string>
+    <string name="buttoncarpool">Pool search</string>
+    <string name="buttonhirenow">Hire Now</string>
+    <string name="map_api_key">AIzaSyD7B_JmOOy1C9lCXhRJhdLXUeZ36P_1RuM</string>
+    <string name="chat_header">Chat:</string>
+    <string name="searchaddressheader">Address search</string>
+    <string name="full_name">Name:</string>
+    <string name="stringpassword">Password:</string>
+    <string name="retype_pass">Retype Pass:</string>
+    <string name="buttonregister">Not Registered?</string>
+    <string name="username">Username</string>
+    <string name="stringlogin">Login</string>
+    <string name="registerButton">Register</string>
+    <string name="buttonFindBuddies">Find</string>
+    <string name="MyLocationHintString">My Location</string>
+
+</resources>
