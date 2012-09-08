@@ -20,14 +20,9 @@ import android.util.Log;
 
 public class HttpQueries {
 	
-	public enum QueryMethod {
-		Get,
-		Post,
-		Put,
-		Delete
-	}
+	
 
-	public static ServerResponse QueryServer(final QueryMethod queryMethod,String query,HttpEntity queryEntity){
+	public static ServerResponse QueryServer(QueryMethod queryMethod,String query,HttpEntity queryEntity){
 		HttpClient httpclient = new DefaultHttpClient();
 		
 		HttpRequestBase httpQuery = null;

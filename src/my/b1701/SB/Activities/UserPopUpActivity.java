@@ -1,15 +1,11 @@
 package my.b1701.SB.Activities;
 
+
 import my.b1701.SB.R;
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.widget.ImageButton;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class UserPopUpActivity extends Activity{

@@ -26,7 +26,7 @@ public class StartButtonActivity extends Activity {
     public void onClickStartButtons(View v) {
         switch (v.getId()) {
         case R.id.buttonhirenow:
-        	startActivity(new Intent(this,MyMapView.class));
+        	startActivity(new Intent(this,SBMapViewActivity.class));
         	break;
         }
     }

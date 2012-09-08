@@ -23,12 +23,12 @@ public class MapListViewTabActivity extends Activity {
         ActionBar.Tab ListTab = actionbar.newTab().setText("ListView");
  
      //create the two fragments we want to use for display content
-        Fragment MapFragment = new MapFragment();
-        Fragment ListFragment = new ListFragment();
+       // Fragment MapFragment = new MapFragment();
+        //Fragment ListFragment = new ListFragment();
  
     //set the Tab listener. Now we can listen for clicks.
-        MapTab.setTabListener(new MyTabsListener(MapFragment));
-        ListTab.setTabListener(new MyTabsListener(MapFragment));
+        //MapTab.setTabListener(new MyTabsListener(MapFragment));
+        //ListTab.setTabListener(new MyTabsListener(MapFragment));
  
    //add the two tabs to the actionbar
         actionbar.addTab(MapTab);

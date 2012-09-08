@@ -34,7 +34,7 @@
         android:textStyle="bold" />
     
     <ProgressBar
-        android:id="@+id/auth_progressBar"
+        android:id="@+id/authorization_progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"

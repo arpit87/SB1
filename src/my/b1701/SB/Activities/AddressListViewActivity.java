@@ -3,10 +3,15 @@ package my.b1701.SB.Activities;
 import java.io.IOException;
 import java.util.List;
 
+import my.b1701.SB.HttpClient.GetUsersRequest;
+import my.b1701.SB.HttpClient.SBHttpClient;
+import my.b1701.SB.HttpClient.SBHttpRequest;
+import my.b1701.SB.Server.ServerResponseBase;
+import my.b1701.SB.Users.ThisUser;
+import LocationHelpers.SBGeoPoint;
 import my.b1701.SB.R;
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -25,6 +30,7 @@ import android.widget.Toast;
 
 public class AddressListViewActivity extends Activity{
 	
+	private static final String TAG = "AddressListViewActivity";
 	String searchText=null;
 	Geocoder myGeocoder;
 	final static int MAX_RESULT = 5;
@@ -33,54 +39,43 @@ public class AddressListViewActivity extends Activity{
 	EditText searchEditText;
 	Button searchButton;
 	ListView listviewResult;
+	//AddressListViewActivityHandler activityHandler;
 	
-	public void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {		
 	      super.onCreate(savedInstanceState);	      	
 	      setContentView(R.layout.addresslist);
-	      Bundle addressBundle=getIntent().getExtras();   	      
-	      
-	      if (addressBundle == null) {
-	    		Log.d("debug","no address string");
-	    		searchText = DEFAULT_SEARCH;
-	    		}
-	      else
-	        {
-	        	searchText = addressBundle.getString("addressString");	        	
-	        }
-	      
-	      searchEditText = (EditText)findViewById(R.id.searchedittext);
-	      searchEditText.setText(searchText);
+	      Log.i(TAG,"started addresslist activity");
+	 	  searchText = DEFAULT_SEARCH;   
+	      searchEditText = (EditText)findViewById(R.id.searchedittext);	     
 	      searchButton = (Button)findViewById(R.id.searchbutton);
 	      listviewResult = (ListView)findViewById(R.id.list);	      
+	      //activityHandler = AddressListViewActivityHandler.getInstance();
+	      //activityHandler.setUnderlyingActivity(this);
 	      searchButton.setOnClickListener(searchButtonOnClickListener);
 	      listviewResult.setOnItemClickListener(listviewResultOnItemClickListener);
-	      
-	      myGeocoder = new Geocoder(this);	      
-	      searchFromLocationName(searchText);
- 
-	    
+	      myGeocoder = new Geocoder(this);
 	  }
 	
 	OnItemClickListener listviewResultOnItemClickListener
 	  = new OnItemClickListener(){
 	 
-	  public void onItemClick(AdapterView<?> parent, View view, int position,
-	    long id) {
-	   	    
-	   double lat = ((Address)parent.getItemAtPosition(position)).getLatitude();
-	   double lon = ((Address)parent.getItemAtPosition(position)).getLongitude();
-	   Intent intent = new Intent();
-	   Bundle desBundle = new Bundle();
-	   desBundle.putDouble("deslatitude", lat);
-	   desBundle.putDouble("deslongitude", lon);	   
-	   intent.putExtras(desBundle);
-	   setResult(1, intent);
+	  public void onItemClick(AdapterView<?> parent, View view, int position,long id) {
+	   Log.i(TAG,"address item clicked");
+	   int lat = (int)(((Address)parent.getItemAtPosition(position)).getLatitude()*1e6);
+	   int lon = (int)(((Address)parent.getItemAtPosition(position)).getLongitude()*1e6);	   
+	   ThisUser.getInstance().setDestinationGeoPoint(new SBGeoPoint(lat,lon));
+	   Log.i(TAG,"user desti set..querying server");
+	   SBHttpRequest request = new GetUsersRequest();
+	   ServerResponseBase response = SBHttpClient.getInstance().executeRequest(request);
+	   Log.i(TAG,"got response ,processing");
+	   response.process();
+	   Log.i(TAG,"processed response,finish activity");
 	   finish();	   
 	 }};
 	
 	  Button.OnClickListener searchButtonOnClickListener
 	  = new Button.OnClickListener(){	 
-	 public void onClick(View view) {	  
+	 public void onClick(View view) { 
 	  String searchString = searchEditText.getText().toString();
 	  searchFromLocationName(searchString);
 	 }};

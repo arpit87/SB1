@@ -27,8 +27,9 @@
             android:id="@+id/desLocation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="10"  >
+            android:layout_weight="10" android:onClick="onClickMapViewButtons"    >
             <requestFocus />
+            
         </EditText>
             
         <Button
