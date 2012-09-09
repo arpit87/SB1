@@ -1,7 +1,7 @@
 package my.b1701.SB.Platform;
 
 import my.b1701.SB.HttpClient.SBHttpClient;
-import LocationHelpers.SBLocationManager;
+import my.b1701.SB.LocationHelpers.SBLocationManager;
 import android.content.Context;
 
 public class Platform {

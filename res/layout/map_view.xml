@@ -30,16 +30,7 @@
             android:layout_weight="10" android:onClick="onClickMapViewButtons"    >
             <requestFocus />
             
-        </EditText>
-            
-        <Button
-            android:id="@+id/searchBuddiesButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0"
-            android:text="Find" 
-            android:onClick="onClickMapViewButtons"/>
- 
+        </EditText>    
     	
     </LinearLayout>    
  

@@ -2,6 +2,8 @@ package my.b1701.SB.Activities;
 
 import my.b1701.SB.R;
 import my.b1701.SB.ActivityHandlers.MapActivityHandler;
+import my.b1701.SB.LocationHelpers.SBLocation;
+import my.b1701.SB.LocationHelpers.SBLocationManager;
 import my.b1701.SB.MapHelpers.BaseItemizedOverlay;
 import my.b1701.SB.MapHelpers.BaseOverlayItem;
 import my.b1701.SB.MapHelpers.ItemizedOverlayFactory;
@@ -9,8 +11,6 @@ import my.b1701.SB.MapHelpers.ThisUserItemizedOverlayFactory;
 import my.b1701.SB.MapHelpers.ThisUserOverlayItem;
 import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.Users.ThisUser;
-import LocationHelpers.SBLocation;
-import LocationHelpers.SBLocationManager;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;

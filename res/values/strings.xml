@@ -3,9 +3,9 @@
     <string name="app_name">Mystrangerbuddy</string>
     <string name="url_strangerbuddy">www.strangerbuddy.com</string>
     <string name="title1">StrangerBuddy</string>
-    <color name="white">#FFFFFF</color>
+    <color name="white">#ffffffff</color>
     <color name="dark_gray">#808080</color>
-    <string name="slogan">Share,anything everything</string>
+    <string name="slogan">Share,right here,right now</string>
     <string name="buttonlogin">Login</string>
     <string name="buttoncarpool">Pool search</string>
     <string name="buttonhirenow">Hire Now</string>
@@ -24,6 +24,12 @@
     <string name="hintDestinationSearch">Enter destination</string>    
     <string name="arpit">arpit</string>
     
-    <color name="black">#0000</color>
+    <color name="black">#ff000000</color>
+    <string name="sloganl1">Share,right here,</string>
+    <string name="sloganl2">right now </string>
+    <string name="stranger">Stanger</string>
+    <string name="buddy">Buddy</string>
+    <color name="red">#ffff0000</color>
+    <color name="yellow">#ffff0000</color>
 
 </resources>

@@ -1,7 +1,7 @@
 package my.b1701.SB.Users;
 
-import LocationHelpers.SBGeoPoint;
-import LocationHelpers.SBLocation;
+import my.b1701.SB.LocationHelpers.SBGeoPoint;
+import my.b1701.SB.LocationHelpers.SBLocation;
 import android.location.Location;
 import android.util.Log;
 

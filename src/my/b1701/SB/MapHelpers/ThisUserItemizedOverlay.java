@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import my.b1701.SB.R;
+import my.b1701.SB.LocationHelpers.SBGeoPoint;
+import my.b1701.SB.LocationHelpers.SBLocation;
+import my.b1701.SB.LocationHelpers.SBLocationManager;
 import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.Users.ThisUser;
-import LocationHelpers.SBGeoPoint;
-import LocationHelpers.SBLocation;
-import LocationHelpers.SBLocationManager;
 import android.graphics.drawable.Drawable;
 
 public class ThisUserItemizedOverlay extends BaseItemizedOverlay{

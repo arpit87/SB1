@@ -2,59 +2,66 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/white" >
+    android:background="@drawable/gradient" >
 
-    <ImageView
-        android:id="@+id/logo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="5dp"
-        android:src="@drawable/logo" />
-    
     <TextView
-        android:id="@+id/quickblox"
+        android:id="@+id/sloganl1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/logo"
-        android:layout_centerHorizontal="true"
-        android:text="@string/url_strangerbuddy"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="50dp"
+        android:text="@string/sloganl1"
         android:textColor="@color/black"
-        android:textStyle="bold" android:autoLink="web"/>
-    
+        android:textSize="10pt" />
+
     <TextView
-        android:id="@+id/textTitle1"
+        android:id="@+id/sloganl2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/quickblox"
-        android:layout_centerHorizontal="true"
-        android:text="@string/title1"
-        android:textColor="@color/dark_gray"
-        android:textSize="17pt"
-        android:textStyle="bold" />
-    
+        android:layout_alignRight="@+id/sloganl1"
+        android:layout_below="@+id/sloganl1"
+        android:text="@string/sloganl2"
+        android:textColor="@color/black"
+        android:textSize="10pt" />
+
     <ProgressBar
         android:id="@+id/authorization_progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
         style="?android:attr/progressBarStyleInverse"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/textTitle1"
-        android:layout_marginTop="40dp" />
-
-        <TextView
-        android:id="@+id/textSlogan"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/sloganl2"
         android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginTop="25dp"
-        android:layout_below="@+id/auth_progressBar"
-        android:text="@string/slogan"
-        android:textSize="8pt"
-        android:textColor="@color/dark_gray"
-        android:gravity="center"
-        android:textStyle="bold" />
+        android:layout_marginTop="66dp"
+        android:background="@android:color/transparent"
+        android:focusable="false"
+        android:minHeight="30dip"
+        android:minWidth="30dip" />
+
+    <TextView
+        android:id="@+id/stranger"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/authorization_progressBar"
+        android:layout_below="@+id/authorization_progressBar"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="88dp"
+        android:text="@string/stranger"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/black"
+        android:textSize="16pt" />
+
+    <TextView
+        android:id="@+id/buddy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/stranger"
+        android:layout_alignBottom="@+id/stranger"
+        android:layout_alignLeft="@+id/authorization_progressBar"
+        android:layout_marginLeft="32dp"
+        android:text="@string/buddy"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/yellow"
+        android:textSize="16pt" />
 
 </RelativeLayout>

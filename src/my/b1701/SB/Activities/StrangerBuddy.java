@@ -1,10 +1,10 @@
 package my.b1701.SB.Activities;
 
 
+import my.b1701.SB.HelperClasses.ThisAppInstallation;
+import my.b1701.SB.LocationHelpers.SBLocationManager;
 import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.Users.ThisUser;
-import HelperClasses.ThisAppInstallation;
-import LocationHelpers.SBLocationManager;
 import android.app.Application;
 import android.content.Context;
 import android.util.Log;

@@ -3,12 +3,12 @@ package my.b1701.SB.Server;
 import java.util.List;
 
 import my.b1701.SB.ActivityHandlers.MapActivityHandler;
+import my.b1701.SB.HelperClasses.JSONHandler;
 import my.b1701.SB.Users.NearbyUser;
 
 import org.apache.http.HttpResponse;
 import org.json.JSONObject;
 
-import HelperClasses.JSONHandler;
 import android.os.Bundle;
 import android.os.Message;
 import android.util.Log;
