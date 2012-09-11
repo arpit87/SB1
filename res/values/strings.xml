@@ -25,11 +25,15 @@
     <string name="arpit">arpit</string>
     
     <color name="black">#ff000000</color>
-    <string name="sloganl1">Share,right here,</string>
-    <string name="sloganl2">right now </string>
-    <string name="stranger">Stanger</string>
+    <string name="sloganl1">Share,</string>
+    <string name="sloganl2">right now,</string><string name="stranger">Stranger</string>
     <string name="buddy">Buddy</string>
     <color name="red">#ffff0000</color>
-    <color name="yellow">#ffff0000</color>
+    <color name="yellow">#ffffff00</color>
+    
+    <string name="sloganl3">right here</string>
+    <color name="green">#ff00ff00</color>
+    <color name="springgreen">#008B45</color>
+    <color name="firebrickred">#8b1a1a</color>
 
 </resources>

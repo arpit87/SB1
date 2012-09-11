@@ -19,36 +19,32 @@
         android:id="@+id/sloganl2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/sloganl1"
         android:layout_below="@+id/sloganl1"
+        android:layout_toRightOf="@+id/sloganl1"
         android:text="@string/sloganl2"
         android:textColor="@color/black"
         android:textSize="10pt" />
 
-    <ProgressBar
-        android:id="@+id/authorization_progressBar"
-        style="?android:attr/progressBarStyleInverse"
+    <TextView
+        android:id="@+id/sloganl3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/sloganl2"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="66dp"
-        android:background="@android:color/transparent"
-        android:focusable="false"
-        android:minHeight="30dip"
-        android:minWidth="30dip" />
+        android:layout_toRightOf="@+id/sloganl2"
+        android:text="@string/sloganl3"
+        android:textColor="@color/black"
+        android:textSize="10pt" />
 
     <TextView
         android:id="@+id/stranger"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/authorization_progressBar"
-        android:layout_below="@+id/authorization_progressBar"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="88dp"
+        android:layout_alignLeft="@+id/sloganl1"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="147dp"
         android:text="@string/stranger"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/black"
+        android:textColor="@color/firebrickred"
         android:textSize="16pt" />
 
     <TextView
@@ -57,11 +53,23 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/stranger"
         android:layout_alignBottom="@+id/stranger"
-        android:layout_alignLeft="@+id/authorization_progressBar"
-        android:layout_marginLeft="32dp"
+        android:layout_alignRight="@+id/sloganl3"
         android:text="@string/buddy"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/yellow"
+        android:textColor="@color/springgreen"
         android:textSize="16pt" />
+
+    <ProgressBar
+        android:id="@+id/authorization_progressBar"
+        style="?android:attr/progressBarStyleInverse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/sloganl3"
+        android:layout_marginTop="54dp"
+        android:layout_toLeftOf="@+id/buddy"
+        android:background="@android:color/transparent"
+        android:focusable="false"
+        android:minHeight="30dip"
+        android:minWidth="30dip" />
 
 </RelativeLayout>

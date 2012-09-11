@@ -41,11 +41,8 @@ public class NearbyUsersItemizedOverlay extends BaseItemizedOverlay{
 		return userList.size();
 	}
 
-	@Override
-	public void addThisUser() {
-		
-		
-	}
+	
+
 	
 	
 }

@@ -20,9 +20,11 @@ public abstract class BaseItemizedOverlay extends ItemizedOverlay<BaseOverlayIte
 	protected abstract BaseOverlayItem createItem(int arg0);
 
 	
-	public abstract void addList(List <?> l );	
+	public  void addList(List <?> l ){}
 	
-	public abstract void addThisUser();
+	public  void addThisUser(){}
+
+	public  void updateThisUser(){}
 	
 
 }
