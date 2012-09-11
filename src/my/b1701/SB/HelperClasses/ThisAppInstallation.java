@@ -6,7 +6,10 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.UUID;
 
+import my.b1701.SB.Platform.Platform;
+
 import android.content.Context;
+import android.content.SharedPreferences;
 
 public class ThisAppInstallation {
 	
@@ -18,7 +21,12 @@ public class ThisAppInstallation {
 	            File installation = new File(context.getFilesDir(), INSTALLATION);
 	            try {
 	                if (!installation.exists())
+	                {
 	                    writeInstallationFile(installation);
+	                    //always initialize platform before calling this!
+	                    ThisAppConfig.getInstance().putLong("networkfreq", 1*60*1000);
+	                    ThisAppConfig.getInstance().putLong("gpsfreq", 2*60*1000);	           
+	                }
 	                sID = readInstallationFile(installation);
 	            } catch (Exception e) {
 	                throw new RuntimeException(e);
