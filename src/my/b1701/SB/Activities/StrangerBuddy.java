@@ -12,8 +12,7 @@ import android.util.Log;
 public class StrangerBuddy extends Application{
 	
 	private Context context;
-	private Platform platform;
-	private SBLocationManager locManager;
+	private Platform platform;	
 	private static final String TAG = "StrangerBuddy";
 		
 	@Override

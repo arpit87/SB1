@@ -2,6 +2,7 @@ package my.b1701.SB.Activities;
 
 
 import my.b1701.SB.R;
+import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.LocationHelpers.SBLocationManager;
 import android.app.Activity;
 import android.content.Intent;
@@ -24,18 +25,26 @@ public class StartStrangerBuddyActivity extends Activity {
         
         //Log.i(TAG,"Requesting single update");
         //SBLocationManager.getInstance().requestSingleLocationUpdate();
-        //Log.i(TAG,"passed single update");
+        //Log.i(TAG,"passed single update");        
+        if(ThisUserConfig.getInstance().getBool(ThisUserConfig.FBCHECK)==false)
+        {
+            startActivity(new Intent().setClass(this, LoginActivity.class));
+            finish();
+        }
         SBLocationManager.getInstance().StartListeningtoNetwork();
-        Log.i(TAG,"started network listening and map activity in 2 sec");
+        Log.i(TAG,"started network listening ");
         final Intent showSBMapViewActivity = new Intent(this, SBMapViewActivity.class);
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
           public void run() {        	  
               startActivity(showSBMapViewActivity);
           }
-        }, (1000 * 2));
+        }, (1000 * 2)); 
         
-      // startActivity(intent);        
-        
+    }
+    
+    public void onResume()
+    {
+    	finish();
     }
 }
