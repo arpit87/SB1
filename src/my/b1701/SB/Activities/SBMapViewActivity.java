@@ -2,11 +2,17 @@ package my.b1701.SB.Activities;
 
 import my.b1701.SB.R;
 import my.b1701.SB.ActivityHandlers.MapActivityHandler;
+import my.b1701.SB.HelperClasses.Constants;
+import my.b1701.SB.HelperClasses.ThisAppConfig;
 import my.b1701.SB.LocationHelpers.SBLocation;
 import my.b1701.SB.LocationHelpers.SBLocationManager;
+import FacebookHelpers.FacebookConnector;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.google.android.maps.MapActivity;
@@ -20,8 +26,6 @@ public class SBMapViewActivity extends MapActivity {
 	
 		
 	private SBLocation location;
-
-	
 
     @Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -57,17 +61,15 @@ public class SBMapViewActivity extends MapActivity {
 
 	public void onResume(){
     	super.onResume();
+    	SBLocationManager.getInstance().StartListeningtoNetwork(ThisAppConfig.getInstance().getLong("networkfreq") , 100);
+    	MapActivityHandler.getInstance().updateThisUserMapOverlay();
     }
-	
-	
-   
-    
 
     //test
 	public void onPause(){
-    	super.onPause();    	
-    	SBLocationManager.getInstance().StartListeningtoNetwork();
-    	SBLocationManager.getInstance().StartListeningtoGPS();
+    	super.onPause();
+    	//SBLocationManager.getInstance().StopListeningtoGPS();    	
+        //SBLocationManager.getInstance().StopListeningtoNetwork();
     	mymapview.getOverlays().clear();
     	mymapview.postInvalidate();
     }
@@ -78,8 +80,28 @@ public class SBMapViewActivity extends MapActivity {
 		// TODO Auto-generated method stub
 		return false;
 	}
-    
 	
+	// Initiating Menu XML file (menu.xml)
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.layout.mapactivity_menu, menu);
+        return true;
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+ 
+        switch (item.getItemId())
+        {
+        case R.id.menu_fb_logout:
+        	FacebookConnector fbconnect = new FacebookConnector(this, Constants.FB_PERMISSIONS);
+        	fbconnect.logoutFromFB();
+        }
+		return true;
+    }
 	
    
 }

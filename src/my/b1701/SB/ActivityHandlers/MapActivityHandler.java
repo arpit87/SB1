@@ -117,7 +117,12 @@ public class MapActivityHandler extends Handler {
 	
 	public void updateThisUserMapOverlay()
 	{		
+		Log.i(TAG,"update this user called");	
+		if(thisUserOverlay != null)	
+			mapView.getOverlays().remove(thisUserOverlay);
 	    thisUserOverlay.updateThisUser();
+	    Log.i(TAG,"this user map overlay updated");	    
+	    mapView.getOverlays().add(thisUserOverlay);
 	    mapView.postInvalidate();	       
 	    mapcontroller.animateTo(ThisUser.getInstance().getCurrentGeoPoint());
 		

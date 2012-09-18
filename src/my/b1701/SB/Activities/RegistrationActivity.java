@@ -28,8 +28,7 @@ public class RegistrationActivity extends Activity {
 
 	public void onStart()
 	{
-	    super.onStart();	    
-	    
+	    super.onStart();
 	}
 	
 	public void onStop()

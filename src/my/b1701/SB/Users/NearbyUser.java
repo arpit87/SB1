@@ -1,15 +1,7 @@
 package my.b1701.SB.Users;
 
-import org.json.JSONArray;
-import java.lang.Number;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import android.provider.Settings.Secure;
-import android.util.Log;
 
 import com.google.android.maps.GeoPoint;
 
@@ -17,23 +9,27 @@ public class NearbyUser {
 	
 		 
 	private String userName;	
-	private String latitude;
-	private String longitude;
+	private String srclatitude;
+	private String srclongitude;
+	private String dstlatitude;
+	private String dstlongitude;
 	private GeoPoint geoPoint;
-	private String userDestination;
-	private String atTime;
+	private String userDestination;	
+	private UserFBInfo userFBInfo;
 	 
 	public NearbyUser(JSONObject thisOtherUser)
 	{
 		try {
-			userName=thisOtherUser.getString(UserAttributes.USER_ID);
-			latitude=thisOtherUser.getString(UserAttributes.LATITUDE);
-			longitude=thisOtherUser.getString(UserAttributes.LONGITUDE);
+			userName=thisOtherUser.getString(UserAttributes.USERID);
+			srclatitude=thisOtherUser.getString(UserAttributes.SRCLATITUDE);
+			srclongitude=thisOtherUser.getString(UserAttributes.SRCLONGITUDE);
 			userDestination=thisOtherUser.getString(UserAttributes.DESTINATION);
-			atTime=thisOtherUser.getString(UserAttributes.TIME);
+			dstlatitude=thisOtherUser.getString(UserAttributes.DSTLATITUDE);
+			dstlongitude=thisOtherUser.getString(UserAttributes.DSTLONGITUDE);	
+			//userFBInfo = new UserFBInfo(thisOtherUser.getJSONObject(UserAttributes.FBINFO));
 			geoPoint = GetUserGeopoint();
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
+			// TODO Auto-generated catch bloOck
 			e.printStackTrace();
 		}
 		
@@ -50,14 +46,9 @@ public class NearbyUser {
 		return userDestination;
 	}
 	
-	public String getAtTime()
-	{		
-		return atTime;
-	}
-	
 	public GeoPoint GetUserGeopoint()
 	{
-		return new GeoPoint((int)(Double.parseDouble(latitude)*1E6),(int)(Double.parseDouble(longitude)*1E6));
+		return new GeoPoint((int)(Double.parseDouble(srclatitude)*1E6),(int)(Double.parseDouble(srclongitude)*1E6));
 	}
 	
 }
