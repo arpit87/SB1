@@ -5,6 +5,7 @@ import java.util.List;
 import my.b1701.SB.ActivityHandlers.MapActivityHandler;
 import my.b1701.SB.HelperClasses.JSONHandler;
 import my.b1701.SB.Users.NearbyUser;
+import my.b1701.SB.Users.ThisUser;
 
 import org.apache.http.HttpResponse;
 import org.json.JSONObject;
@@ -30,6 +31,7 @@ public class GetUsersResponse extends ServerResponseBase{
 		List<NearbyUser> nearbyUsers = JSONHandler.getInstance().GetNearbyUsersInfoFromJSONObject(jobj);		
 		Log.i(TAG,"updating nearby users");
 		MapActivityHandler.getInstance().updateNearbyUsers(nearbyUsers);
+		
 		
 	}
 	

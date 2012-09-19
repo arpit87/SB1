@@ -27,7 +27,8 @@ public class ThisUser {
 		this.uniqueID = uniqueID;
 	}
 
-	private SBLocation location=null;
+	private SBLocation currlocation=null;
+	//private SBLocation dstlocation=null;
 
 	private SBGeoPoint currentGeoPoint=null;
 	private SBGeoPoint shareReqGeoPoint=null;
@@ -35,14 +36,21 @@ public class ThisUser {
 	
 	public SBLocation getLocation() {
 		 Log.i(TAG,"getlocation called");
-		return location;
+		return currlocation;
 	}
 
 	public void setLocation(SBLocation location) {
-		this.location = location;		 
+		this.currlocation = location;		 
 		currentGeoPoint = new SBGeoPoint((int)(location.getLatitude()*1e6),(int)(location.getLongitude()*1e6));
 		Log.i(TAG,"setting location"+currentGeoPoint.toString());
 	}
+	
+	//thr is no dst location but only geopoint
+	/*public void setDstLocation(SBLocation location) {
+		this.dstlocation = location;		 
+		destinationGeoPoint = new SBGeoPoint((int)(location.getLatitude()*1e6),(int)(location.getLongitude()*1e6));
+		Log.i(TAG,"setting location"+destinationGeoPoint.toString());
+	}*/
 
 	
 	 
@@ -82,8 +90,8 @@ public class ThisUser {
 		return shareReqGeoPoint;
 	}
 
-	public void setShareReqLocation(SBGeoPoint shareReqLocation) {
-		this.shareReqGeoPoint = shareReqLocation;
+	public void setShareReqGeoPoint() {
+		this.shareReqGeoPoint = new SBGeoPoint(currlocation);
 	}	
 	
 	

@@ -11,5 +11,6 @@ public class ServerQueries {
 	public static final String POST_QUERY = SERVER_ADDRESS;
 	public static final String DELETE_USER_QUERY = SERVER_ADDRESS;
 	public static final String GET_USERS_QUERY = SERVER_ADDRESS;
+	public static final String SENDFBTOKEN_QUERY = SERVER_ADDRESS;
 
 }

@@ -97,19 +97,20 @@ public class FacebookConnector {
 	}
 
 	private void showToast(String message){
-		Toast.makeText(underlying_activity, message, Toast.LENGTH_SHORT).show();
+		final String thismsg = message;
+		underlying_activity.runOnUiThread(new Runnable(){
+			public void run() {				
+				Toast.makeText(underlying_activity, thismsg, Toast.LENGTH_SHORT).show();				
+			}});
+		
 	}
 	
 	class LogoutRequestListener implements RequestListener {
 		  public void onComplete(String response, Object state) {
 			  ThisUserConfig.getInstance().putString(ThisUserConfig.FBACCESSTOKEN, "");
 			  ThisUserConfig.getInstance().putLong(ThisUserConfig.FBACCESSEXPIRES,-1);
-			  ThisUserConfig.getInstance().putBool(ThisUserConfig.FBCHECK,false);
-			  underlying_activity.runOnUiThread(new Runnable(){
-				public void run() {
-					showToast("Successfully logged out");
-					
-				}});
+			  ThisUserConfig.getInstance().putBool(ThisUserConfig.FBCHECK,false);			  
+			  showToast("Successfully logged out");			
 			  underlying_activity.finish();
 		  }
 		  

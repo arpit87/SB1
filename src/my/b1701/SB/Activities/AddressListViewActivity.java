@@ -62,7 +62,8 @@ public class AddressListViewActivity extends Activity{
 	  public void onItemClick(AdapterView<?> parent, View view, int position,long id) {
 	   Log.i(TAG,"address item clicked");
 	   int lat = (int)(((Address)parent.getItemAtPosition(position)).getLatitude()*1e6);
-	   int lon = (int)(((Address)parent.getItemAtPosition(position)).getLongitude()*1e6);	   
+	   int lon = (int)(((Address)parent.getItemAtPosition(position)).getLongitude()*1e6);
+	   ThisUser.getInstance().setShareReqGeoPoint();		
 	   ThisUser.getInstance().setDestinationGeoPoint(new SBGeoPoint(lat,lon));
 	   Log.i(TAG,"user desti set..querying server");
 	   SBHttpRequest request = new GetUsersRequest();

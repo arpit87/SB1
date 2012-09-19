@@ -24,7 +24,7 @@ public class ThisAppInstallation {
 	                {
 	                    writeInstallationFile(installation);
 	                    //always initialize platform before calling this!
-	                    ThisAppConfig.getInstance().putLong("networkfreq", 1*60*1000);
+	                    ThisAppConfig.getInstance().putLong("networkfreq", 30*1000);
 	                    ThisAppConfig.getInstance().putLong("gpsfreq", 2*60*1000);	           
 	                }
 	                sID = readInstallationFile(installation);
