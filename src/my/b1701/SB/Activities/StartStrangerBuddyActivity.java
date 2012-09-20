@@ -21,7 +21,7 @@ public class StartStrangerBuddyActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main); 
-        mProgress = (ProgressBar) findViewById(R.id.authorization_progressBar); 
+        mProgress = (ProgressBar) findViewById(R.id.hopon_progressBar); 
         
         //Log.i(TAG,"Requesting single update");
         //SBLocationManager.getInstance().requestSingleLocationUpdate();

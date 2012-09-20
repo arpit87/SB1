@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/gradient" >
+    android:background="@color/white" >
 
     <TextView
         android:id="@+id/sloganl1"
@@ -35,41 +35,23 @@
         android:textColor="@color/black"
         android:textSize="10pt" />
 
-    <TextView
-        android:id="@+id/stranger"
+    <ImageView
+        android:id="@+id/hoponlogo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/sloganl1"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="147dp"
-        android:text="@string/stranger"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/firebrickred"
-        android:textSize="16pt" />
-
-    <TextView
-        android:id="@+id/buddy"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/stranger"
-        android:layout_alignBottom="@+id/stranger"
-        android:layout_alignRight="@+id/sloganl3"
-        android:text="@string/buddy"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/springgreen"
-        android:textSize="16pt" />
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/sloganl3"
+        android:layout_marginBottom="57dp"
+        android:contentDescription="@string/hopon"
+        android:src="@drawable/hoponlogopng" />
 
     <ProgressBar
-        android:id="@+id/authorization_progressBar"
-        style="?android:attr/progressBarStyleInverse"
+        android:id="@+id/hopon_progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/sloganl3"
-        android:layout_marginTop="54dp"
-        android:layout_toLeftOf="@+id/buddy"
-        android:background="@android:color/transparent"
-        android:focusable="false"
-        android:minHeight="30dip"
-        android:minWidth="30dip" />
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="18dp" />
 
 </RelativeLayout>

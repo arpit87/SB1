@@ -40,5 +40,6 @@
     <string name="fblogintext3">- see other users credentials,</string>
     <string name="fblogintext4">- chat with them</string>
     <string name="fb_logout">logout</string>
+    <string name="hopon">hopon</string>
 
 </resources>
