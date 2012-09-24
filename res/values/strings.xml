@@ -41,5 +41,8 @@
     <string name="fblogintext4">- chat with them</string>
     <string name="fb_logout">logout</string>
     <string name="hopon">hopon</string>
+    <string name="locationupdaterservice">locationupdaterservice</string>
+    <string name="request_active">You will be notified if anyone mooovs by you</string>
+    <string name="request_cancel">Click to cancel request</string>
 
 </resources>

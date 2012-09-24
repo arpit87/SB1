@@ -30,6 +30,7 @@ public class NetworkListener implements LocationListener{
 	
 	public void start(long minTime,float minDistance)
 	{
+		Log.i(TAG,"strted listening to network wid mintim"+minTime+",mindist:"+minDistance);
 		this.minTime=minTime;
 		this.minDistnce=minDistance;
 		SBLocationManager.getInstance().locManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, minTime, minDistnce, this);
@@ -53,13 +54,13 @@ public class NetworkListener implements LocationListener{
 			thisWindowBestLocation = location;
 			return;
 		}
-		else if(location.getAccuracy() > thisWindowBestLocation.getAccuracy() )
+		else if(location.getAccuracy() < thisWindowBestLocation.getAccuracy() )
 		{
 			//window continuing
-			Log.i(TAG,"thiswindowbest location:"+thisWindowBestLocation.toString());
+			//Log.i(TAG,"thiswindowbest location:"+thisWindowBestLocation.toString());
 			thisWindowBestLocation = location;			
 		}
-		
+		Log.i(TAG,"thiswindowbest location:"+thisWindowBestLocation.toString());
 		//location = SBLocationManager.getInstance().getCurrentBestLocation(location);
 		//LocationUpdater.getInstance().UpdateCurrentLocation(new SBLocation(location));
 		
@@ -85,10 +86,12 @@ public class NetworkListener implements LocationListener{
 		Log.i(TAG,"network status changed to:"+status);
 		//Toast toast = Toast.makeText(Platform.getInstance().getContext(), "Network status change to:"+status, Toast.LENGTH_SHORT);       
 		//toast.show();
+		if(thisWindowBestLocation!=null)
+		LocationUpdater.getInstance().UpdateToBestCurrentLocation(new SBLocation(thisWindowBestLocation));
 		if(status == AVAILABLE) //window starting
 			thisWindowBestLocation = null;
-		if(status == TEMPORARILY_UNAVAILABLE) //window ending
-			LocationUpdater.getInstance().UpdateCurrentLocation(new SBLocation(thisWindowBestLocation));
+		//if(status == TEMPORARILY_UNAVAILABLE) //window ending
+			
 		
 	}
 

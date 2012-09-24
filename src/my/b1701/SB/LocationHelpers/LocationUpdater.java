@@ -16,6 +16,7 @@ public class LocationUpdater extends BroadcastReceiver{
 	private static LocationUpdater instance = null;
 	private LocationUpdater(){};
 	
+	
 	public static LocationUpdater getInstance()
 	{
 		if(instance == null)
@@ -26,8 +27,9 @@ public class LocationUpdater extends BroadcastReceiver{
 		return instance;
 	}
 	
-	public void UpdateCurrentLocation(SBLocation newLocation)
+	public void UpdateToBestCurrentLocation(SBLocation newLocation)
 	{
+		
 		ThisUser.getInstance().setLocation(newLocation);
 		Toast toast = Toast.makeText(Platform.getInstance().getContext(), "Updating cur loc", Toast.LENGTH_SHORT);       
 		toast.show();

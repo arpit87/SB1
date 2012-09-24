@@ -3,7 +3,7 @@ package my.b1701.SB.HttpClient;
 import java.io.IOException;
 
 import my.b1701.SB.Server.DeleteUserResponse;
-import my.b1701.SB.Server.ServerQueries;
+import my.b1701.SB.Server.ServerConstants;
 import my.b1701.SB.Server.ServerResponseBase;
 import my.b1701.SB.Users.ThisUser;
 
@@ -16,7 +16,7 @@ public class DeleteUserRequest extends SBHttpRequest{
 	{
 		super();
 		queryMethod = QueryMethod.Post;
-		url = ServerQueries.DELETE_USER_QUERY+ "\\"+ ThisUser.getInstance().getUniqueID();
+		url = ServerConstants.DELETE_USER_QUERY+ "\\"+ ThisUser.getInstance().getUniqueID();
 	};
 	
 	public ServerResponseBase execute() {

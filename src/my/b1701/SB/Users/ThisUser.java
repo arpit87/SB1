@@ -92,7 +92,7 @@ public class ThisUser {
 
 	public void setShareReqGeoPoint() {
 		if(currlocation!=null)
-			this.shareReqGeoPoint = new SBGeoPoint(currlocation);
+			this.shareReqGeoPoint = this.currentGeoPoint;
 		else
 			Log.i(TAG,"current share loc found to be null");
 	}	

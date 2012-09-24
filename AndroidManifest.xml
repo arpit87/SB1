@@ -44,7 +44,15 @@
             android:screenOrientation="portrait" >
             
         </activity>        
-         
+        <service android:name=".LocationHelpers.LocationService"
+            android:label="@string/locationupdaterservice"
+            android:icon="@drawable/btn_close"
+            android:exported="false">
+             </service>
+          <receiver android:name=".BroadcastReceivers.KillLocationServiceReceiver" 
+              		android:exported="false">           
+        </receiver>
+			         
                    
          <uses-library android:name="com.google.android.maps" />
          

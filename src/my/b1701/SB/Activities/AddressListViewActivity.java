@@ -3,15 +3,17 @@ package my.b1701.SB.Activities;
 import java.io.IOException;
 import java.util.List;
 
+import my.b1701.SB.R;
 import my.b1701.SB.HttpClient.GetUsersRequest;
 import my.b1701.SB.HttpClient.SBHttpClient;
 import my.b1701.SB.HttpClient.SBHttpRequest;
+import my.b1701.SB.LocationHelpers.LocationService;
 import my.b1701.SB.LocationHelpers.SBGeoPoint;
 import my.b1701.SB.Server.ServerResponseBase;
 import my.b1701.SB.Users.ThisUser;
-import my.b1701.SB.R;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -69,8 +71,10 @@ public class AddressListViewActivity extends Activity{
 	   SBHttpRequest request = new GetUsersRequest();
 	   ServerResponseBase response = SBHttpClient.getInstance().executeRequest(request);
 	   Log.i(TAG,"got response ,processing");
-	   response.process();
-	   Log.i(TAG,"processed response,finish activity");
+	   response.process();	   
+	   Log.i(TAG,"processed response,finish activity n staring service");
+	   Intent startLocService = new Intent(AddressListViewActivity.this,LocationService.class);
+	   startService(startLocService);
 	   finish();	   
 	 }};
 	

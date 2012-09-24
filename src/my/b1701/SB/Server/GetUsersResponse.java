@@ -25,7 +25,7 @@ public class GetUsersResponse extends ServerResponseBase{
 	}
 	@Override
 	public void process() {
-		Log.i(TAG,"processing response..geting json");
+		Log.i(TAG,"processing GetUsersResponse response..geting json");
 		jobj = JSONHandler.getInstance().GetJSONObjectFromHttp(serverResponse);
 		Log.i(TAG,"got json "+jobj.toString());
 		List<NearbyUser> nearbyUsers = JSONHandler.getInstance().GetNearbyUsersInfoFromJSONObject(jobj);		

@@ -1,4 +1,4 @@
-package FacebookHelpers;
+package my.b1701.SB.FacebookHelpers;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

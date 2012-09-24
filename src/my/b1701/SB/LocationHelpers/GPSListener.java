@@ -49,7 +49,7 @@ public class GPSListener implements LocationListener{
 			thisWindowBestLocation = location;
 			return;
 		}
-		else if(location.getAccuracy() > thisWindowBestLocation.getAccuracy() )
+		else if(location.getAccuracy() < thisWindowBestLocation.getAccuracy() )
 		{
 			//window continuing
 			Log.i(TAG,"thiswindowbest location:"+thisWindowBestLocation.toString());
@@ -75,7 +75,7 @@ public class GPSListener implements LocationListener{
 		if(status == AVAILABLE) //window starting
 			thisWindowBestLocation = null;
 		if(status == TEMPORARILY_UNAVAILABLE) //window ending
-			LocationUpdater.getInstance().UpdateCurrentLocation(new SBLocation(thisWindowBestLocation));
+			LocationUpdater.getInstance().UpdateToBestCurrentLocation(new SBLocation(thisWindowBestLocation));
 		
 	}	
 

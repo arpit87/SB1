@@ -8,7 +8,7 @@ import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.HttpClient.SBHttpRequest.QueryMethod;
 import my.b1701.SB.Server.GetUsersResponse;
 import my.b1701.SB.Server.SendFBTokenToServerResponse;
-import my.b1701.SB.Server.ServerQueries;
+import my.b1701.SB.Server.ServerConstants;
 import my.b1701.SB.Server.ServerResponseBase;
 import my.b1701.SB.Users.ThisUser;
 import my.b1701.SB.Users.UserAttributes;
@@ -32,7 +32,7 @@ public class SendFBTokenToServer extends SBHttpRequest{
 	{
 		super();
 		queryMethod = QueryMethod.Post;
-		url = ServerQueries.SENDFBTOKEN_QUERY;
+		url = ServerConstants.SENDFBTOKEN_QUERY;
 		jsonobj=new JSONObject();
 		httpQuery =  new HttpPost(url);
 		try {

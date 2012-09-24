@@ -32,7 +32,11 @@ public class StartStrangerBuddyActivity extends Activity {
             startActivity(new Intent().setClass(this, LoginActivity.class));
             finish();
         }*/
-        SBLocationManager.getInstance().StartListeningtoNetwork(ThisAppConfig.getInstance().getLong("networkfreq"),0);        
+        ThisAppConfig.getInstance().putLong(ThisAppConfig.NETWORKFREQ, 30*1000); //.5 min
+        ThisAppConfig.getInstance().putLong(ThisAppConfig.GPSFREQ, 2*60*1000);	 //2 min
+        ThisAppConfig.getInstance().putLong(ThisAppConfig.USERCUTOFFDIST,1000);  //1000 meter
+        ThisAppConfig.getInstance().putLong(ThisAppConfig.USERPOSCHECKFREQ,30*1000);  //.5min
+        SBLocationManager.getInstance().StartListeningtoNetwork(ThisAppConfig.getInstance().getLong(ThisAppConfig.NETWORKFREQ),0);        
         //SBLocationManager.getInstance().StartListeningtoGPS(ThisAppConfig.getInstance().getLong("gpsfreq"),100);
         Log.i(TAG,"started network listening ");
         final Intent showSBMapViewActivity = new Intent(this, SBMapViewActivity.class);

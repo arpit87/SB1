@@ -7,11 +7,11 @@ import java.util.List;
 import my.b1701.SB.R;
 import my.b1701.SB.Activities.LoginActivity;
 import my.b1701.SB.ActivityHandlers.MapActivityHandler;
+import my.b1701.SB.FacebookHelpers.FacebookConnector;
 import my.b1701.SB.HelperClasses.Constants;
 import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.Users.NearbyUser;
-import FacebookHelpers.FacebookConnector;
 import android.content.Intent;
 import android.widget.Toast;
 

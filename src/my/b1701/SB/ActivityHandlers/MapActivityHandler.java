@@ -82,16 +82,12 @@ public class MapActivityHandler extends Handler {
 	    itemizedOverlayFactory = new ThisUserItemizedOverlayFactory(); 
 	    Log.i(TAG,"setting myoverlay");        
 	    thisUserOverlay = itemizedOverlayFactory.createItemizedOverlay();
+	    SBLocation currLoc = null;
+		while(currLoc == null)
+			currLoc = SBLocationManager.getInstance().getLastBestLocation();
+		ThisUser.getInstance().setLocation(currLoc);
 	    SBGeoPoint currGeo = ThisUser.getInstance().getCurrentGeoPoint();
-		if(currGeo == null)
-		{
-			SBLocation currLoc = null;
-			while(currLoc == null)
-				currLoc = SBLocationManager.getInstance().getLastBestLocation();
-			currGeo =new SBGeoPoint(currLoc);
-			Log.i(TAG,"location is:"+currGeo.getLatitudeE6()+","+currGeo.getLongitudeE6());
-			ThisUser.getInstance().setCurrentGeoPoint(currGeo);
-		}
+	    Log.i(TAG,"location is:"+currGeo.getLatitudeE6()+","+currGeo.getLongitudeE6());		
 	    thisUserOverlay.addThisUser();	    
 	    mapView.getOverlays().add(thisUserOverlay);
 	    mapView.postInvalidate();	       
@@ -119,12 +115,16 @@ public class MapActivityHandler extends Handler {
 	{		
 		Log.i(TAG,"update this user called");	
 		if(thisUserOverlay != null)	
+		{
 			mapView.getOverlays().remove(thisUserOverlay);
-	    thisUserOverlay.updateThisUser();
-	    Log.i(TAG,"this user map overlay updated");	    
-	    mapView.getOverlays().add(thisUserOverlay);
-	    mapView.postInvalidate();	       
-	    mapcontroller.animateTo(ThisUser.getInstance().getCurrentGeoPoint());
+		    thisUserOverlay.updateThisUser();
+		    Log.i(TAG,"this user map overlay updated");	    
+		    mapView.getOverlays().add(thisUserOverlay);
+		    mapView.postInvalidate();	       
+		    mapcontroller.animateTo(ThisUser.getInstance().getCurrentGeoPoint());
+		}
+		else
+			Log.i(TAG,"but thisUSeroverlay empty!how?shldnt be..we initialixed it in init");
 		
 	}
 

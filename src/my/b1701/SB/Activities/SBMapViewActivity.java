@@ -2,11 +2,11 @@ package my.b1701.SB.Activities;
 
 import my.b1701.SB.R;
 import my.b1701.SB.ActivityHandlers.MapActivityHandler;
+import my.b1701.SB.FacebookHelpers.FacebookConnector;
 import my.b1701.SB.HelperClasses.Constants;
 import my.b1701.SB.HelperClasses.ThisAppConfig;
 import my.b1701.SB.LocationHelpers.SBLocation;
 import my.b1701.SB.LocationHelpers.SBLocationManager;
-import FacebookHelpers.FacebookConnector;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -61,17 +61,17 @@ public class SBMapViewActivity extends MapActivity {
 
 	public void onResume(){
     	super.onResume();
-    	SBLocationManager.getInstance().StartListeningtoNetwork(ThisAppConfig.getInstance().getLong("networkfreq") , 100);
+    	SBLocationManager.getInstance().StartListeningtoNetwork(ThisAppConfig.getInstance().getLong(ThisAppConfig.NETWORKFREQ) , 0);
     	MapActivityHandler.getInstance().updateThisUserMapOverlay();
     }
 
     //test
 	public void onPause(){
     	super.onPause();
-    	//SBLocationManager.getInstance().StopListeningtoGPS();    	
-        //SBLocationManager.getInstance().StopListeningtoNetwork();
-    	mymapview.getOverlays().clear();
-    	mymapview.postInvalidate();
+    	SBLocationManager.getInstance().StopListeningtoGPS();    	
+        SBLocationManager.getInstance().StopListeningtoNetwork();
+    	//mymapview.getOverlays().clear();
+    	//mymapview.postInvalidate();
     }
 
 

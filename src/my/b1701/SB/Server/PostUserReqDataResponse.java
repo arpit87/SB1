@@ -1,24 +1,23 @@
 package my.b1701.SB.Server;
 
 import my.b1701.SB.Platform.Platform;
-import my.b1701.SB.Server.ServerResponseBase.ResponseStatus;
 
 import org.apache.http.HttpResponse;
 
 import android.util.Log;
 import android.widget.Toast;
 
-public class DeleteUserResponse extends ServerResponseBase{
-	
-	private static final String TAG = "DeleteUserResponse";
+public class PostUserReqDataResponse extends ServerResponseBase {
 
-	public DeleteUserResponse(HttpResponse response) {
+	private static final String TAG = "PostUserReqDataResponse";
+	
+	public PostUserReqDataResponse(HttpResponse response) {
 		super(response);
+		
 	}
 
 	@Override
 	public void process() {
-		
 		Log.i(TAG,"processing PostUserReqDataResponse");
 		//chk wt response coming of post..2xx is success
 		if(this.getStatus() == ResponseStatus.HttpStatus201 || this.getStatus() == ResponseStatus.HttpStatus200)
@@ -29,8 +28,7 @@ public class DeleteUserResponse extends ServerResponseBase{
 		else
 			Toast.makeText(Platform.getInstance().getContext(), "user data not posted", Toast.LENGTH_SHORT).show();
 
-		
-	}
+	}	
 	
 
 }

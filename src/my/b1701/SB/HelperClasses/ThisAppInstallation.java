@@ -24,8 +24,10 @@ public class ThisAppInstallation {
 	                {
 	                    writeInstallationFile(installation);
 	                    //always initialize platform before calling this!
-	                    ThisAppConfig.getInstance().putLong("networkfreq", 30*1000);
-	                    ThisAppConfig.getInstance().putLong("gpsfreq", 2*60*1000);	           
+	                    ThisAppConfig.getInstance().putLong(ThisAppConfig.NETWORKFREQ, 0); //.5 min
+	                    ThisAppConfig.getInstance().putLong(ThisAppConfig.GPSFREQ, 2*60*1000);	 //2 min
+	                    ThisAppConfig.getInstance().putLong(ThisAppConfig.USERCUTOFFDIST,1000);  //1000 meter
+	                    ThisAppConfig.getInstance().putLong(ThisAppConfig.USERPOSCHECKFREQ,30*1000);  //.5min
 	                }
 	                sID = readInstallationFile(installation);
 	            } catch (Exception e) {

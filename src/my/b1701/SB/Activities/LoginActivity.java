@@ -1,8 +1,8 @@
 package my.b1701.SB.Activities;
 
 import my.b1701.SB.R;
+import my.b1701.SB.FacebookHelpers.FacebookConnector;
 import my.b1701.SB.HelperClasses.Constants;
-import FacebookHelpers.FacebookConnector;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
