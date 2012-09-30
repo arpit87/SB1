@@ -59,7 +59,7 @@ public class LocationService extends Service{
         showNotification();
         CheckAndDeleteUserTask = new CheckAndDeleteUserOutOfReqArea();
         timer = new Timer();
-        timer.scheduleAtFixedRate(CheckAndDeleteUserTask, 60*1000, ThisAppConfig.getInstance().getLong(ThisAppConfig.USERPOSCHECKFREQ));
+        timer.scheduleAtFixedRate(CheckAndDeleteUserTask, 2*60*1000, ThisAppConfig.getInstance().getLong(ThisAppConfig.USERPOSCHECKFREQ));
         // We want this service to continue running until it is explicitly
         // stopped, so return sticky.
         return START_STICKY;
@@ -92,7 +92,7 @@ public class LocationService extends Service{
         CharSequence text = getText(R.string.request_active);
 
         // Set the icon, scrolling text and timestamp
-        Notification notification = new Notification(R.drawable.btn_close, text,System.currentTimeMillis());
+        Notification notification = new Notification(R.drawable.searchingbuddies, text,System.currentTimeMillis());
 
          //The PendingIntent to launch our activity if the user selects this notification
         PendingIntent contentIntent = PendingIntent.getBroadcast(this, 0,

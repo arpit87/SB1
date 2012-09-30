@@ -1,23 +1,22 @@
 package my.b1701.SB.LocationHelpers;
 
-import my.b1701.SB.HelperClasses.ThisAppConfig;
-import my.b1701.SB.Platform.Platform;
+import my.b1701.SB.ActivityHandlers.MapActivityHandler;
 import my.b1701.SB.Users.ThisUser;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 public class NetworkListener implements LocationListener{
 	
 	long minTime=0L;
 	float minDistnce=0F;
 	private static final String TAG = "NetworkListener";
-	private Location prevLocation = null;
+	
 	private Location thisWindowBestLocation = null;	
-	private boolean newWindow = false;
+	private Location lastWindowBestLocation = null;
+
 	public static final int OUT_OF_SERVICE = 0;	
 	public static final int TEMPORARILY_UNAVAILABLE = 1;	
 	public static final int AVAILABLE = 2;
@@ -25,7 +24,8 @@ public class NetworkListener implements LocationListener{
 	public void start()
 	{
 		Log.i(TAG,"strted listening to network");
-		SBLocationManager.getInstance().locManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, minTime, minDistnce, this);
+		//thisWindowBestLocation = null;
+		SBLocationManager.getInstance().locManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
 	}
 	
 	public void start(long minTime,float minDistance)
@@ -38,7 +38,12 @@ public class NetworkListener implements LocationListener{
 	
 	public void stop()
 	{
-		Log.i(TAG,"stopped listening to network");
+		if(thisWindowBestLocation != null)
+		{
+			Log.i(TAG,"stopped listening to network,best loc thiswindowbestacc:"+thisWindowBestLocation.getAccuracy());
+			lastWindowBestLocation = thisWindowBestLocation;
+		}
+		thisWindowBestLocation = null;
 		SBLocationManager.getInstance().locManager.removeUpdates(this);
 	}	
 
@@ -46,7 +51,7 @@ public class NetworkListener implements LocationListener{
 		//we see that location bursts come in windows n then idle for given time
 		//so we find most accurate location of a window and set it to thisWindowBest
 		Log.i(TAG,"network location changed");
-		Log.i(TAG,"newlocation :"+ location.toString());
+		Log.i(TAG,"new network location acc:"+ location.getAccuracy());
 		
 		if(thisWindowBestLocation == null)
 		{		
@@ -58,18 +63,24 @@ public class NetworkListener implements LocationListener{
 		{
 			//window continuing
 			//Log.i(TAG,"thiswindowbest location:"+thisWindowBestLocation.toString());
-			thisWindowBestLocation = location;			
-		}
-		Log.i(TAG,"thiswindowbest location:"+thisWindowBestLocation.toString());
+			thisWindowBestLocation = location;		
+			if(MapActivityHandler.getInstance().isUpdateMapRealTime())
+			{
+				ThisUser.getInstance().setLocation(new SBLocation(location));
+				MapActivityHandler.getInstance().updateThisUserMapOverlay();				
+			}
+				
+			Log.i(TAG,"thiswindowbest location:"+thisWindowBestLocation.toString());
+		}		
 		//location = SBLocationManager.getInstance().getCurrentBestLocation(location);
 		//LocationUpdater.getInstance().UpdateCurrentLocation(new SBLocation(location));
 		
 		
 	}
 	
-	public Location getThisWindowBestLocation()
+	public SBLocation getLastWindowBestLocation()
 	{
-		return thisWindowBestLocation;
+		return new SBLocation(lastWindowBestLocation);
 	}
 
 	public void onProviderDisabled(String provider) {
@@ -83,15 +94,14 @@ public class NetworkListener implements LocationListener{
 	}
 
 	public void onStatusChanged(String provider, int status, Bundle extras) {
-		Log.i(TAG,"network status changed to:"+status);
+		/*Log.i(TAG,"network status changed to:"+status);
 		//Toast toast = Toast.makeText(Platform.getInstance().getContext(), "Network status change to:"+status, Toast.LENGTH_SHORT);       
 		//toast.show();
 		if(thisWindowBestLocation!=null)
 		LocationUpdater.getInstance().UpdateToBestCurrentLocation(new SBLocation(thisWindowBestLocation));
 		if(status == AVAILABLE) //window starting
 			thisWindowBestLocation = null;
-		//if(status == TEMPORARILY_UNAVAILABLE) //window ending
-			
+		//if(status == TEMPORARILY_UNAVAILABLE) //window ending*/			
 		
 	}
 

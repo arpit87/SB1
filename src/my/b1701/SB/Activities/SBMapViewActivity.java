@@ -5,6 +5,7 @@ import my.b1701.SB.ActivityHandlers.MapActivityHandler;
 import my.b1701.SB.FacebookHelpers.FacebookConnector;
 import my.b1701.SB.HelperClasses.Constants;
 import my.b1701.SB.HelperClasses.ThisAppConfig;
+import my.b1701.SB.HelperClasses.ToastTracker;
 import my.b1701.SB.LocationHelpers.SBLocation;
 import my.b1701.SB.LocationHelpers.SBLocationManager;
 import android.content.Intent;
@@ -23,6 +24,7 @@ public class SBMapViewActivity extends MapActivity {
 	private static final String TAG = "SBMapViewActivity";	
 	private MapActivityHandler mapActivityHandler;
 	private MapView mymapview;	
+	private boolean mapInitialized = false;
 	
 		
 	private SBLocation location;
@@ -39,6 +41,7 @@ public class SBMapViewActivity extends MapActivity {
         MapActivityHandler.getInstance().setMapView(mymapview); 
         MapActivityHandler.getInstance().setUnderlyingActivity(this);
         Log.i(TAG,"initialize mylocation");
+        ToastTracker.showToast("Updating location..",1);
         MapActivityHandler.getInstance().initMyLocation();
     }     
    
@@ -61,13 +64,17 @@ public class SBMapViewActivity extends MapActivity {
 
 	public void onResume(){
     	super.onResume();
-    	SBLocationManager.getInstance().StartListeningtoNetwork(ThisAppConfig.getInstance().getLong(ThisAppConfig.NETWORKFREQ) , 0);
-    	MapActivityHandler.getInstance().updateThisUserMapOverlay();
+    	//we update realtime when on map activity
+    	SBLocationManager.getInstance().StartListeningtoNetwork(); 
+    	MapActivityHandler.getInstance().setUpdateMapRealTime(true);
+    	if(MapActivityHandler.getInstance().isMapInitialized())
+    		MapActivityHandler.getInstance().updateThisUserMapOverlay();
     }
 
     //test
 	public void onPause(){
     	super.onPause();
+    	MapActivityHandler.getInstance().setUpdateMapRealTime(false);
     	SBLocationManager.getInstance().StopListeningtoGPS();    	
         SBLocationManager.getInstance().StopListeningtoNetwork();
     	//mymapview.getOverlays().clear();

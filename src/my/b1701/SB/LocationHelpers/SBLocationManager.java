@@ -88,29 +88,34 @@ public class SBLocationManager {
 	}
 
 	//need to start listening first
-	public SBLocation getLastBestLocation( ) {
+	public SBLocation getLastXMinBestLocation(long xMin ) {
 	    Location bestResult = null;
 	    float bestAccuracy = Float.MAX_VALUE;
-	    long bestTime = Long.MIN_VALUE;
-	    
+	    long bestTime = Long.MIN_VALUE;	    
+	    long minTime = System.currentTimeMillis() - xMin*60*1000;
 	    List<String> matchingProviders = locManager.getAllProviders();
 	    for (String provider: matchingProviders) {
 	      Location location = locManager.getLastKnownLocation(provider);
 	      if (location != null) {
-	        float accuracy = location.getAccuracy();
-	        long time = location.getTime();
-	        
-	        if ((time > bestTime && accuracy < bestAccuracy)) {
-	          bestResult = location;
-	          bestAccuracy = accuracy;
-	          bestTime = time;
-	        }
+	          float accuracy = location.getAccuracy();
+	          long time = location.getTime();
+	          
+	          if ((time > minTime && accuracy < bestAccuracy)) {
+	            bestResult = location;
+	            bestAccuracy = accuracy;
+	            bestTime = time;
+	          }
+	          /*else if (time < minTime && bestAccuracy == Float.MAX_VALUE && time > bestTime) {
+	            bestResult = location;
+	            bestTime = time;
+	          }*/
 	        
 	        }
 	      }
 	        
-      
+	    if(bestResult!=null)
 	      return new SBLocation(bestResult);
+	    else return null;
 		
 	}
 	
