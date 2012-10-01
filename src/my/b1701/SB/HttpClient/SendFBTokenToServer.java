@@ -32,7 +32,7 @@ public class SendFBTokenToServer extends SBHttpRequest{
 	{
 		super();
 		queryMethod = QueryMethod.Post;
-		url = ServerConstants.SENDFBTOKEN_QUERY;
+		url = ServerConstants.SERVER_ADDRESS;
 		jsonobj=new JSONObject();
 		httpQuery =  new HttpPost(url);
 		try {

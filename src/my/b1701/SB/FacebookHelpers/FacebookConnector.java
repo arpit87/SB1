@@ -65,6 +65,7 @@ public class FacebookConnector {
     	
     	 if (!facebook.isSessionValid()) {
     		 facebook.authorize(underlying_activity, permissions, new LoginDialogListener());  
+    		 
     	 }
     }  
     

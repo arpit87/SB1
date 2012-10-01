@@ -6,11 +6,8 @@ public class ServerConstants {
 	//public static  String  SERVER_ADDRESS = "http://192.168.1.5/strangerbuddy/";
 	public static  String  SERVER_ADDRESS = "http://www.greenyatra.org/sb/";
 	
-	public static String GET_QUERY=SERVER_ADDRESS+"/getNearby";
+	public static String USERSERVICE="UserService";
+	public static String REQUESTSERVICE="RequestService";
 	
-	public static final String POST_USERREQDATA_QUERY = SERVER_ADDRESS;
-	public static final String DELETE_USER_QUERY = SERVER_ADDRESS;
-	public static final String GET_USERS_QUERY = SERVER_ADDRESS;
-	public static final String SENDFBTOKEN_QUERY = SERVER_ADDRESS;
 
 }

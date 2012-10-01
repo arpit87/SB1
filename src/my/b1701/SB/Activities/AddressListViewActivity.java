@@ -69,9 +69,9 @@ public class AddressListViewActivity extends Activity{
 	   ThisUser.getInstance().setDestinationGeoPoint(new SBGeoPoint(lat,lon));
 	   Log.i(TAG,"user desti set..querying server");
 	   SBHttpRequest request = new GetUsersRequest();
-	   ServerResponseBase response = SBHttpClient.getInstance().executeRequest(request);
+	   SBHttpClient.getInstance().executeRequest(request);
 	   Log.i(TAG,"got response ,processing");
-	   response.process();	   
+	   //response.process();	   
 	   Log.i(TAG,"processed response,finish activity n staring service");
 	   Intent startLocService = new Intent(AddressListViewActivity.this,LocationService.class);
 	   startService(startLocService);

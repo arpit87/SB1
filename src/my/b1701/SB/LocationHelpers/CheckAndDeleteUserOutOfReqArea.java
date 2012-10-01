@@ -44,9 +44,9 @@ public class CheckAndDeleteUserOutOfReqArea extends TimerTask{
 		{
 		   Log.i(TAG,"user out of req area sending delete req to server");
 		   SBHttpRequest request = new DeleteUserRequest();
-		   ServerResponseBase response = SBHttpClient.getInstance().executeRequest(request);
+		   SBHttpClient.getInstance().executeRequest(request);
 		   Log.i(TAG,"got delete user response ,processing");
-		   response.process();	
+		   //response.process();	
 		   Platform.getInstance().getContext().sendBroadcast(new Intent(Platform.getInstance().getContext(),LocationService.class));
 		   
 		}

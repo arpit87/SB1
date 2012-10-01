@@ -28,7 +28,7 @@ public class GetUsersRequest extends SBHttpRequest{
 	{
 		super();
 		queryMethod = QueryMethod.Post;
-		url = ServerConstants.GET_USERS_QUERY;
+		url = ServerConstants.SERVER_ADDRESS;
 		jsonobj=new JSONObject();
 		httpQuery =  new HttpPost(url);
 		try {
@@ -37,7 +37,6 @@ public class GetUsersRequest extends SBHttpRequest{
 			jsonobj.put(UserAttributes.SRCLONGITUDE, ThisUser.getInstance().getCurrentGeoPoint().getLongitudeE6());
 			jsonobj.put(UserAttributes.DSTLATITUDE, ThisUser.getInstance().getCurrentGeoPoint().getLatitudeE6());
 			jsonobj.put(UserAttributes.DSTLONGITUDE, ThisUser.getInstance().getCurrentGeoPoint().getLongitudeE6());	
-					
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
