@@ -79,7 +79,7 @@ public class SBLocationManager {
 	public void requestSingleLocationUpdate()
 	{
 		Criteria criteria = new Criteria();
-		criteria.setAccuracy(Criteria.ACCURACY_LOW);
+		criteria.setAccuracy(Criteria.ACCURACY_COARSE);
 		Intent updateIntent = new Intent(Constants.SINGLE_LOCATION_UPDATE);  
         PendingIntent singleUpatePI = PendingIntent.getBroadcast(Platform.getInstance().getContext(), 0, updateIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         IntentFilter locIntentFilter = new IntentFilter(Constants.SINGLE_LOCATION_UPDATE);
