@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <com.google.android.maps.MapView android:id="@+id/map_view" android:focusable="true" android:focusableInTouchMode="true" android:clickable="true" android:layout_width="fill_parent" android:layout_height="fill_parent" android:apiKey="@string/map_api_key" />    
+    <ImageButton android:id="@+id/my_location_button" android:background="@drawable/my_location" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8.0dip" android:layout_marginRight="8.0dip"  android:layout_alignParentRight="true" android:contentDescription="@string/icon_my_location" />
+</RelativeLayout>

@@ -32,7 +32,7 @@ public class SBMapViewActivity extends MapActivity {
     @Override
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.map_view);
+        setContentView(R.layout.map_view_old);
         /*serachBuddiesButton = (Button)findViewById(R.id.searchBuddiesButton);
         fromLocationView = (EditText)findViewById(R.id.fromLocation);
         desLocationView = (EditText)findViewById(R.id.desLocation);    */
@@ -50,10 +50,10 @@ public class SBMapViewActivity extends MapActivity {
     	Log.i(TAG,"button clicked:"+v.getId());
         //mapActivityHandler.handleOnClick(v);    
     	switch (v.getId()) {
-        case R.id.searchBuddiesButton:
+       // case R.id.searchBuddiesButton:
         	//getLocationListFromAddressString();
         	//updateNearbyBuddies();  
-        	break;
+        	//break;
         case R.id.desLocation:
         	Log.i(TAG,"destination edit test clicked starting addres list activity");
     		Intent showAddressListActivity = new Intent(this, AddressListViewActivity.class);    		
