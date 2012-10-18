@@ -75,6 +75,7 @@ public class MapListViewTabActivity extends TabCompatActivity {
     	else
     	{
     		mMapViewContainer.addView(mMapView);
+    		mMapViewContainer.addView(selfLocationButton);
     	}
     	return mMapViewContainer;
     }

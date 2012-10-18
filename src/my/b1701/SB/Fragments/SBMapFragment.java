@@ -37,7 +37,7 @@ public class SBMapFragment extends Fragment implements View.OnClickListener, Vie
 		if( null != parentViewGroup ) {
 			parentViewGroup.removeView( mMapViewContainer );
 		}
-		mMapViewContainer.removeView(mMapView);
+		mMapViewContainer.removeAllViews();
     }  
 	
 	
