@@ -39,7 +39,7 @@ public class StartStrangerBuddyActivity extends Activity {
         SBLocationManager.getInstance().StartListeningtoNetwork();        
         //SBLocationManager.getInstance().StartListeningtoGPS(ThisAppConfig.getInstance().getLong("gpsfreq"),100);
         Log.i(TAG,"started network listening ");
-        final Intent showSBMapViewActivity = new Intent(this, SBMapViewActivity.class);
+        final Intent showSBMapViewActivity = new Intent(this, MapListViewTabActivity.class);
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
           public void run() {        	  

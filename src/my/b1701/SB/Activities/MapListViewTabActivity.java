@@ -1,38 +1,78 @@
 package my.b1701.SB.Activities;
 
 import my.b1701.SB.R;
-import android.app.ActionBar;
-import android.app.Activity;
-import android.app.Fragment;
+import my.b1701.SB.ActivityHandlers.MapActivityHandler;
+import my.b1701.SB.Fragments.SBListFragment;
+import my.b1701.SB.Fragments.SBMapFragment;
+import my.b1701.SB.HelperClasses.ToastTracker;
+import my.b1701.SB.TabHelpers.SherLockActionBarTabListener;
+import my.b1701.SB.TabHelpers.SherlockActionBarTab;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.TabHost;
+
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.google.android.maps.MapView;
 
 
-public class MapListViewTabActivity extends Activity {
-	 /** Called when the activity is first created. */
+public class MapListViewTabActivity extends SherlockFragmentActivity {
+	//public View mMapViewContainer;	
+	ActionBar bar;
+	private static final String TAG = "MapListViewTabActivity";	
+	private MapActivityHandler mapActivityHandler;		
+	private boolean mapInitialized = false;
+	private ViewGroup mMapViewContainer;
+	private MapView mMapView;
+	private TabHost tabHost;
+	private ImageButton selfLocationButton;
+	private Fragment mapFrag;
+	/** Called when the activity is first created. */	
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.map_list_tabview);
- 
-       //ActionBar gets initiated
-        ActionBar actionbar = getActionBar();
-      //Tell the ActionBar we want to use Tabs.
-        actionbar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-      //initiating both tabs and set text to it.
-        ActionBar.Tab MapTab = actionbar.newTab().setText("MapView");
-        ActionBar.Tab ListTab = actionbar.newTab().setText("ListView");
- 
-     //create the two fragments we want to use for display content
-       // Fragment MapFragment = new MapFragment();
-        //Fragment ListFragment = new ListFragment();
- 
-    //set the Tab listener. Now we can listen for clicks.
-        //MapTab.setTabListener(new MyTabsListener(MapFragment));
-        //ListTab.setTabListener(new MyTabsListener(MapFragment));
- 
-   //add the two tabs to the actionbar
-        actionbar.addTab(MapTab);
-        actionbar.addTab(ListTab);
+        super.onCreate(savedInstanceState);  
+        setContentView(R.layout.tab_navigation); 
+        ActionBar ab= getSupportActionBar();
+        ab.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        SherlockActionBarTab mapTab = new SherlockActionBarTab(this, "MapFragment");
+        mapTab.setText(R.string.mapviewstr).setIcon(R.drawable.tab_map).setTabListener(new SherLockActionBarTabListener(this, SBMapFragment.class));
+        ab.addTab((ActionBar.Tab)mapTab.getTab());
+        
+        SherlockActionBarTab listTab = new SherlockActionBarTab(this, "ListFragment");
+        mapTab.setText(R.string.listviewstr).setIcon(R.drawable.tab_map).setTabListener(new SherLockActionBarTabListener(this, SBListFragment.class));
+        ab.addTab((ActionBar.Tab)mapTab.getTab());
+        
+    
     }
-
+    
+    public ViewGroup getThisMapContainerWithMapView()
+    {
+    	if(mMapViewContainer == null)
+    	{    		
+    		mMapViewContainer = (ViewGroup) getLayoutInflater().inflate(R.layout.map,null,false);
+    		mMapView = (MapView) mMapViewContainer.findViewById(R.id.map_view);
+    		selfLocationButton = (ImageButton) mMapViewContainer.findViewById(R.id.my_location_button);
+    		mMapView.getOverlays().clear();
+    		MapActivityHandler.getInstance().setMapView(mMapView);
+            MapActivityHandler.getInstance().setUnderlyingActivity(this);
+            Log.i(TAG,"initialize handler");      
+            Log.i(TAG,"initialize mylocation");
+            ToastTracker.showToast("Updating location..",1);
+            MapActivityHandler.getInstance().initMyLocation();        
+    		//mMapViewContainer.removeView(mMapView);
+    	}
+    	else
+    	{
+    		mMapViewContainer.addView(mMapView);
+    		mMapViewContainer.addView(selfLocationButton);
+    	}
+    	return mMapViewContainer;
+    }
+   
+   
 }
+

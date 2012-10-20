@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Mystrangerbuddy</string>
+    <string name="app_name">HopOn</string>
     <string name="url_strangerbuddy">www.strangerbuddy.com</string>
     <string name="title1">StrangerBuddy</string>
     <color name="white">#ffffffff</color>
@@ -9,7 +9,7 @@
     <string name="buttonlogin">Login</string>
     <string name="buttoncarpool">Pool search</string>
     <string name="buttonhirenow">Hire Now</string>
-    <string name="map_api_key">AIzaSyD7B_JmOOy1C9lCXhRJhdLXUeZ36P_1RuM</string>
+    <string name="map_api_key">0XJOljncnnganZQESZVOCjDRt1YNfLAnSBEMdPg</string>
     <string name="chat_header">Chat:</string>
     <string name="searchaddressheader">Address search</string>
     <string name="full_name">Name:</string>
@@ -44,5 +44,8 @@
     <string name="locationupdaterservice">locationupdaterservice</string>
     <string name="request_active">You will be notified if anyone mooovs by you</string>
     <string name="request_cancel">Click to cancel request</string>
+    <string name="mapviewstr">MapView</string>
+    <string name="listviewstr">ListView</string>
+    <string name="icon_my_location">MyLocationIcon</string>
 
 </resources>
