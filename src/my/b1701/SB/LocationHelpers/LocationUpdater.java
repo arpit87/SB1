@@ -1,6 +1,5 @@
 package my.b1701.SB.LocationHelpers;
 
-import my.b1701.SB.Activities.SBMapViewActivity;
 import my.b1701.SB.ActivityHandlers.MapActivityHandler;
 import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.Users.ThisUser;
