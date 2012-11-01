@@ -8,12 +8,15 @@ import android.database.MatrixCursor;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
+import android.util.Log;
+import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.List;
 
 
 public class GeoAddressProvider extends ContentProvider {
+    private static final String TAG = "GeoAddressProvider";
     private static final int MAX_RESULT = 10;
     public static final String AUTHORITY = "my.b1701.SB.provider";
     private static final String BASE_PATH = "addresses";
@@ -21,6 +24,7 @@ public class GeoAddressProvider extends ContentProvider {
 
     public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + BASE_PATH);
     private static final UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+
     static {
         uriMatcher.addURI(AUTHORITY, BASE_PATH + "/*", _ID);
     }
@@ -38,22 +42,25 @@ public class GeoAddressProvider extends ContentProvider {
         int uriType = uriMatcher.match(uri);
 
         MatrixCursor cursor;
-        if (uriType == _ID){
-            cursor  = new MatrixCursor(new String[] {"GEO_ADDRESS"});
+        if (uriType == _ID) {
+            cursor = new MatrixCursor(new String[]{"AddressLine", "LAT_LONG"});
             String searchAddress = uri.getLastPathSegment();
             List<Address> addressList = null;
             try {
                 addressList = geocoder.getFromLocationName(searchAddress, MAX_RESULT);
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.e(TAG, e.getMessage());
             }
             if (addressList != null && !addressList.isEmpty()) {
-                for (Address address : addressList){
-                    cursor.addRow(new Object[]{new GeoAddress(address)});
+                for (Address address : addressList) {
+                    try {
+                        cursor.addRow(new Object[]{GeoAddress.constructAddressLine(address), GeoAddress.constructLocationJSon(address)});
+                    } catch (JSONException e) {
+                        Log.e(TAG, e.getMessage());
+                    }
                 }
             }
-        }
-        else {
+        } else {
             cursor = new MatrixCursor(null);
         }
 

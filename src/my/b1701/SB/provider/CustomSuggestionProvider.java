@@ -2,10 +2,7 @@ package my.b1701.SB.provider;
 
 import android.R;
 import android.app.SearchManager;
-import android.content.ContentProvider;
-import android.content.ContentValues;
-import android.content.Context;
-import android.content.UriMatcher;
+import android.content.*;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.database.MergeCursor;
@@ -67,7 +64,7 @@ public class CustomSuggestionProvider extends ContentProvider {
     public final static String AUTHORITY = "my.b1701.SB.provider.CustomSuggestionProvider";
     public final static int MODE = DATABASE_MODE_QUERIES;
 
-    public CustomSuggestionProvider(){
+    public CustomSuggestionProvider() {
         setupSuggestions(AUTHORITY, MODE);
     }
 
@@ -164,7 +161,8 @@ public class CustomSuggestionProvider extends ContentProvider {
                     "display1 AS " + SearchManager.SUGGEST_COLUMN_TEXT_1,
                     "query AS " + SearchManager.SUGGEST_COLUMN_QUERY,
                     "_id",
-                    "'android.intent.action.SEARCH' AS " + SearchManager.SUGGEST_COLUMN_INTENT_ACTION
+                    "'"+ Intent.ACTION_SEARCH+"' AS " + SearchManager.SUGGEST_COLUMN_INTENT_ACTION,
+                    "display1 AS " + SearchManager.SUGGEST_COLUMN_INTENT_DATA
             };
         }
 
@@ -290,31 +288,38 @@ public class CustomSuggestionProvider extends ContentProvider {
                 }
                 suggestSelection = mSuggestSuggestionClause;
             }
+
             // Suggestions are always performed with the default sort order
-            Cursor c1 = db.query(sSuggestions, mSuggestionProjection,
+            Cursor cSavedSug = db.query(sSuggestions, mSuggestionProjection,
                     suggestSelection, myArgs, null, null, ORDER_BY, null);
-            c1.setNotificationUri(getContext().getContentResolver(), uri);
+            cSavedSug.setNotificationUri(getContext().getContentResolver(), uri);
 
-            if (TextUtils.isEmpty(selectionArgs[0])){
-                return c1;
+            if (TextUtils.isEmpty(selectionArgs[0])) {
+                return cSavedSug;
             }
 
-            Uri uri2  = Uri.parse(GeoAddressProvider.CONTENT_URI + "/" + selectionArgs[0]);
-            Cursor c2 = getContext().getContentResolver().query(uri2, null, null, null, "");
-            
-            if (c2 == null || c2.getCount() == 0)
-                return c1;
+            Uri urlForCustomSug = Uri.parse(GeoAddressProvider.CONTENT_URI + "/" + selectionArgs[0]);
+            Cursor cCustSug = getContext().getContentResolver().query(urlForCustomSug, null, null, null, "");
+
+            if (cCustSug == null || cCustSug.getCount() == 0)
+                return cSavedSug;
 
 
-            MatrixCursor c3 = new MatrixCursor(new String[]{SearchManager.SUGGEST_COLUMN_FORMAT, SearchManager.SUGGEST_COLUMN_ICON_1, SearchManager.SUGGEST_COLUMN_TEXT_1, SearchManager.QUERY, "_id", SearchManager.SUGGEST_COLUMN_INTENT_ACTION});
+            MatrixCursor cCombSug = new MatrixCursor(new String[]{SearchManager.SUGGEST_COLUMN_FORMAT,
+                    SearchManager.SUGGEST_COLUMN_ICON_1,
+                    SearchManager.SUGGEST_COLUMN_TEXT_1,
+                    SearchManager.QUERY, "_id",
+                    SearchManager.SUGGEST_COLUMN_INTENT_ACTION,
+                    SearchManager.SUGGEST_COLUMN_INTENT_DATA});
+
             int offset = 1000;
-            if (c2.moveToFirst()) {
+            if (cCustSug.moveToFirst()) {
                 do {
-                    c3.addRow(new Object[]{0, null, c2.getString(0), selectionArgs[0], offset++, "android.intent.action.VIEW"});
-                } while (c2.moveToNext());
+                    cCombSug.addRow(new Object[]{0, null, cCustSug.getString(0), selectionArgs[0], offset++, Intent.ACTION_VIEW, cCustSug.getString(1)});
+                } while (cCustSug.moveToNext());
             }
 
-            MergeCursor c = new MergeCursor(new Cursor[]{c1, c3});
+            MergeCursor c = new MergeCursor(new Cursor[]{cSavedSug, cCombSug});
             return c;
         }
 
