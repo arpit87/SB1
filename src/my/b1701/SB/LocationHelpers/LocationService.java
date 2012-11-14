@@ -10,7 +10,7 @@ package my.b1701.SB.LocationHelpers;
 import java.util.Timer;
 
 import my.b1701.SB.R;
-import my.b1701.SB.ActivityHandlers.MapActivityHandler;
+import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
 import my.b1701.SB.BroadcastReceivers.KillLocationServiceReceiver;
 import my.b1701.SB.HelperClasses.ThisAppConfig;
 import my.b1701.SB.HelperClasses.ToastTracker;

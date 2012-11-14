@@ -1,49 +1,63 @@
 package my.b1701.SB.Fragments;
 
+import java.util.List;
+
+import my.b1701.SB.Activities.MapListViewTabActivity;
+import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
+import my.b1701.SB.ActivityHandlers.NearbyUsersListViewAdapter;
 import my.b1701.SB.HelperClasses.ToastTracker;
-import my.b1701.SB.R;
-//import android.annotation.SuppressLint;
+import my.b1701.SB.Users.NearbyUser;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 public class SBListFragment extends ListFragment {
 	
-	 public static final String[] TITLES = 
-		    {
-		            "Henry IV (1)",   
-		            "Henry V",
-		            "Henry VIII",       
-		            "Richard II",
-		            "Richard III",
-		            "Merchant of Venice",  
-		            "Othello",
-		            "King Lear"
-		    };
-	
+	private static final String TAG = "SBListFragment";
+	private ViewGroup mListViewContainer;
+	private List<NearbyUser> nearbyUserlist = null;
+		
 	@Override
-    public void onCreate(Bundle savedState) {
+	public void onCreate(Bundle savedState) {
         super.onCreate(savedState);
-        
-        // Populate list with our static array of titles.
-        setListAdapter(new ArrayAdapter<String>(getActivity(),
-                R.layout.nearbyusertextview,TITLES
-                ));
+		//update listview
+        Log.i(TAG,"on create list view");
+        nearbyUserlist = MapListActivityHandler.getInstance().getNearbyUserList();
+        if(nearbyUserlist!=null)
+        {
+			NearbyUsersListViewAdapter adapter = new NearbyUsersListViewAdapter(getActivity(), nearbyUserlist);
+			setListAdapter(adapter);
+			Log.i(TAG,"nearby users:"+nearbyUserlist.toString());
+        }
+        ((MapListViewTabActivity)getActivity()).setListFrag(this);
 	}
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.nearbyuserlistview, container, false);
+		Log.i(TAG,"oncreateview listview");
+		mListViewContainer=  ((MapListViewTabActivity)getActivity()).getThisListContainerWithListView();
+		return mListViewContainer;
 	}
 	
 	@Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         ToastTracker.showToast("Item clicked: " + id);
     }
+	
+	@Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.i(TAG,"ondestroyview listview");
+        ViewGroup parentViewGroup = (ViewGroup) mListViewContainer.getParent();
+		if( null != parentViewGroup ) {
+			parentViewGroup.removeView( mListViewContainer );
+		}
+		//mListViewContainer.removeAllViews();
+    }  
 	
 
 }

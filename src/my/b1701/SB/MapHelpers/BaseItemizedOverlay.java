@@ -26,5 +26,7 @@ public abstract class BaseItemizedOverlay extends ItemizedOverlay<BaseOverlayIte
 
 	public  void updateThisUser(){}
 	
+	private void createAndDisplayView(){}
+	
 
 }

@@ -46,6 +46,16 @@ public class NearbyUser {
 		return userDestination;
 	}
 	
+	public String getSrcLatitude()
+	{
+		return srclatitude;
+	}
+	
+	public String getSrcLongitude()
+	{
+		return srclongitude;
+	}
+	
 	public GeoPoint GetUserGeopoint()
 	{
 		return new GeoPoint((int)(Double.parseDouble(srclatitude)*1E6),(int)(Double.parseDouble(srclongitude)*1E6));

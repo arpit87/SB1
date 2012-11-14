@@ -31,6 +31,21 @@ public class JSONHandler {
 		
 	}
 	
+	public String getFBPicURLFromJSON(JSONObject jObj)
+	{
+		String URL = null;
+		try {
+			JSONObject picture = jObj.getJSONObject("picture");
+			JSONObject data = picture.getJSONObject("data");
+			URL = data.getString("url");
+		
+	} catch (JSONException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+		return URL;
+	}
+	
 	public JSONObject GetJSONObjectFromHttp(HttpResponse response)
 	{
 				

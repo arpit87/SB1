@@ -42,7 +42,7 @@
 
         android:layout_height="wrap_content" android:clickable="true"
 
-        android:apiKey="0XJOljncnnganZQESZVOCjDRt1YNfLAnSBEMdPg" />
+        android:apiKey="@string/map_api_key" />
 
 </LinearLayout>
 

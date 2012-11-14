@@ -1,26 +1,37 @@
 package my.b1701.SB.MapHelpers;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import my.b1701.SB.R;
-import my.b1701.SB.LocationHelpers.SBGeoPoint;
-import my.b1701.SB.LocationHelpers.SBLocation;
-import my.b1701.SB.LocationHelpers.SBLocationManager;
 import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.Users.ThisUser;
-import android.graphics.drawable.Drawable;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.ImageView;
+
+import com.google.android.maps.GeoPoint;
+import com.google.android.maps.MapView;
 
 public class ThisUserItemizedOverlay extends BaseItemizedOverlay{
 
 	ArrayList<ThisUserOverlayItem> userList=new ArrayList<ThisUserOverlayItem>();
 	ThisUserOverlayItem overlay;
 	private static final String TAG = "ThisUserItemizedOverlay";
+	private MapView mMapView = null;
+	private static LayoutInflater mInflater;
+	View viewOnMarker = null; 
+	ImageView picView = null;
 	
-	public ThisUserItemizedOverlay() {
-		super(Platform.getInstance().getContext().getResources().getDrawable(R.drawable.red_marker));
+	public ThisUserItemizedOverlay(MapView mapView) {		
+		super(boundCenter(Platform.getInstance().getContext().getResources().getDrawable(R.drawable.new_red_marker)));
+		this.mMapView = mapView;
 		// TODO Auto-generated constructor stub
+	}
+	
+	public ThisUserItemizedOverlay() {		
+		super(boundCenter(Platform.getInstance().getContext().getResources().getDrawable(R.drawable.new_red_marker)));		
 	}
 
 	@Override
@@ -34,11 +45,11 @@ public class ThisUserItemizedOverlay extends BaseItemizedOverlay{
 		// TODO Auto-generated method stub
 		return userList.size();
 	}
-
+	
 	@Override
 	public void addThisUser() {
 		
-		overlay=new ThisUserOverlayItem(ThisUser.getInstance().getCurrentGeoPoint(), ThisUser.getInstance().getUniqueID(), "");
+		overlay=new ThisUserOverlayItem(ThisUser.getInstance().getCurrentGeoPoint(), ThisUser.getInstance().getUniqueID(), "",mMapView);
 		userList.add(overlay);
 		populate();
 	}
@@ -47,11 +58,18 @@ public class ThisUserItemizedOverlay extends BaseItemizedOverlay{
 	{
 		Log.i(TAG,"updating this user,removing overlay");
 		if(overlay!=null)
-			userList.remove(overlay);
-		overlay=new ThisUserOverlayItem(ThisUser.getInstance().getCurrentGeoPoint(), ThisUser.getInstance().getUniqueID(), "");
+		{
+			overlay.removeView();
+			userList.remove(overlay);			
+		}
+		overlay=new ThisUserOverlayItem(ThisUser.getInstance().getCurrentGeoPoint(), ThisUser.getInstance().getUniqueID(), "",mMapView);
 		Log.i(TAG,"adding new this overlay");
 		userList.add(overlay);
 		populate();
 	}
+	
+	
+	
+	
 
 }

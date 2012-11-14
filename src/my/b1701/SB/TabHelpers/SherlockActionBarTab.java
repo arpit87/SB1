@@ -84,7 +84,6 @@ public class SherlockActionBarTab extends BaseTab implements ActionBar.TabListen
         return mFragment;
     }
 
-	@Override
 	public void onTabSelected(Tab tab, FragmentTransaction ft) {
 		  ft = mActivity.getSupportFragmentManager().beginTransaction();
 	        ft.disallowAddToBackStack();
@@ -93,7 +92,6 @@ public class SherlockActionBarTab extends BaseTab implements ActionBar.TabListen
 		
 	}
 
-	@Override
 	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
 		  ft = mActivity.getSupportFragmentManager().beginTransaction();
 	        ft.disallowAddToBackStack();
@@ -102,7 +100,6 @@ public class SherlockActionBarTab extends BaseTab implements ActionBar.TabListen
 		
 	}
 
-	@Override
 	public void onTabReselected(Tab tab, FragmentTransaction ft) {
 		  ft = mActivity.getSupportFragmentManager().beginTransaction();
 	        ft.disallowAddToBackStack();

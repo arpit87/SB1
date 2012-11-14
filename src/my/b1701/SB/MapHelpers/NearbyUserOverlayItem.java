@@ -10,9 +10,9 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 
 	public NearbyUserOverlayItem(GeoPoint arg0, String arg1, String arg2) {
 		super(arg0, arg1, arg2);
-		Drawable icon= Platform.getInstance().getContext().getResources().getDrawable(R.drawable.green_marker);
+		/*Drawable icon= Platform.getInstance().getContext().getResources().getDrawable(R.drawable.green_marker);
 		icon.setBounds(0, 0, icon.getIntrinsicHeight(), icon.getIntrinsicWidth());
-		this.mMarker = icon;
+		this.mMarker = icon;*/
 	}
 	
 

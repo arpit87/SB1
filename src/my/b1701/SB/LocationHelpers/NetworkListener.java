@@ -1,6 +1,6 @@
 package my.b1701.SB.LocationHelpers;
 
-import my.b1701.SB.ActivityHandlers.MapActivityHandler;
+import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
 import my.b1701.SB.Users.ThisUser;
 import android.location.Location;
 import android.location.LocationListener;
@@ -64,10 +64,10 @@ public class NetworkListener implements LocationListener{
 			//window continuing
 			//Log.i(TAG,"thiswindowbest location:"+thisWindowBestLocation.toString());
 			thisWindowBestLocation = location;		
-			if(MapActivityHandler.getInstance().isUpdateMapRealTime())
+			if(MapListActivityHandler.getInstance().isUpdateMapRealTime())
 			{
 				ThisUser.getInstance().setLocation(new SBLocation(location));
-				MapActivityHandler.getInstance().updateThisUserMapOverlay();				
+				MapListActivityHandler.getInstance().updateThisUserMapOverlay();				
 			}
 				
 			Log.i(TAG,"thiswindowbest location:"+thisWindowBestLocation.toString());

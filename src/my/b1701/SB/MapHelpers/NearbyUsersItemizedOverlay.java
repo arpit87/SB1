@@ -6,7 +6,7 @@ import java.util.List;
 
 import my.b1701.SB.R;
 import my.b1701.SB.Activities.LoginActivity;
-import my.b1701.SB.ActivityHandlers.MapActivityHandler;
+import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
 import my.b1701.SB.FacebookHelpers.FacebookConnector;
 import my.b1701.SB.HelperClasses.Constants;
 import my.b1701.SB.HelperClasses.ThisUserConfig;
@@ -20,7 +20,7 @@ public class NearbyUsersItemizedOverlay extends BaseItemizedOverlay{
 	ArrayList<NearbyUserOverlayItem> userList=new ArrayList<NearbyUserOverlayItem>();
 	
 	public NearbyUsersItemizedOverlay() {
-		super(Platform.getInstance().getContext().getResources().getDrawable(R.drawable.green_marker));
+		super(boundCenter(Platform.getInstance().getContext().getResources().getDrawable(R.drawable.new_green_marker)));
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -52,8 +52,8 @@ public class NearbyUsersItemizedOverlay extends BaseItemizedOverlay{
 		//on tap check if user logged in to fb
 		if(!ThisUserConfig.getInstance().getBool(ThisUserConfig.FBCHECK))
 		{
-			Intent fbLoginIntent = new Intent(MapActivityHandler.getInstance().getUnderlyingActivity(),LoginActivity.class);			
-			MapActivityHandler.getInstance().getUnderlyingActivity().startActivity(fbLoginIntent);
+			Intent fbLoginIntent = new Intent(MapListActivityHandler.getInstance().getUnderlyingActivity(),LoginActivity.class);			
+			MapListActivityHandler.getInstance().getUnderlyingActivity().startActivity(fbLoginIntent);
 		}
 		Toast toast = Toast.makeText(Platform.getInstance().getContext(), "FB acces tok:"+ThisUserConfig.getInstance().getString(ThisUserConfig.FBACCESSTOKEN), Toast.LENGTH_SHORT);       
 		toast.show();

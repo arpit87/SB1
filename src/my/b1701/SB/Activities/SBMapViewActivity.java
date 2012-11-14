@@ -1,7 +1,7 @@
 package my.b1701.SB.Activities;
 
 import my.b1701.SB.R;
-import my.b1701.SB.ActivityHandlers.MapActivityHandler;
+import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
 import my.b1701.SB.FacebookHelpers.FacebookConnector;
 import my.b1701.SB.HelperClasses.Constants;
 import my.b1701.SB.HelperClasses.ThisAppConfig;
@@ -22,7 +22,7 @@ import com.google.android.maps.MapView;
 public class SBMapViewActivity extends MapActivity { 	
 		
 	private static final String TAG = "SBMapViewActivity";	
-	private MapActivityHandler mapActivityHandler;
+	private MapListActivityHandler mapListActivityHandler;
 	private MapView mymapview;	
 	private boolean mapInitialized = false;
 	
@@ -38,11 +38,11 @@ public class SBMapViewActivity extends MapActivity {
         desLocationView = (EditText)findViewById(R.id.desLocation);    */
         mymapview = (MapView)findViewById(R.id.mapview);
         Log.i(TAG,"initialize handler");
-        MapActivityHandler.getInstance().setMapView(mymapview); 
-        MapActivityHandler.getInstance().setUnderlyingActivity(this);
+        MapListActivityHandler.getInstance().setMapView(mymapview); 
+        MapListActivityHandler.getInstance().setUnderlyingActivity(this);
         Log.i(TAG,"initialize mylocation");
         ToastTracker.showToast("Updating location..",1);
-        MapActivityHandler.getInstance().initMyLocation();
+        MapListActivityHandler.getInstance().initMyLocation();
     }     
    
     
@@ -66,15 +66,15 @@ public class SBMapViewActivity extends MapActivity {
     	super.onResume();
     	//we update realtime when on map activity
     	SBLocationManager.getInstance().StartListeningtoNetwork(); 
-    	MapActivityHandler.getInstance().setUpdateMapRealTime(true);
-    	if(MapActivityHandler.getInstance().isMapInitialized())
-    		MapActivityHandler.getInstance().updateThisUserMapOverlay();
+    	MapListActivityHandler.getInstance().setUpdateMapRealTime(true);
+    	if(MapListActivityHandler.getInstance().isMapInitialized())
+    		MapListActivityHandler.getInstance().updateThisUserMapOverlay();
     }
 
     //test
 	public void onPause(){
     	super.onPause();
-    	MapActivityHandler.getInstance().setUpdateMapRealTime(false);
+    	MapListActivityHandler.getInstance().setUpdateMapRealTime(false);
     	SBLocationManager.getInstance().StopListeningtoGPS();    	
         SBLocationManager.getInstance().StopListeningtoNetwork();
     	//mymapview.getOverlays().clear();
