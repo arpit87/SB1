@@ -12,4 +12,5 @@ public class UserAttributes {
 	public static String DSTLONGITUDE = "dst_longitude";
 	public static String  DESTINATION = "destination";
 	public static String  FBINFO = "fb_info";
+	public static String  IMAGEURL = "image_url";
 }

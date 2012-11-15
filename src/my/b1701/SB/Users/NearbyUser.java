@@ -16,6 +16,8 @@ public class NearbyUser {
 	private GeoPoint geoPoint;
 	private String userDestination;	
 	private UserFBInfo userFBInfo;
+	private String imageURL;
+	
 	 
 	public NearbyUser(JSONObject thisOtherUser)
 	{
@@ -25,7 +27,8 @@ public class NearbyUser {
 			srclongitude=thisOtherUser.getString(UserAttributes.SRCLONGITUDE);
 			userDestination=thisOtherUser.getString(UserAttributes.DESTINATION);
 			dstlatitude=thisOtherUser.getString(UserAttributes.DSTLATITUDE);
-			dstlongitude=thisOtherUser.getString(UserAttributes.DSTLONGITUDE);	
+			dstlongitude=thisOtherUser.getString(UserAttributes.DSTLONGITUDE);
+			imageURL=thisOtherUser.getString(UserAttributes.IMAGEURL);
 			//userFBInfo = new UserFBInfo(thisOtherUser.getJSONObject(UserAttributes.FBINFO));
 			geoPoint = GetUserGeopoint();
 		} catch (JSONException e) {
@@ -41,6 +44,16 @@ public class NearbyUser {
 		return userName;
 	}
 	
+	public String getImageURL() {
+		return imageURL;
+	}
+
+
+	public UserFBInfo getUserFBInfo() {
+		return userFBInfo;
+	}
+
+
 	public String getUserDestination()
 	{		
 		return userDestination;

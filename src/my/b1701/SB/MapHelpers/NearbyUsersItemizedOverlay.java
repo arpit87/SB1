@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.google.android.maps.MapView;
+
 import my.b1701.SB.R;
 import my.b1701.SB.Activities.LoginActivity;
 import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
@@ -18,11 +20,16 @@ import android.widget.Toast;
 public class NearbyUsersItemizedOverlay extends BaseItemizedOverlay{
 
 	ArrayList<NearbyUserOverlayItem> userList=new ArrayList<NearbyUserOverlayItem>();
+	private MapView mMapView = null;
+	
+	public NearbyUsersItemizedOverlay(MapView mapView) {
+		super(boundCenter(Platform.getInstance().getContext().getResources().getDrawable(R.drawable.new_green_marker)));
+		this.mMapView = mapView;
+	}
 	
 	public NearbyUsersItemizedOverlay() {
 		super(boundCenter(Platform.getInstance().getContext().getResources().getDrawable(R.drawable.new_green_marker)));
-		// TODO Auto-generated constructor stub
-	}
+		}
 	
 	@Override
 	public void addList(List<?> allUsers) {		
@@ -30,7 +37,7 @@ public class NearbyUsersItemizedOverlay extends BaseItemizedOverlay{
 		while(it.hasNext() )
 		{
 			NearbyUser u = it.next();
-			NearbyUserOverlayItem overlayItem=new NearbyUserOverlayItem(u.GetUserGeopoint(),u.getUsername(),u.getUserDestination());
+			NearbyUserOverlayItem overlayItem=new NearbyUserOverlayItem(u.GetUserGeopoint(),u.getImageURL(),u.getUserDestination(),mMapView);
 			userList.add(overlayItem);
 			populate();
 		}	    
@@ -50,6 +57,7 @@ public class NearbyUsersItemizedOverlay extends BaseItemizedOverlay{
 	protected boolean onTap(int i)
 	{
 		//on tap check if user logged in to fb
+		userList.get(i).ToggleView();
 		if(!ThisUserConfig.getInstance().getBool(ThisUserConfig.FBCHECK))
 		{
 			Intent fbLoginIntent = new Intent(MapListActivityHandler.getInstance().getUnderlyingActivity(),LoginActivity.class);			

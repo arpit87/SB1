@@ -20,9 +20,7 @@ public class ThisUserItemizedOverlay extends BaseItemizedOverlay{
 	ThisUserOverlayItem overlay;
 	private static final String TAG = "ThisUserItemizedOverlay";
 	private MapView mMapView = null;
-	private static LayoutInflater mInflater;
-	View viewOnMarker = null; 
-	ImageView picView = null;
+	
 	
 	public ThisUserItemizedOverlay(MapView mapView) {		
 		super(boundCenter(Platform.getInstance().getContext().getResources().getDrawable(R.drawable.new_red_marker)));
@@ -66,6 +64,14 @@ public class ThisUserItemizedOverlay extends BaseItemizedOverlay{
 		Log.i(TAG,"adding new this overlay");
 		userList.add(overlay);
 		populate();
+	}
+	
+	protected boolean onTap(int i)
+	{
+		Log.i(TAG,"toggling this user view");
+		overlay.ToggleView();
+		return true;
+		
 	}
 	
 	

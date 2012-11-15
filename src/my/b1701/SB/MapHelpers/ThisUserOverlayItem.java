@@ -18,7 +18,6 @@ import com.google.android.maps.MapView;
 public class ThisUserOverlayItem extends BaseOverlayItem{
 
 	private static String TAG = "ThisUserOverlayItem";
-	View thisUserViewWithFrame;	
 	Drawable icon;
 	private MapView mMapView = null;
 	private static LayoutInflater mInflater;
@@ -26,6 +25,7 @@ public class ThisUserOverlayItem extends BaseOverlayItem{
 	ImageView picView = null;
 	GeoPoint mGeoPoint = null;
 	String mImageURL= null;
+	boolean isVisible = false; 
 	
 	public ThisUserOverlayItem(GeoPoint geoPoint, String imageURL, String arg2,MapView mapView) {
 		super(geoPoint, imageURL, arg2);	
@@ -86,11 +86,13 @@ public class ThisUserOverlayItem extends BaseOverlayItem{
 			}
 			mMapView.addView(viewOnMarker,params);
 			viewOnMarker.setVisibility(View.VISIBLE);
+			isVisible = true;
 		}
 		else
 		{			
 			viewOnMarker.setLayoutParams(params);	
 			viewOnMarker.setVisibility(View.VISIBLE);
+			isVisible = true;
 		
 		}
 		
@@ -99,9 +101,35 @@ public class ThisUserOverlayItem extends BaseOverlayItem{
 	public void removeView()
 	{
 		if(viewOnMarker!=null)
+		{
 			viewOnMarker.setVisibility(View.GONE);
+			isVisible = false;
+		}
 		else
 			Log.i(TAG,"trying to remove null thisUserMapView");
 	}	
+	
+	public void ToggleView()
+	{
+		if(isVisible)
+			removeView();
+		else
+			showView();
+	}
+	
+	public void showView()
+	{
+		if(viewOnMarker!=null)
+		{
+			viewOnMarker.setVisibility(View.VISIBLE);
+			isVisible = true;
+		}
+		else
+		{
+			createAndDisplayView();
+			Log.i(TAG,"trying to show null thisUserMapView");
+		}
+	}
+	
 
 }
