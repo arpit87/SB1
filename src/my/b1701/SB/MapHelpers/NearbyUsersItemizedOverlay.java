@@ -4,13 +4,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.google.android.maps.MapView;
-
 import my.b1701.SB.R;
 import my.b1701.SB.Activities.LoginActivity;
 import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
-import my.b1701.SB.FacebookHelpers.FacebookConnector;
-import my.b1701.SB.HelperClasses.Constants;
+import my.b1701.SB.CustomViewsAndListeners.SBMapView;
 import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.Users.NearbyUser;
@@ -20,9 +17,9 @@ import android.widget.Toast;
 public class NearbyUsersItemizedOverlay extends BaseItemizedOverlay{
 
 	ArrayList<NearbyUserOverlayItem> userList=new ArrayList<NearbyUserOverlayItem>();
-	private MapView mMapView = null;
+	private SBMapView mMapView = null;
 	
-	public NearbyUsersItemizedOverlay(MapView mapView) {
+	public NearbyUsersItemizedOverlay(SBMapView mapView) {
 		super(boundCenter(Platform.getInstance().getContext().getResources().getDrawable(R.drawable.new_green_marker)));
 		this.mMapView = mapView;
 	}
@@ -37,7 +34,7 @@ public class NearbyUsersItemizedOverlay extends BaseItemizedOverlay{
 		while(it.hasNext() )
 		{
 			NearbyUser u = it.next();
-			NearbyUserOverlayItem overlayItem=new NearbyUserOverlayItem(u.GetUserGeopoint(),u.getImageURL(),u.getUserDestination(),mMapView);
+			NearbyUserOverlayItem overlayItem=new NearbyUserOverlayItem(u.getUserLocInfo().getGeoPoint(),u.getUserFBInfo().getImageURL(),u.getUserLocInfo().getUserDestination(),mMapView);
 			userList.add(overlayItem);
 			populate();
 		}	    
@@ -54,10 +51,34 @@ public class NearbyUsersItemizedOverlay extends BaseItemizedOverlay{
 		return userList.size();
 	}
 
+	public void removeAllSmallViews()
+	{
+		if(size()==0)
+			return;
+		Iterator<NearbyUserOverlayItem> it = (Iterator<NearbyUserOverlayItem>) userList.iterator();
+		while(it.hasNext() )
+		{
+			it.next().removeSmallView();			
+		}
+	}
+	
+	public void removeExpandedShowSmallViews()
+	{
+		if(size()==0)
+			return;
+		Iterator<NearbyUserOverlayItem> it = (Iterator<NearbyUserOverlayItem>) userList.iterator();
+		while(it.hasNext() )
+		{
+			it.next().showSmallIfExpanded();			
+		}
+	}
+	
+	
+	
 	protected boolean onTap(int i)
 	{
 		//on tap check if user logged in to fb
-		userList.get(i).ToggleView();
+		userList.get(i).toggleSmallView();
 		if(!ThisUserConfig.getInstance().getBool(ThisUserConfig.FBCHECK))
 		{
 			Intent fbLoginIntent = new Intent(MapListActivityHandler.getInstance().getUnderlyingActivity(),LoginActivity.class);			

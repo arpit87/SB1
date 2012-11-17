@@ -1,8 +1,6 @@
 package my.b1701.SB.MapHelpers;
 
-import com.google.android.maps.MapView;
-
-import android.graphics.drawable.Drawable;
+import my.b1701.SB.CustomViewsAndListeners.SBMapView;
 
 
 public abstract class ItemizedOverlayFactory {
@@ -11,7 +9,7 @@ public abstract class ItemizedOverlayFactory {
 	
 	public abstract BaseItemizedOverlay createItemizedOverlay();
 
-	public BaseItemizedOverlay createItemizedOverlay(MapView mapView) {
+	public BaseItemizedOverlay createItemizedOverlay(SBMapView mapView) {
 		// TODO Auto-generated method stub
 		return null;
 	}

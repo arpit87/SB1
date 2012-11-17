@@ -24,9 +24,17 @@ public abstract class BaseItemizedOverlay extends ItemizedOverlay<BaseOverlayIte
 	
 	public  void addThisUser(){}
 
-	public  void updateThisUser(){}
+	public  void updateThisUser(){}	
 	
-	private void createAndDisplayView(){}
+	public void removeAllSmallViews(){}
+
+	public void removeAllExpandedViews() {
+				
+	}
+
+	public void removeExpandedShowSmallViews() {
+				
+	}
 	
 
 }

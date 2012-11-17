@@ -4,43 +4,53 @@ import my.b1701.SB.R;
 import my.b1701.SB.HelperClasses.SBImageLoader;
 import my.b1701.SB.HelperClasses.Store;
 import my.b1701.SB.HelperClasses.ThisUserConfig;
+import my.b1701.SB.HelperClasses.ToastTracker;
 import my.b1701.SB.Platform.Platform;
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapView;
 
+@SuppressLint("ParserError")
 public class NearbyUserOverlayItem extends BaseOverlayItem{
 
 	private static String TAG = "NearbyUserOverlayItem";
-	
-	private MapView mMapView = null;
-	private static LayoutInflater mInflater;
-	View viewOnMarker = null; 
-	ImageView picView = null;
+
+	protected MapView mMapView = null;
+	protected static LayoutInflater mInflater = (LayoutInflater) Platform.getInstance().getContext().getSystemService(Platform.getInstance().getContext().LAYOUT_INFLATER_SERVICE);
+	View viewOnMarkerSmall = null; 
+	View viewOnMarkerExpanded = null;
+	ImageView picViewSmall = null;
+	ImageView picViewExpanded = null;
 	GeoPoint mGeoPoint = null;
 	String mImageURL= null;
-	boolean isVisible = false; 
-	
-	public NearbyUserOverlayItem(GeoPoint geoPoint, String imageURL, String arg2,MapView mapView) {
-		super(geoPoint, imageURL, arg2);
+	String mUserID= null;
+	boolean isVisibleSmall = false;
+	boolean isVisibleExpanded = false;
+		
+	public NearbyUserOverlayItem(GeoPoint geoPoint, String imageURL, String userID ,MapView mapView) {
+		super(geoPoint, imageURL, userID);
 		this.mGeoPoint = geoPoint;		
 		this.mMapView = mapView;
 		this.mImageURL = imageURL;
-		createAndDisplayView();
+		this.mUserID = userID;
+		createAndDisplaySmallView();
 		/*Drawable icon= Platform.getInstance().getContext().getResources().getDrawable(R.drawable.green_marker);
 		icon.setBounds(0, 0, icon.getIntrinsicHeight(), icon.getIntrinsicWidth());
 		this.mMarker = icon;*/
 	}
 	
-	private void createAndDisplayView()
+	protected void createAndDisplaySmallView()
 	{
 		if(mMapView == null)
 			return;
@@ -49,60 +59,146 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, mGeoPoint,
 				MapView.LayoutParams.BOTTOM_CENTER);
 		params.mode = MapView.LayoutParams.MODE_MAP;
-		if(viewOnMarker==null)
-		{
-			mInflater = (LayoutInflater) Platform.getInstance().getContext().getSystemService(Platform.getInstance().getContext().LAYOUT_INFLATER_SERVICE);
-			viewOnMarker = mInflater.inflate(R.layout.map_frame_layout, null);
-			picView = (ImageView)viewOnMarker.findViewById(R.id.userpic);	
+		if(viewOnMarkerSmall==null)
+		{			
+			viewOnMarkerSmall = mInflater.inflate(R.layout.map_frame_layout, null);
+			picViewSmall = (ImageView)viewOnMarkerSmall.findViewById(R.id.userpic);	
+			
+			viewOnMarkerSmall.setOnTouchListener(new NearbyUserOnTouchListener());
 			
 			//SBImageLoader.getInstance().displayImageElseStub(mImageURL, picView, R.drawable.userpicicon);
-			SBImageLoader.getInstance().displayImage(mImageURL, picView);
+			SBImageLoader.getInstance().displayImage(mImageURL, picViewSmall);
 			
-			mMapView.addView(viewOnMarker,params);
-			viewOnMarker.setVisibility(View.VISIBLE);
-			isVisible = true;
+			mMapView.addView(viewOnMarkerSmall,params);
+			viewOnMarkerSmall.setVisibility(View.VISIBLE);
+			isVisibleSmall = true;
 		}
 		else
 		{			
-			viewOnMarker.setLayoutParams(params);	
-			viewOnMarker.setVisibility(View.VISIBLE);
-			isVisible = true;
+			viewOnMarkerSmall.setLayoutParams(params);	
+			viewOnMarkerSmall.setVisibility(View.VISIBLE);
+			isVisibleSmall = true;
 		
 		}
 		
 	}
 	
-	public void removeView()
+	protected void createAndDisplayExpandedView()
 	{
-		if(viewOnMarker!=null)
-		{
-			viewOnMarker.setVisibility(View.GONE);
-			isVisible = false;
+		if(mMapView == null)
+			return;
+		
+		MapView.LayoutParams params = new MapView.LayoutParams(
+				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, mGeoPoint,
+				MapView.LayoutParams.BOTTOM_CENTER);
+		params.mode = MapView.LayoutParams.MODE_MAP;
+		if(viewOnMarkerExpanded==null)
+		{			
+			viewOnMarkerExpanded = mInflater.inflate(R.layout.map_expanded_layout, null);
+			picViewExpanded = (ImageView)viewOnMarkerExpanded.findViewById(R.id.expanded_pic);						
+			
+			//SBImageLoader.getInstance().displayImageElseStub(mImageURL, picView, R.drawable.userpicicon);
+			SBImageLoader.getInstance().displayImage(mImageURL, picViewExpanded);
+			
+			removeSmallView();
+			
+			mMapView.addView(viewOnMarkerExpanded,params);
+			viewOnMarkerExpanded.setVisibility(View.VISIBLE);
+			isVisibleExpanded = true;
 		}
 		else
-			Log.i(TAG,"trying to remove null thisUserMapView");
+		{			
+			viewOnMarkerExpanded.setLayoutParams(params);	
+			viewOnMarkerExpanded.setVisibility(View.VISIBLE);
+			isVisibleExpanded = true;		
+		}
+		
+	}
+	
+	public void removeExpandedView()
+	{
+		if(viewOnMarkerExpanded!=null && isVisibleExpanded == true)
+		{
+			viewOnMarkerExpanded.setVisibility(View.GONE);
+			isVisibleExpanded = false;
+		}
+		else
+			Log.i(TAG,"trying to remove expanded null View");
 	}	
 	
-	public void ToggleView()
+	public void removeSmallView()
 	{
-		if(isVisible)
-			removeView();
+		if(viewOnMarkerSmall!=null && isVisibleSmall == true)
+		{
+			viewOnMarkerSmall.setVisibility(View.GONE);
+			isVisibleSmall = false;
+		}
 		else
-			showView();
+			Log.i(TAG,"trying to remove null View");
+	}	
+	
+	public void toggleSmallView()
+	{
+		if(isVisibleSmall)
+			removeSmallView();
+		else
+			showSmallView();
 	}
 	
-	public void showView()
+	public void showSmallIfExpanded()
 	{
-		if(viewOnMarker!=null)
+		if(isVisibleExpanded)
 		{
-			viewOnMarker.setVisibility(View.VISIBLE);
-			isVisible = true;
+			removeExpandedView();
+			showSmallView();
+		}		
+	}
+	
+	public void showExpandedIfSmall()
+	{
+		if(isVisibleSmall)
+		{
+			removeSmallView();
+			showExpandedView();
+		}		
+	}
+	
+	public void showSmallView()
+	{
+		if(viewOnMarkerSmall!=null)
+		{			
+			viewOnMarkerSmall.setVisibility(View.VISIBLE);
+			isVisibleSmall = true;
 		}
 		else
 		{
-			createAndDisplayView();
-			Log.i(TAG,"trying to show null thisUserMapView");
+			createAndDisplaySmallView();			
 		}
+	}
+	
+	public void showExpandedView()
+	{
+		if(viewOnMarkerExpanded!=null)
+		{
+			viewOnMarkerExpanded.setVisibility(View.VISIBLE);
+			isVisibleExpanded = true;
+		}
+		else
+		{
+			createAndDisplayExpandedView();			
+		}
+	}
+
+	
+	public class NearbyUserOnTouchListener implements OnTouchListener
+	{		
+		@Override
+		public boolean onTouch(View v, MotionEvent event) {
+			removeSmallView();
+			showExpandedView();
+			return true;
+		}
+		
 	}
 	
 

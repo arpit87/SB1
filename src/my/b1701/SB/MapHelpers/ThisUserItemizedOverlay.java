@@ -3,26 +3,20 @@ package my.b1701.SB.MapHelpers;
 import java.util.ArrayList;
 
 import my.b1701.SB.R;
+import my.b1701.SB.CustomViewsAndListeners.SBMapView;
 import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.Users.ThisUser;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.ImageView;
-
-import com.google.android.maps.GeoPoint;
-import com.google.android.maps.MapView;
 
 public class ThisUserItemizedOverlay extends BaseItemizedOverlay{
 
 	ArrayList<ThisUserOverlayItem> userList=new ArrayList<ThisUserOverlayItem>();
 	ThisUserOverlayItem overlay;
 	private static final String TAG = "ThisUserItemizedOverlay";
-	private MapView mMapView = null;
+	private SBMapView mMapView = null;
 	
 	
-	public ThisUserItemizedOverlay(MapView mapView) {		
+	public ThisUserItemizedOverlay(SBMapView mapView) {		
 		super(boundCenter(Platform.getInstance().getContext().getResources().getDrawable(R.drawable.new_red_marker)));
 		this.mMapView = mapView;
 		// TODO Auto-generated constructor stub

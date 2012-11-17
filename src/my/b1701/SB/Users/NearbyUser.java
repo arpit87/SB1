@@ -8,70 +8,52 @@ import com.google.android.maps.GeoPoint;
 public class NearbyUser {
 	
 		 
-	private String userName;	
-	private String srclatitude;
-	private String srclongitude;
-	private String dstlatitude;
-	private String dstlongitude;
-	private GeoPoint geoPoint;
-	private String userDestination;	
-	private UserFBInfo userFBInfo;
-	private String imageURL;
+	private UserLocInfo userLocInfo;
+	private UserFBInfo userFBInfo;	
 	
 	 
-	public NearbyUser(JSONObject thisOtherUser)
-	{
-		try {
-			userName=thisOtherUser.getString(UserAttributes.USERID);
-			srclatitude=thisOtherUser.getString(UserAttributes.SRCLATITUDE);
-			srclongitude=thisOtherUser.getString(UserAttributes.SRCLONGITUDE);
-			userDestination=thisOtherUser.getString(UserAttributes.DESTINATION);
-			dstlatitude=thisOtherUser.getString(UserAttributes.DSTLATITUDE);
-			dstlongitude=thisOtherUser.getString(UserAttributes.DSTLONGITUDE);
-			imageURL=thisOtherUser.getString(UserAttributes.IMAGEURL);
-			//userFBInfo = new UserFBInfo(thisOtherUser.getJSONObject(UserAttributes.FBINFO));
-			geoPoint = GetUserGeopoint();
-		} catch (JSONException e) {
-			// TODO Auto-generated catch bloOck
-			e.printStackTrace();
-		}
-		
+	public NearbyUser(JSONObject thisOtherUserJObj)
+	{			
+			getUserLocInfo(thisOtherUserJObj);
+			getUserFBInfo(thisOtherUserJObj);
 	}
 	
-		
-	public String getUsername()
-	{
-		return userName;
-	}
-	
-	public String getImageURL() {
-		return imageURL;
-	}
-
-
 	public UserFBInfo getUserFBInfo() {
 		return userFBInfo;
 	}
+	
+	public UserLocInfo getUserLocInfo() {
+		return userLocInfo;
+	}
+	
+	private void getUserLocInfo(JSONObject thisOtherUserJObj) {
+		
+		JSONObject userLocInfoJObj;
+		try {
+			userLocInfoJObj = thisOtherUserJObj.getJSONObject(UserAttributes.LOCINFO);
+			userLocInfo = new UserLocInfo(userLocInfoJObj);			
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+	}
+		
+	private void getUserFBInfo(JSONObject thisOtherUserJObj) {
+				
+		JSONObject userFBInfoJObj;
+		try {
+			userFBInfoJObj = thisOtherUserJObj.getJSONObject(UserAttributes.FBINFO);
+			userFBInfo = new UserFBInfo(userFBInfoJObj);			
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+	}
 
 
-	public String getUserDestination()
-	{		
-		return userDestination;
-	}
-	
-	public String getSrcLatitude()
-	{
-		return srclatitude;
-	}
-	
-	public String getSrcLongitude()
-	{
-		return srclongitude;
-	}
-	
-	public GeoPoint GetUserGeopoint()
-	{
-		return new GeoPoint((int)(Double.parseDouble(srclatitude)*1E6),(int)(Double.parseDouble(srclongitude)*1E6));
-	}
 	
 }

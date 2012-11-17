@@ -1,11 +1,11 @@
 package my.b1701.SB.MapHelpers;
 
-import com.google.android.maps.MapView;
+import my.b1701.SB.CustomViewsAndListeners.SBMapView;
 
 public class NearbyUsersItemizedOverlayFactory extends ItemizedOverlayFactory {
 
 	@Override
-	public BaseItemizedOverlay createItemizedOverlay(MapView mapView) {
+	public BaseItemizedOverlay createItemizedOverlay(SBMapView mapView) {
 		// TODO Auto-generated method stub
 		return new NearbyUsersItemizedOverlay(mapView);
 	}

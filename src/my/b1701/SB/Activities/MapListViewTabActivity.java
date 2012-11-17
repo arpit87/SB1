@@ -1,24 +1,26 @@
 package my.b1701.SB.Activities;
 
-import java.util.List;
-
 import my.b1701.SB.R;
 import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
+import my.b1701.SB.CustomViewsAndListeners.SBMapView;
 import my.b1701.SB.FacebookHelpers.FacebookConnector;
 import my.b1701.SB.Fragments.SBListFragment;
 import my.b1701.SB.Fragments.SBMapFragment;
-import my.b1701.SB.HelperClasses.Constants;
-import my.b1701.SB.HelperClasses.ProgressHandler;
+import my.b1701.SB.HelperClasses.SBImageLoader;
+import my.b1701.SB.HelperClasses.Store;
+import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.HelperClasses.ToastTracker;
 import my.b1701.SB.LocationHelpers.SBLocationManager;
+import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.TabHelpers.SherLockActionBarTabListener;
 import my.b1701.SB.TabHelpers.SherlockActionBarTab;
-import my.b1701.SB.Users.NearbyUser;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TabHost;
 
@@ -27,7 +29,6 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.google.android.maps.MapView;
 
 
 public class MapListViewTabActivity extends SherlockFragmentActivity {
@@ -38,8 +39,9 @@ public class MapListViewTabActivity extends SherlockFragmentActivity {
 	private boolean mapInitialized = false;
 	private ViewGroup mMapViewContainer;
 	private ViewGroup mListViewContainer;
-	private MapView mMapView;
+	private SBMapView mMapView;
 	private ListView mListView;
+	ImageView mListImageView;
 	private SherlockActionBarTab mapTab;
 	private SherlockActionBarTab listTab;
 	private TabHost tabHost;
@@ -48,9 +50,8 @@ public class MapListViewTabActivity extends SherlockFragmentActivity {
 	private SBListFragment listFrag;
 	
 	
-	
 	public Fragment getListFrag() {
-		return listFrag;
+		return listFrag;		
 	}
 	
 	public Fragment getMapFrag() {
@@ -132,7 +133,7 @@ public class MapListViewTabActivity extends SherlockFragmentActivity {
     	if(mMapViewContainer == null)
     	{
     		mMapViewContainer = (ViewGroup) getLayoutInflater().inflate(R.layout.map,null,false);
-    		mMapView = (MapView) mMapViewContainer.findViewById(R.id.map_view);
+    		mMapView = (SBMapView) mMapViewContainer.findViewById(R.id.map_view);
     		selfLocationButton = (ImageButton) mMapViewContainer.findViewById(R.id.my_location_button);
     		mMapView.getOverlays().clear();
     		MapListActivityHandler.getInstance().setMapView(mMapView);
@@ -156,6 +157,16 @@ public class MapListViewTabActivity extends SherlockFragmentActivity {
     	if(mListViewContainer == null)
     	{
     		mListViewContainer = (ViewGroup) getLayoutInflater().inflate(R.layout.nearbyuserlistview,null,false);
+    		mListImageView = (ImageView)mListViewContainer.findViewById(R.id.list_user_image);    		
+    		Bitmap bmp = Store.getInstance().getBitmapFromFile(ThisUserConfig.FBPICFILENAME);
+			if(bmp != null )
+			{
+				mListImageView.setImageBitmap(bmp);
+			}
+			else
+			{
+				mListImageView.setImageDrawable( Platform.getInstance().getContext().getResources().getDrawable(R.drawable.userpicicon));
+			}
     		mListView = (ListView) mListViewContainer.findViewById(R.id.list);    		
     		//mMapViewContainer.removeView(mMapView);
     	}  	

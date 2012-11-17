@@ -1,5 +1,96 @@
 <resources>
 
     <style name="AppTheme" parent="android:Theme.Light" />
+     <style name="text">
+        <item name="android:textSize">12.0sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:singleLine">true</item>
+    </style>
+    <style name="text.small" parent="@style/text">
+        <item name="android:textSize">11.0sp</item>
+    </style>
+    <style name="text.medium" parent="@style/text">
+        <item name="android:textSize">12.0sp</item>
+    </style>
+    <style name="text.large" parent="@style/text">
+        <item name="android:textSize">14.0sp</item>
+    </style>
+    <style name="text.xlarge" parent="@style/text">
+        <item name="android:textSize">16.0sp</item>
+    </style>
+    <style name="text.large.padding" parent="@style/text.large">
+        <item name="android:padding">8.0dip</item>
+    </style>
+    <style name="text.xlarge.padding" parent="@style/text.xlarge">
+        <item name="android:padding">8.0dip</item>
+    </style>
+    <style name="text.bold" parent="@style/text">
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="text.italic" parent="@style/text">
+        <item name="android:textStyle">italic</item>
+    </style>
+    <style name="text.large.bold" parent="@style/text.large">
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="text.xlarge.bold" parent="@style/text.xlarge">
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="text.yellow" parent="@style/text">
+        <item name="android:textColor">@color/yellow</item>
+    </style>
+    <style name="text.yellow.italic" parent="@style/text.yellow">
+        <item name="android:textStyle">italic</item>
+    </style>
+    <style name="text.blue" parent="@style/text">
+        <item name="android:textColor">@color/blue</item>
+    </style>
+    <style name="text.blue.bold" parent="@style/text.blue">
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="text.black" parent="@style/text">
+        <item name="android:textColor">@color/black</item>
+    </style>
+    <style name="text.black.bold" parent="@style/text.black">
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="text.black.smaller" parent="@style/text.black">
+        <item name="android:textSize">10.0sp</item>
+    </style>
+    <style name="text.black.small" parent="@style/text.black">
+        <item name="android:textSize">11.0sp</item>
+    </style>
+    <style name="text.black.medium" parent="@style/text.black">
+        <item name="android:textSize">12.0sp</item>
+    </style>
+    <style name="text.black.large" parent="@style/text.black">
+        <item name="android:textSize">14.0sp</item>
+    </style>
+    <style name="text.yellow.xlarge" parent="@style/text.yellow">
+        <item name="android:textSize">16.0sp</item>
+    </style>
+    <style name="text.black.xlarge" parent="@style/text.black">
+        <item name="android:textSize">16.0sp</item>
+    </style>
+    <style name="text.black.large.bold" parent="@style/text.black.large">
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="text.black.xlarge.bold" parent="@style/text.black.xlarge">
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="text.gray" parent="@style/text">
+        <item name="android:textColor">@color/gray</item>
+    </style>
+    <style name="text.gray.large" parent="@style/text.gray">
+        <item name="android:textSize">14.0sp</item>
+    </style>
+    <style name="text.gray.large.bold" parent="@style/text.gray.large">
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="text.cyan" parent="@style/text">
+        <item name="android:textColor">@color/cyan</item>
+    </style>
 
 </resources>

@@ -15,7 +15,7 @@
         android:id="@+id/nearbyuser_list_image"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:src="@drawable/user" />
+         />
   </LinearLayout>
  <!-- NearbyUser Name-->
     <TextView

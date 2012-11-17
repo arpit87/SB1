@@ -1,11 +1,11 @@
 package my.b1701.SB.MapHelpers;
 
 import my.b1701.SB.R;
+import my.b1701.SB.CustomViewsAndListeners.SBMapView;
 import my.b1701.SB.HelperClasses.Store;
 import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.Platform.Platform;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,16 +18,16 @@ import com.google.android.maps.MapView;
 public class ThisUserOverlayItem extends BaseOverlayItem{
 
 	private static String TAG = "ThisUserOverlayItem";
-	Drawable icon;
-	private MapView mMapView = null;
-	private static LayoutInflater mInflater;
+	
+	protected SBMapView mMapView = null;
+	protected static LayoutInflater mInflater;
 	View viewOnMarker = null; 
 	ImageView picView = null;
 	GeoPoint mGeoPoint = null;
-	String mImageURL= null;
-	boolean isVisible = false; 
+	String mImageURL= null;	
+	boolean isVisible = false;
 	
-	public ThisUserOverlayItem(GeoPoint geoPoint, String imageURL, String arg2,MapView mapView) {
+	public ThisUserOverlayItem(GeoPoint geoPoint, String imageURL, String arg2,SBMapView mapView) {
 		super(geoPoint, imageURL, arg2);	
 		this.mGeoPoint = geoPoint;		
 		this.mMapView = mapView;

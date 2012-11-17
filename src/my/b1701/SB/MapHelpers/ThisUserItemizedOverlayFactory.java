@@ -1,6 +1,6 @@
 package my.b1701.SB.MapHelpers;
 
-import com.google.android.maps.MapView;
+import my.b1701.SB.CustomViewsAndListeners.SBMapView;
 
 public class ThisUserItemizedOverlayFactory extends ItemizedOverlayFactory{
 
@@ -10,7 +10,7 @@ public class ThisUserItemizedOverlayFactory extends ItemizedOverlayFactory{
 	}
 	
 	@Override
-	public BaseItemizedOverlay createItemizedOverlay(MapView mapView) {		
+	public BaseItemizedOverlay createItemizedOverlay(SBMapView mapView) {		
 		return new ThisUserItemizedOverlay(mapView);
 	}
 

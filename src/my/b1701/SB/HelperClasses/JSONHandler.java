@@ -69,7 +69,7 @@ public class JSONHandler {
  
         // try parse the string to a JSON object
         try {
-            jObj = new JSONObject(json);
+            jObj = new JSONObject(json);            
         } catch (JSONException e) {
             //Log.e("JSON Parser", "Error parsing data " + e.toString());
         }
@@ -80,7 +80,8 @@ public class JSONHandler {
 	public static List<NearbyUser> GetNearbyUsersInfoFromJSONObject(JSONObject jObj)
 	{
 		ArrayList<NearbyUser> nearbyUsers = new ArrayList<NearbyUser>();
-		try {
+		try {			
+						
 			JSONArray users = jObj.getJSONArray("NearbyUsers");
 						
 			for(int i=0;i<users.length();i++)
