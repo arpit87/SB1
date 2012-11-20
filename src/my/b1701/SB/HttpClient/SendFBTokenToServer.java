@@ -36,7 +36,7 @@ public class SendFBTokenToServer extends SBHttpRequest{
 		jsonobj=new JSONObject();
 		httpQuery =  new HttpPost(url);
 		try {
-			jsonobj.put(UserAttributes.USERID, ThisUser.getInstance().getUniqueID());
+			jsonobj.put(UserAttributes.USERID, ThisUser.getInstance().getUserID());
 			jsonobj.put(ThisUserConfig.FBACCESSTOKEN, ThisUserConfig.getInstance().getString(ThisUserConfig.FBACCESSTOKEN));
 			jsonobj.put(ThisUserConfig.FBACCESSEXPIRES, ThisUserConfig.getInstance().getLong(ThisUserConfig.FBACCESSEXPIRES));		
 		} catch (JSONException e) {

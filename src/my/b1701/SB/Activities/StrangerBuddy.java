@@ -1,10 +1,7 @@
 package my.b1701.SB.Activities;
 
 
-import my.b1701.SB.HelperClasses.ThisAppInstallation;
-import my.b1701.SB.LocationHelpers.SBLocationManager;
 import my.b1701.SB.Platform.Platform;
-import my.b1701.SB.Users.ThisUser;
 import android.app.Application;
 import android.content.Context;
 import android.util.Log;
@@ -17,15 +14,20 @@ public class StrangerBuddy extends Application{
 		
 	@Override
 	public void onCreate()
-	{
-		Log.i(TAG,"App start");
+	{		
 		super.onCreate();
+		Log.i(TAG,"App start");
 		context = getApplicationContext();
 		platform=Platform.getInstance();
 		platform.initialize(context);
-		ThisUser.getInstance().setUniqueID(ThisAppInstallation.id(context));
+		//we check on userid which we wipe out on fb logout. User may login as another user
+		//for which we will provide different userid
+		
 		Log.i(TAG,"Platform initialized");
 		
 	}
+
+	
+	
 
 }

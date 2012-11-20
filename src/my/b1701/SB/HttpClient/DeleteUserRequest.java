@@ -16,7 +16,7 @@ public class DeleteUserRequest extends SBHttpRequest{
 	{
 		super();
 		queryMethod = QueryMethod.Post;
-		url = ServerConstants.SERVER_ADDRESS+ "\\"+ ThisUser.getInstance().getUniqueID();
+		url = ServerConstants.SERVER_ADDRESS+ "\\"+ ThisUser.getInstance().getUserID();
 	};
 	
 	public ServerResponseBase execute() {

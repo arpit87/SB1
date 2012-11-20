@@ -41,7 +41,7 @@ public class ThisUserItemizedOverlay extends BaseItemizedOverlay{
 	@Override
 	public void addThisUser() {
 		
-		overlay=new ThisUserOverlayItem(ThisUser.getInstance().getCurrentGeoPoint(), ThisUser.getInstance().getUniqueID(), "",mMapView);
+		overlay=new ThisUserOverlayItem(ThisUser.getInstance().getCurrentGeoPoint(), ThisUser.getInstance().getUserID(), "",mMapView);
 		userList.add(overlay);
 		populate();
 	}
@@ -54,7 +54,7 @@ public class ThisUserItemizedOverlay extends BaseItemizedOverlay{
 			overlay.removeView();
 			userList.remove(overlay);			
 		}
-		overlay=new ThisUserOverlayItem(ThisUser.getInstance().getCurrentGeoPoint(), ThisUser.getInstance().getUniqueID(), "",mMapView);
+		overlay=new ThisUserOverlayItem(ThisUser.getInstance().getCurrentGeoPoint(), ThisUser.getInstance().getUserID(), "",mMapView);
 		Log.i(TAG,"adding new this overlay");
 		userList.add(overlay);
 		populate();
