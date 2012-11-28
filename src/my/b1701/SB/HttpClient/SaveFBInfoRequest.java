@@ -3,17 +3,14 @@ package my.b1701.SB.HttpClient;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-import my.b1701.SB.HelperClasses.ThisAppConfig;
-import my.b1701.SB.Server.AddUserResponse;
+import my.b1701.SB.Server.SaveFBInfoResponse;
 import my.b1701.SB.Server.ServerConstants;
 import my.b1701.SB.Server.ServerResponseBase;
-import my.b1701.SB.Users.ThisUser;
 import my.b1701.SB.Users.UserAttributes;
 
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -24,51 +21,46 @@ import org.json.JSONObject;
 
 import android.util.Log;
 
-public class AddUserRequest extends SBHttpRequest{
+public class SaveFBInfoRequest extends SBHttpRequest{
 	
-	HttpPost httpQuery;
-	JSONObject jsonobj;	
-	String uuid;
-	HttpClient httpclient = new DefaultHttpClient();
-	AddUserResponse addUserResponse;
+	HttpPost httpQuery;	
+	UrlEncodedFormEntity formEntity;
+	HttpClient httpclient = new DefaultHttpClient();	
+	SaveFBInfoResponse saveFBInfoResponse;
+	JSONObject jsonobj;
 	String jsonStr;
 	
-	public AddUserRequest(String uuid)
-	{
+	public SaveFBInfoRequest(String user_id,String fbid,String fbToken)
+	{		
 		super();
-		this.uuid=uuid;		
-		queryMethod = QueryMethod.Get;	
-		url1 = ServerConstants.SERVER_ADDRESS+ServerConstants.USERSERVICE+"/addUser/";
-		jsonobj=new JSONObject();
-		httpQuery =  new HttpPost(url1);
-		
+		queryMethod = QueryMethod.Post;
+				
+		//prepare getnearby request		
+		url1 = ServerConstants.SERVER_ADDRESS + ServerConstants.USERDETAILSSERVICE + "/saveFBInfo/";
+		httpQuery = new HttpPost(url1);
+		jsonobj = new JSONObject();
 		try {
-			jsonobj.put(ThisAppConfig.APPUUID, uuid);		
+			jsonobj.put(UserAttributes.USERID, user_id);	
+			jsonobj.put(UserAttributes.FBID, fbid);
+			jsonobj.put(UserAttributes.FBTOKEN, fbToken);
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		
-		/*Uri.Builder builder = new Builder();
-		builder.scheme("http");
-		builder.authority(ServerConstants.SERVER_ADDRESS);
-		builder.path(ServerConstants.USERSERVICE+"/addUser/");
-		builder.appendQueryParameter(ThisAppConfig.APPUUID, uuid);
-		url1 = builder.build().toString();		
-		httpQuery =  new HttpGet(url1);*/
-		
-		StringEntity postEntityUser = null;
+		StringEntity postEntitygetNearbyUsers = null;
 		try {
-			postEntityUser = new StringEntity(jsonobj.toString());
+			postEntitygetNearbyUsers = new StringEntity(jsonobj.toString());
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		postEntityUser.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+		postEntitygetNearbyUsers.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
 		Log.d("debug", "calling server:"+jsonobj.toString());	
-		httpQuery.setEntity(postEntityUser);
+		httpQuery.setEntity(postEntitygetNearbyUsers);
+	
 	}
+	
 	
 	public ServerResponseBase execute() {
 			try {
@@ -80,6 +72,7 @@ public class AddUserRequest extends SBHttpRequest{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+
 			try {
 				jsonStr = responseHandler.handleResponse(response);
 			} catch (ClientProtocolException e) {
@@ -88,14 +81,15 @@ public class AddUserRequest extends SBHttpRequest{
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}   
-					
-			addUserResponse =	new AddUserResponse(response,jsonStr);
-			return addUserResponse;
+			} 	
+			
+		saveFBInfoResponse = new SaveFBInfoResponse(response,jsonStr);
+		return saveFBInfoResponse;
 		
 	}
 	
 	
 
 }
+
 

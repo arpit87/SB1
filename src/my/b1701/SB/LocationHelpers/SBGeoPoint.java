@@ -20,4 +20,14 @@ public class SBGeoPoint extends GeoPoint{
 		
 		
 	}
+	
+	public double getLatitude()
+	{
+		return lati/1e6;
+	}
+	
+	public double getLongitude()
+	{
+		return longi/1e6;
+	}
 }

@@ -9,16 +9,19 @@ import my.b1701.SB.HelperClasses.ProgressHandler;
 import my.b1701.SB.HelperClasses.Store;
 import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.HelperClasses.ToastTracker;
+import my.b1701.SB.HttpClient.SBHttpClient;
+import my.b1701.SB.HttpClient.SBHttpRequest;
+import my.b1701.SB.HttpClient.SaveFBInfoRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.facebook.android.AsyncFacebookRunner;
 import com.facebook.android.AsyncFacebookRunner.RequestListener;
@@ -98,13 +101,13 @@ public class FacebookConnector {
 	    	ThisUserConfig.getInstance().putString(ThisUserConfig.FBACCESSTOKEN, facebook.getAccessToken());
         	ThisUserConfig.getInstance().putLong(ThisUserConfig.FBACCESSEXPIRES, facebook.getAccessExpires()); 
         	ThisUserConfig.getInstance().putBool(ThisUserConfig.FBCHECK, true);
-        	ToastTracker.showToast("Authentication successsful");
-        	requestUserData();			
-			
+        	ToastTracker.showToast("Authentication successsful");        	
+        	requestUserData();
         	underlying_activity.finish();
-        }
+        }    
 	    
-	    public void onFacebookError(FacebookError error) {
+
+		public void onFacebookError(FacebookError error) {
 	    	ToastTracker.showToast("Authentication with Facebook failed!");
 	    	underlying_activity.finish();
 	    }
@@ -118,8 +121,14 @@ public class FacebookConnector {
 	    }
 	}
 
+    private void sendAddFBInfoToServer() {
+    	//this should only be called from fbpostloginlistener to ensure we have fbid
+    	Log.i(TAG,"in sendAddFBInfoToServer");
+		SBHttpRequest sendFBInfoRequest = new SaveFBInfoRequest(ThisUserConfig.getInstance().getString(ThisUserConfig.USERID), ThisUserConfig.getInstance().getString(ThisUserConfig.FBUID), ThisUserConfig.getInstance().getString(ThisUserConfig.FBACCESSTOKEN));
+		SBHttpClient.getInstance().executeRequest(sendFBInfoRequest);			
+	}
 		
-	public void requestUserData() {
+	private void requestUserData() {
         ToastTracker.showToast("Fetching user name, profile pic...");
         Bundle params = new Bundle();
         params.putString("fields", "name, picture");
@@ -134,14 +143,19 @@ public class FacebookConnector {
 	    public void onComplete(final String response, final Object state) {
 	        JSONObject jsonObject;
 	        try {
-	            jsonObject = new JSONObject(response);	            
-	            ThisUserConfig.getInstance().putString(ThisUserConfig.FBPICURL, JSONHandler.getInstance().getFBPicURLFromJSON(jsonObject));
-	            ThisUserConfig.getInstance().putString(ThisUserConfig.FBNAME, jsonObject.getString("name"));
-	            ThisUserConfig.getInstance().putString(ThisUserConfig.FBUID, jsonObject.getString("id"));
+	            jsonObject = new JSONObject(response);	  
+	            String picurl,name,id;
+	            id = jsonObject.getString("id");
+	            name  = jsonObject.getString("name");
+	            picurl = "http://graph.facebook.com/" + id + "/picture?type=small";
+	            ThisUserConfig.getInstance().putString(ThisUserConfig.FBPICURL, picurl);
+	            ThisUserConfig.getInstance().putString(ThisUserConfig.FBNAME, name);
+	            ThisUserConfig.getInstance().putString(ThisUserConfig.FBUID,id );
+	            sendAddFBInfoToServer();
 	            Log.i(TAG,"fbpicurl:"+jsonObject.getString("picture"));
 	            ToastTracker.showToast("fbpicurl:"+jsonObject.getString("picture"));
-	            Bitmap bmp = FBUtility.getBitmap(ThisUserConfig.getInstance().getString(ThisUserConfig.FBPICURL));
-	            Store.getInstance().saveBitmapToFile(bmp,ThisUserConfig.FBPICFILENAME);
+	            //Bitmap bmp = FBUtility.getBitmap(ThisUserConfig.getInstance().getString(ThisUserConfig.FBPICURL));
+	            //Store.getInstance().saveBitmapToFile(bmp,ThisUserConfig.FBPICFILENAME);
 	        } catch (JSONException e) {
 	            // TODO Auto-generated catch block
 	            e.printStackTrace();

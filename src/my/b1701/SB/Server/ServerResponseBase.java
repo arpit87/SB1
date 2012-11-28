@@ -1,6 +1,8 @@
 package my.b1701.SB.Server;
 
 import org.apache.http.HttpResponse;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public abstract class ServerResponseBase {
 	
@@ -16,11 +18,13 @@ public abstract class ServerResponseBase {
 		
 	}	
 	
-	protected ResponseStatus status;	
-	protected HttpResponse serverResponse;	
+	JSONObject jobj;
+	JSONObject body;
+	JSONObject error;
+	protected ResponseStatus status;			
 	
-	public ServerResponseBase(HttpResponse response) {
-		serverResponse = response;
+	public ServerResponseBase(HttpResponse response,String jobjStr) {
+		
 		switch(response.getStatusLine().getStatusCode()){
 		case 200:
 			status = ResponseStatus.HttpStatus200;
@@ -47,6 +51,13 @@ public abstract class ServerResponseBase {
 			status = ResponseStatus.HttpStatus422;
 			break;
 	}
+		
+		try {
+			jobj= new JSONObject(jobjStr);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 

@@ -52,7 +52,7 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 	
 	protected void createAndDisplaySmallView()
 	{
-		if(mMapView == null)
+		if(mMapView == null || mGeoPoint == null)
 			return;
 		
 		MapView.LayoutParams params = new MapView.LayoutParams(
@@ -66,8 +66,11 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 			
 			viewOnMarkerSmall.setOnTouchListener(new NearbyUserOnTouchListener());
 			
-			//SBImageLoader.getInstance().displayImageElseStub(mImageURL, picView, R.drawable.userpicicon);
-			SBImageLoader.getInstance().displayImage(mImageURL, picViewSmall);
+			if(mImageURL != "")
+				SBImageLoader.getInstance().displayImageElseStub(mImageURL, picViewSmall, R.drawable.userpicicon);
+			else
+				picViewSmall.setImageDrawable( Platform.getInstance().getContext().getResources().getDrawable(R.drawable.nearbyusericon));
+			//SBImageLoader.getInstance().displayImage(mImageURL, picViewSmall);
 			
 			mMapView.addView(viewOnMarkerSmall,params);
 			viewOnMarkerSmall.setVisibility(View.VISIBLE);
@@ -85,7 +88,7 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 	
 	protected void createAndDisplayExpandedView()
 	{
-		if(mMapView == null)
+		if(mMapView == null || mGeoPoint == null)
 			return;
 		
 		MapView.LayoutParams params = new MapView.LayoutParams(

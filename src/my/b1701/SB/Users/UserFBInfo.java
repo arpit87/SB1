@@ -9,28 +9,47 @@ import org.json.JSONObject;
 public class UserFBInfo {
 
 	JSONObject allInfo = null;
-	private String imageURL;
-	private String worksAt;
-	private String livesIn;
-	private String studiedAt;
-	private String hometown;
-	private String name;
+	private String imageURL = "";
+	private String worksAt = "";
+	private String livesIn = "";
+	private String studiedAt = "" ;
+	private String hometown = "";
+	private String name = "";	
 	
+	public UserFBInfo() {
+		// TODO Auto-generated constructor stub
+	}
 	
 	public UserFBInfo(JSONObject jsonObject) {
 		allInfo = jsonObject;
+				
 		try {
-			imageURL = allInfo.getString(UserAttributes.NAME);
-			imageURL = allInfo.getString(UserAttributes.IMAGEURL);
-			worksAt = allInfo.getString(UserAttributes.WORKSAT);
-			livesIn = allInfo.getString(UserAttributes.LIVESIN);
-			studiedAt = allInfo.getString(UserAttributes.STUDIEDAT);
-			hometown = allInfo.getString(UserAttributes.HOMETOWN);
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			name = allInfo.getString(UserAttributes.NAME);			
+		} catch (JSONException e) {	}
+		
+		try {
+			imageURL = allInfo.getString(UserAttributes.IMAGEURL);		
+		} catch (JSONException e) {	}
+		
+		try {
+			worksAt = allInfo.getString(UserAttributes.WORKSAT);			
+		} catch (JSONException e) {	}
+		
+		try {
+			livesIn = allInfo.getString(UserAttributes.LIVESIN);		
+		} catch (JSONException e) {	}
+		
+		try {
+			studiedAt = allInfo.getString(UserAttributes.STUDIEDAT);					
+		} catch (JSONException e) {	}
+		
+		try {
+			hometown = allInfo.getString(UserAttributes.HOMETOWN);			
+		} catch (JSONException e) {	}
 	}
+
+
+	
 
 
 	public String getName() {

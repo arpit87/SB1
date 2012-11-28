@@ -4,9 +4,8 @@ import my.b1701.SB.Server.ServerResponseBase;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.impl.client.BasicResponseHandler;
 
 public abstract class SBHttpRequest {
 	
@@ -18,12 +17,16 @@ public abstract class SBHttpRequest {
 	}
 	
 	QueryMethod queryMethod = null;
-	String url = null;
+	//we are allowing upto 3 consecutive syncd requests for now
+	String url1 = null;
+	String url2 = null;
+	String url3 = null;
 	HttpEntity queryEntity = null;	
-	HttpClient httpclient = new DefaultHttpClient();
-	HttpRequestBase httpQuery = null;
 	HttpResponse response = null;
 	
+	// Create a response handler
+    ResponseHandler<String> responseHandler = new BasicResponseHandler();
+    	
 	public ServerResponseBase execute() {
 		return null;}
 }

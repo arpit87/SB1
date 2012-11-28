@@ -28,7 +28,7 @@ public class ThisUser {
 	}
 	
 	public String getUserID() {
-		Log.i(TAG,"get user id");
+		Log.i(TAG,"get user id"+this.userID);
 		return this.userID;
 	}
 

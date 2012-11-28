@@ -7,33 +7,43 @@ import com.google.android.maps.GeoPoint;
 
 public class UserLocInfo {
 	
-	private String userName;	
-	private String srclatitude;
-	private String srclongitude;
-	private String dstlatitude;
-	private String dstlongitude;
-	private GeoPoint geoPoint;
-	private String userDestination;	
-	
+	private String userName = "";	
+	private String srclatitude = "";
+	private String srclongitude = "";
+	private String dstlatitude = "";
+	private String dstlongitude = "";
+	private GeoPoint geoPoint = null;
+	private String userDestination  = "";	
+		
 	
 	public UserLocInfo(JSONObject thisUserJobj)
 	{
-		JSONObject userLocInfo;
-		try {
-									
-			userName=thisUserJobj.getString(UserAttributes.USERID);
-			srclatitude=thisUserJobj.getString(UserAttributes.SRCLATITUDE);
-			srclongitude=thisUserJobj.getString(UserAttributes.SRCLONGITUDE);
-			userDestination=thisUserJobj.getString(UserAttributes.DESTINATION);
-			dstlatitude=thisUserJobj.getString(UserAttributes.DSTLATITUDE);
-			dstlongitude=thisUserJobj.getString(UserAttributes.DSTLONGITUDE);
-			getUserGeopoint();
-			
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+				
+		try {									
+			userName=thisUserJobj.getString(UserAttributes.USERID);			
+		} catch (JSONException e) {}
 		
+		try {									
+			srclatitude=thisUserJobj.getString(UserAttributes.SRCLATITUDE);			
+		} catch (JSONException e) {}
+		
+		try {									
+			srclongitude=thisUserJobj.getString(UserAttributes.SRCLONGITUDE);			
+		} catch (JSONException e) {}
+		
+		try {									
+			userDestination=thisUserJobj.getString(UserAttributes.DESTINATION);			
+		} catch (JSONException e) {}
+		
+		try {									
+			dstlatitude=thisUserJobj.getString(UserAttributes.DSTLATITUDE);			
+		} catch (JSONException e) {}
+		
+		try {									
+			dstlongitude=thisUserJobj.getString(UserAttributes.DSTLONGITUDE);			
+		} catch (JSONException e) {}
+		
+		getUserGeopoint();
 		
 	}
 
@@ -66,7 +76,8 @@ public class UserLocInfo {
 
 	private void getUserGeopoint()
 	{
-		geoPoint =  new GeoPoint((int)(Double.parseDouble(srclatitude)*1E6),(int)(Double.parseDouble(srclongitude)*1E6));
+		if(srclatitude != "" && srclongitude != "")
+			geoPoint =  new GeoPoint((int)(Double.parseDouble(srclatitude)*1E6),(int)(Double.parseDouble(srclongitude)*1E6));
 	}
 	
 	

@@ -14,6 +14,7 @@ import my.b1701.SB.LocationHelpers.SBLocationManager;
 import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.TabHelpers.SherLockActionBarTabListener;
 import my.b1701.SB.TabHelpers.SherlockActionBarTab;
+import my.b1701.SB.Users.ThisUser;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -74,6 +75,7 @@ public class MapListViewTabActivity extends SherlockFragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tab_navigation);
         ActionBar ab= getSupportActionBar();
+        ToastTracker.showToast("Your userid:"+ThisUser.getInstance().getUserID());
         ab.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         mapTab = new SherlockActionBarTab(this, "MapFragment");
         mapTab.setText(R.string.mapviewstr).setIcon(R.drawable.tab_map).setTabListener(new SherLockActionBarTabListener(this, SBMapFragment.class));
@@ -158,15 +160,16 @@ public class MapListViewTabActivity extends SherlockFragmentActivity {
     	{
     		mListViewContainer = (ViewGroup) getLayoutInflater().inflate(R.layout.nearbyuserlistview,null,false);
     		mListImageView = (ImageView)mListViewContainer.findViewById(R.id.list_user_image);    		
-    		Bitmap bmp = Store.getInstance().getBitmapFromFile(ThisUserConfig.FBPICFILENAME);
-			if(bmp != null )
+    		String fbPicURL = ThisUserConfig.getInstance().getString(ThisUserConfig.FBPICURL);
+			if(fbPicURL != "")
 			{
-				mListImageView.setImageBitmap(bmp);
+				SBImageLoader.getInstance().displayImageElseStub(fbPicURL, mListImageView, R.drawable.userpicicon);
 			}
 			else
 			{
 				mListImageView.setImageDrawable( Platform.getInstance().getContext().getResources().getDrawable(R.drawable.userpicicon));
 			}
+			
     		mListView = (ListView) mListViewContainer.findViewById(R.id.list);    		
     		//mMapViewContainer.removeView(mMapView);
     	}  	

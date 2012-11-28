@@ -42,7 +42,7 @@ public class StartStrangerBuddyActivity extends Activity {
 			firstRun();		
 		else	
 		{
-			ThisUser.getInstance().setUserID(ThisUserConfig.getInstance().getString(ThisUserConfig.USERID));        
+			ThisUser.getInstance().setUserID(ThisUserConfig.getInstance().getString(ThisUserConfig.USERID));			
 	        final Intent showSBMapViewActivity = new Intent(this, MapListViewTabActivity.class);
 	        showSBMapViewActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 	        Platform.getInstance().getHandler().postDelayed(new Runnable() {
@@ -50,8 +50,7 @@ public class StartStrangerBuddyActivity extends Activity {
 	              startActivity(showSBMapViewActivity);
 	          }
 	        }, (1000 * 2)); 
-		}
-        
+		}        
     }
     
     private void firstRun() {
@@ -59,7 +58,7 @@ public class StartStrangerBuddyActivity extends Activity {
 		ToastTracker.showToast("Preparing for first run..");
 		String uuid = ThisAppInstallation.id(this.getBaseContext());
 		ThisAppConfig.getInstance().putString(ThisAppConfig.APPUUID,uuid);
-		SBHttpRequest request = new AddUserRequest(uuid);
+		SBHttpRequest request = new AddUserRequest(uuid);		
 		SBHttpClient.getInstance().executeRequest(request);
 		
 	}

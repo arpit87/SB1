@@ -47,7 +47,7 @@ public class NearbyUser {
 			userFBInfoJObj = thisOtherUserJObj.getJSONObject(UserAttributes.FBINFO);
 			userFBInfo = new UserFBInfo(userFBInfoJObj);			
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
+			userFBInfo = new UserFBInfo();
 			e.printStackTrace();
 		}
 		

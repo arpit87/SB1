@@ -2,6 +2,7 @@ package my.b1701.SB.MapHelpers;
 
 import my.b1701.SB.R;
 import my.b1701.SB.CustomViewsAndListeners.SBMapView;
+import my.b1701.SB.HelperClasses.SBImageLoader;
 import my.b1701.SB.HelperClasses.Store;
 import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.Platform.Platform;
@@ -26,6 +27,7 @@ public class ThisUserOverlayItem extends BaseOverlayItem{
 	GeoPoint mGeoPoint = null;
 	String mImageURL= null;	
 	boolean isVisible = false;
+	String fbPicURL = null;
 	
 	public ThisUserOverlayItem(GeoPoint geoPoint, String imageURL, String arg2,SBMapView mapView) {
 		super(geoPoint, imageURL, arg2);	
@@ -75,10 +77,10 @@ public class ThisUserOverlayItem extends BaseOverlayItem{
 			mInflater = (LayoutInflater) Platform.getInstance().getContext().getSystemService(Platform.getInstance().getContext().LAYOUT_INFLATER_SERVICE);
 			viewOnMarker = mInflater.inflate(R.layout.map_frame_layout, null);
 			picView = (ImageView)viewOnMarker.findViewById(R.id.userpic);	
-			Bitmap bmp = Store.getInstance().getBitmapFromFile(ThisUserConfig.FBPICFILENAME);
-			if(bmp != null )
+			fbPicURL = ThisUserConfig.getInstance().getString(ThisUserConfig.FBPICURL);
+			if(fbPicURL != "")
 			{
-				picView.setImageBitmap(bmp);
+				SBImageLoader.getInstance().displayImageElseStub(fbPicURL, picView, R.drawable.userpicicon);
 			}
 			else
 			{
