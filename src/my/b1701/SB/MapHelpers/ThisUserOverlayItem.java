@@ -75,7 +75,7 @@ public class ThisUserOverlayItem extends BaseOverlayItem{
 		if(viewOnMarker==null)
 		{
 			mInflater = (LayoutInflater) Platform.getInstance().getContext().getSystemService(Platform.getInstance().getContext().LAYOUT_INFLATER_SERVICE);
-			viewOnMarker = mInflater.inflate(R.layout.map_frame_layout, null);
+			viewOnMarker = mInflater.inflate(R.layout.map_frame_layout_red, null);
 			picView = (ImageView)viewOnMarker.findViewById(R.id.userpic);	
 			fbPicURL = ThisUserConfig.getInstance().getString(ThisUserConfig.FBPICURL);
 			if(fbPicURL != "")

@@ -20,12 +20,12 @@ public class NearbyUsersItemizedOverlay extends BaseItemizedOverlay{
 	private SBMapView mMapView = null;
 	
 	public NearbyUsersItemizedOverlay(SBMapView mapView) {
-		super(boundCenter(Platform.getInstance().getContext().getResources().getDrawable(R.drawable.new_green_marker)));
+		super(boundCenter(Platform.getInstance().getContext().getResources().getDrawable(R.drawable.my_dot_green)));
 		this.mMapView = mapView;
 	}
 	
 	public NearbyUsersItemizedOverlay() {
-		super(boundCenter(Platform.getInstance().getContext().getResources().getDrawable(R.drawable.new_green_marker)));
+		super(boundCenter(Platform.getInstance().getContext().getResources().getDrawable(R.drawable.my_dot_green)));
 		}
 	
 	@Override

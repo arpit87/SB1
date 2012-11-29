@@ -17,13 +17,13 @@ public class ThisUserItemizedOverlay extends BaseItemizedOverlay{
 	
 	
 	public ThisUserItemizedOverlay(SBMapView mapView) {		
-		super(boundCenter(Platform.getInstance().getContext().getResources().getDrawable(R.drawable.new_red_marker)));
+		super(boundCenter(Platform.getInstance().getContext().getResources().getDrawable(R.drawable.my_dot_red)));
 		this.mMapView = mapView;
 		// TODO Auto-generated constructor stub
 	}
 	
 	public ThisUserItemizedOverlay() {		
-		super(boundCenter(Platform.getInstance().getContext().getResources().getDrawable(R.drawable.new_red_marker)));		
+		super(boundCenter(Platform.getInstance().getContext().getResources().getDrawable(R.drawable.my_dot_red)));		
 	}
 
 	@Override

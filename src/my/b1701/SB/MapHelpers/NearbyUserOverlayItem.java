@@ -61,7 +61,7 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 		params.mode = MapView.LayoutParams.MODE_MAP;
 		if(viewOnMarkerSmall==null)
 		{			
-			viewOnMarkerSmall = mInflater.inflate(R.layout.map_frame_layout, null);
+			viewOnMarkerSmall = mInflater.inflate(R.layout.map_frame_layout_green, null);
 			picViewSmall = (ImageView)viewOnMarkerSmall.findViewById(R.id.userpic);	
 			
 			viewOnMarkerSmall.setOnTouchListener(new NearbyUserOnTouchListener());
