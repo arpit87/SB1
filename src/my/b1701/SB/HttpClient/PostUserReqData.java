@@ -33,7 +33,7 @@ public class PostUserReqData extends SBHttpRequest{
 		super();
 		queryMethod = QueryMethod.Post;
 		url1 = ServerConstants.SERVER_ADDRESS;
-		jsonobj=new JSONObject();
+		jsonobj=GetServerAuthenticatedJSON();
 		httpQuery =  new HttpPost(url1);
 		try {
 			jsonobj.put(UserAttributes.USERID, ThisUser.getInstance().getUserID());

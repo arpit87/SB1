@@ -15,6 +15,9 @@ public class ThisUserConfig extends ConfigBase{
 	public static final String FBNAME = "fb_name";
 	public static final String FBUID = "fb_user_uid";
 	public static final String FBPICFILENAME = "user_fb_pic.bmp";
+	public static final String PASSWORD = "password";
+	public static final String CHATPASSWORD = "password";
+	public static final String CHATUSERID = "chat_userid";
 	
 	
 	private ThisUserConfig(){super(Constants.USER_CONF_FILE);}

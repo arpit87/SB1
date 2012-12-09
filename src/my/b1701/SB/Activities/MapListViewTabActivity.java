@@ -7,7 +7,6 @@ import my.b1701.SB.FacebookHelpers.FacebookConnector;
 import my.b1701.SB.Fragments.SBListFragment;
 import my.b1701.SB.Fragments.SBMapFragment;
 import my.b1701.SB.HelperClasses.SBImageLoader;
-import my.b1701.SB.HelperClasses.Store;
 import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.HelperClasses.ToastTracker;
 import my.b1701.SB.LocationHelpers.SBLocationManager;
@@ -15,17 +14,18 @@ import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.TabHelpers.SherLockActionBarTabListener;
 import my.b1701.SB.TabHelpers.SherlockActionBarTab;
 import my.b1701.SB.Users.ThisUser;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TabHost;
 
 import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -49,6 +49,7 @@ public class MapListViewTabActivity extends SherlockFragmentActivity {
 	private ImageButton selfLocationButton;
 	private SBMapFragment mapFrag;
 	private SBListFragment listFrag;
+	ActionBar ab;
 	
 	
 	public Fragment getListFrag() {
@@ -74,15 +75,20 @@ public class MapListViewTabActivity extends SherlockFragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tab_navigation);
-        ActionBar ab= getSupportActionBar();
-        ToastTracker.showToast("Your userid:"+ThisUser.getInstance().getUserID());
-        ab.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        ab= getSupportActionBar();
+        ToastTracker.showToast("Your userid:"+ThisUser.getInstance().getUserID());        
+              
+        ab.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);       
+        ab.setDisplayHomeAsUpEnabled(false);
+        ab.setDisplayShowTitleEnabled(false);
+        ab.setIcon(R.drawable.hoponlogoforactionbar);
+        //ab.setDisplayUseLogoEnabled(true);
         mapTab = new SherlockActionBarTab(this, "MapFragment");
-        mapTab.setText(R.string.mapviewstr).setIcon(R.drawable.tab_map).setTabListener(new SherLockActionBarTabListener(this, SBMapFragment.class));
+        mapTab.setText(R.string.mapviewstr).setTabListener(new SherLockActionBarTabListener(this, SBMapFragment.class));
         ab.addTab((ActionBar.Tab)mapTab.getTab());       
 
         listTab = new SherlockActionBarTab(this, "ListFragment");
-        listTab.setText(R.string.listviewstr).setIcon(R.drawable.tab_chart).setTabListener(new SherLockActionBarTabListener(this, SBListFragment.class));
+        listTab.setText(R.string.listviewstr).setTabListener(new SherLockActionBarTabListener(this, SBListFragment.class));
         ab.addTab((ActionBar.Tab)listTab.getTab());
         
     }
@@ -115,7 +121,7 @@ public class MapListViewTabActivity extends SherlockFragmentActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {
-            
+    	
         switch (menuItem.getItemId())
         {
         case R.id.menu_search:
@@ -124,11 +130,18 @@ public class MapListViewTabActivity extends SherlockFragmentActivity {
         case R.id.menu_fb_logout:        	
         	FacebookConnector fbconnect = new FacebookConnector(this);
         	fbconnect.logoutFromFB();
-        	break;
+        	break;       	
+        
         }
 		
         return super.onOptionsItemSelected(menuItem);
     }
+    
+   /* public void showMainDropDownMenu(View v) {
+        PopupMenu popup = new PopupMenu(this, v);         
+        popup.getMenuInflater().inflate(R.menu.maindropdown,popup.getMenu());  
+        popup.show();
+    }*/
 
     public ViewGroup getThisMapContainerWithMapView()
     {

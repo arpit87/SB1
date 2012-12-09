@@ -37,7 +37,7 @@ public class AddThisUserSrcDstRequest extends SBHttpRequest{
 		super();
 		queryMethod = QueryMethod.Post;
 		url1 = ServerConstants.SERVER_ADDRESS + ServerConstants.REQUESTSERVICE + "/addRequest/";		
-		jsonobjAddRequest=new JSONObject();
+		jsonobjAddRequest=GetServerAuthenticatedJSON();
 		httpQueryAddRequest =  new HttpPost(url1);		
 		try {
 			jsonobjAddRequest.put(UserAttributes.USERID, ThisUser.getInstance().getUserID());	

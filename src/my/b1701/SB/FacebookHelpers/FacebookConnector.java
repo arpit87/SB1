@@ -9,6 +9,7 @@ import my.b1701.SB.HelperClasses.ProgressHandler;
 import my.b1701.SB.HelperClasses.Store;
 import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.HelperClasses.ToastTracker;
+import my.b1701.SB.HttpClient.ChatServiceCreateUser;
 import my.b1701.SB.HttpClient.SBHttpClient;
 import my.b1701.SB.HttpClient.SBHttpRequest;
 import my.b1701.SB.HttpClient.SaveFBInfoRequest;
@@ -101,7 +102,9 @@ public class FacebookConnector {
 	    	ThisUserConfig.getInstance().putString(ThisUserConfig.FBACCESSTOKEN, facebook.getAccessToken());
         	ThisUserConfig.getInstance().putLong(ThisUserConfig.FBACCESSEXPIRES, facebook.getAccessExpires()); 
         	ThisUserConfig.getInstance().putBool(ThisUserConfig.FBCHECK, true);
-        	ToastTracker.showToast("Authentication successsful");        	
+        	ToastTracker.showToast("Authentication successsful");   
+        	SBHttpRequest chatServiceAddUserRequest = new ChatServiceCreateUser();
+        	SBHttpClient.getInstance().executeRequest(chatServiceAddUserRequest);
         	requestUserData();
         	underlying_activity.finish();
         }    

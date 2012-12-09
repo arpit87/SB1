@@ -5,42 +5,85 @@ import org.json.JSONObject;
 
 import com.google.android.maps.GeoPoint;
 
+
+/**
+ * 
+ * @author arpit87
+ * this class parses the nearbyuser array that we get
+ */
 public class UserLocInfo {
 	
-	private String userName = "";	
+	private String userID = "";	
+	private String firstName = "";	
+	private String lastName = "";	
 	private String srclatitude = "";
 	private String srclongitude = "";
 	private String dstlatitude = "";
 	private String dstlongitude = "";
 	private GeoPoint geoPoint = null;
-	private String userDestination  = "";	
+	private String srcaddress = "";
+	private String srclocality = "";
+	private String dstaddress = "";
+	private String dstlocality = "";
+	
+	
+	private JSONObject srcLocjObj = null;
+	private JSONObject dstLocjObj = null;
 		
 	
 	public UserLocInfo(JSONObject thisUserJobj)
 	{
+		try {
+			srcLocjObj = thisUserJobj.getJSONObject(UserAttributes.SRCINFO);
+		} catch (JSONException e) {}
+		
+		try {
+			dstLocjObj = thisUserJobj.getJSONObject(UserAttributes.DSTINFO);
+		} catch (JSONException e) {}
 				
 		try {									
-			userName=thisUserJobj.getString(UserAttributes.USERID);			
+			userID=thisUserJobj.getString(UserAttributes.USERID);			
 		} catch (JSONException e) {}
 		
 		try {									
-			srclatitude=thisUserJobj.getString(UserAttributes.SRCLATITUDE);			
+			firstName=thisUserJobj.getString(UserAttributes.FIRSTNAME);			
 		} catch (JSONException e) {}
 		
 		try {									
-			srclongitude=thisUserJobj.getString(UserAttributes.SRCLONGITUDE);			
+			lastName=thisUserJobj.getString(UserAttributes.LASTNAME);			
 		} catch (JSONException e) {}
 		
 		try {									
-			userDestination=thisUserJobj.getString(UserAttributes.DESTINATION);			
+			srclatitude=srcLocjObj.getString(UserAttributes.SRCLATITUDE);			
 		} catch (JSONException e) {}
 		
 		try {									
-			dstlatitude=thisUserJobj.getString(UserAttributes.DSTLATITUDE);			
+			srclongitude=srcLocjObj.getString(UserAttributes.SRCLONGITUDE);			
 		} catch (JSONException e) {}
 		
 		try {									
-			dstlongitude=thisUserJobj.getString(UserAttributes.DSTLONGITUDE);			
+			srcaddress = srcLocjObj.getString(UserAttributes.SRCADDRESS);			
+		} catch (JSONException e) {}
+		
+		try {									
+			srclocality = srcLocjObj.getString(UserAttributes.SRCLOCALITY);			
+		} catch (JSONException e) {}
+			
+		
+		try {									
+			dstlatitude=dstLocjObj.getString(UserAttributes.DSTLATITUDE);			
+		} catch (JSONException e) {}
+		
+		try {									
+			dstlongitude=dstLocjObj.getString(UserAttributes.DSTLONGITUDE);			
+		} catch (JSONException e) {}
+		
+		try {									
+			dstaddress = srcLocjObj.getString(UserAttributes.DSTADDRESS);			
+		} catch (JSONException e) {}
+		
+		try {									
+			dstlocality = srcLocjObj.getString(UserAttributes.DSTLOCALITY);			
 		} catch (JSONException e) {}
 		
 		getUserGeopoint();
@@ -48,15 +91,20 @@ public class UserLocInfo {
 	}
 
 
-	public String getUsername()
+	public String getUserID()
 	{
-		return userName;
+		return userID;
 	}	
 
 
-	public String getUserDestination()
+	public String getUserDstLocality()
 	{		
-		return userDestination;
+		return dstlocality;
+	}
+	
+	public String getUserDstAddress()
+	{		
+		return dstaddress;
 	}
 	
 	public String getSrcLatitude()

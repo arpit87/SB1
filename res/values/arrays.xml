@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array
+        name="logo_drop_down_menu">
+        <item>Car pool</item>
+        <item>Logout</item>
+        <item>Exit</item>
+    </string-array>
+</resources>

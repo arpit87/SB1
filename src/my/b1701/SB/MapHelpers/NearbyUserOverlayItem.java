@@ -1,14 +1,10 @@
 package my.b1701.SB.MapHelpers;
 
 import my.b1701.SB.R;
+import my.b1701.SB.ChatClient.ChatWindow;
 import my.b1701.SB.HelperClasses.SBImageLoader;
-import my.b1701.SB.HelperClasses.Store;
-import my.b1701.SB.HelperClasses.ThisUserConfig;
-import my.b1701.SB.HelperClasses.ToastTracker;
 import my.b1701.SB.Platform.Platform;
-import android.annotation.SuppressLint;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -21,7 +17,6 @@ import android.widget.ImageView;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapView;
 
-@SuppressLint("ParserError")
 public class NearbyUserOverlayItem extends BaseOverlayItem{
 
 	private static String TAG = "NearbyUserOverlayItem";
@@ -32,18 +27,21 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 	View viewOnMarkerExpanded = null;
 	ImageView picViewSmall = null;
 	ImageView picViewExpanded = null;
+	ImageView chatIcon = null;
+	ImageView facebookIcon = null;
 	GeoPoint mGeoPoint = null;
 	String mImageURL= null;
-	String mUserID= null;
+	String mUserFBID= null;
 	boolean isVisibleSmall = false;
 	boolean isVisibleExpanded = false;
+	
 		
-	public NearbyUserOverlayItem(GeoPoint geoPoint, String imageURL, String userID ,MapView mapView) {
-		super(geoPoint, imageURL, userID);
+	public NearbyUserOverlayItem(GeoPoint geoPoint, String imageURL, String fbID ,MapView mapView) {
+		super(geoPoint, imageURL, fbID);
 		this.mGeoPoint = geoPoint;		
 		this.mMapView = mapView;
 		this.mImageURL = imageURL;
-		this.mUserID = userID;
+		this.mUserFBID = fbID;
 		createAndDisplaySmallView();
 		/*Drawable icon= Platform.getInstance().getContext().getResources().getDrawable(R.drawable.green_marker);
 		icon.setBounds(0, 0, icon.getIntrinsicHeight(), icon.getIntrinsicWidth());
@@ -96,14 +94,25 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 				MapView.LayoutParams.BOTTOM_CENTER);
 		params.mode = MapView.LayoutParams.MODE_MAP;
 		if(viewOnMarkerExpanded==null)
-		{			
+		{		
+			removeSmallView();
 			viewOnMarkerExpanded = mInflater.inflate(R.layout.map_expanded_layout, null);
 			picViewExpanded = (ImageView)viewOnMarkerExpanded.findViewById(R.id.expanded_pic);						
-			
+			chatIcon = (ImageView)viewOnMarkerExpanded.findViewById(R.id.chat_icon_view);
+			facebookIcon = (ImageView)viewOnMarkerExpanded.findViewById(R.id.fb_icon_view);
 			//SBImageLoader.getInstance().displayImageElseStub(mImageURL, picView, R.drawable.userpicicon);
 			SBImageLoader.getInstance().displayImage(mImageURL, picViewExpanded);
 			
-			removeSmallView();
+			chatIcon.setOnClickListener(new OnClickListener() {				
+				@Override
+				public void onClick(View chatIconView) {
+					Intent startChatIntent = new Intent(Platform.getInstance().getContext(),ChatWindow.class);					
+					startChatIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP
+				 			| Intent.FLAG_ACTIVITY_NEW_TASK);
+					startChatIntent.putExtra("participant", mUserFBID);
+					
+				}
+			});
 			
 			mMapView.addView(viewOnMarkerExpanded,params);
 			viewOnMarkerExpanded.setVisibility(View.VISIBLE);

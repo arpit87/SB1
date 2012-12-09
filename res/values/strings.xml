@@ -23,7 +23,8 @@
     <string name="MyLocationHintString">My Location</string>
     <string name="hintDestinationSearch">Enter destination</string>    
     <string name="arpit">arpit</string>
-    
+    <string name="AcceptContactRequest">%s has just added you to his/her buddy list.</string>
+	<string name="AcceptContactRequestFrom">Authorize %s to contact you.</string>
     <color name="black">#ff000000</color>
     <string name="sloganl1">Share,</string>
     <string name="sloganl2">right now,</string><string name="stranger">Stranger</string>
@@ -54,5 +55,9 @@
         <item quantity="one">%1$d result for \"%2$s\": </item>
         <item quantity="other">%1$d results for \"%2$s\": </item>
     </plurals>
+    <string name="chatserver">hopin.co.in</string>
+    <string name="NetworkConnectivityLost">Sorry, no network</string>
+    <string name="chatservice">chatservice</string>
+    <string name="sbchatservicedescription">chat service</string>
 
 </resources>

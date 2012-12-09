@@ -1,7 +1,11 @@
 package my.b1701.SB.Activities;
 
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import my.b1701.SB.R;
+import my.b1701.SB.ChatService.SBChatService;
 import my.b1701.SB.HelperClasses.ThisAppConfig;
 import my.b1701.SB.HelperClasses.ThisAppInstallation;
 import my.b1701.SB.HelperClasses.ThisUserConfig;
@@ -9,13 +13,14 @@ import my.b1701.SB.HelperClasses.ToastTracker;
 import my.b1701.SB.HttpClient.AddUserRequest;
 import my.b1701.SB.HttpClient.SBHttpClient;
 import my.b1701.SB.HttpClient.SBHttpRequest;
+import my.b1701.SB.LocationHelpers.SBLocation;
 import my.b1701.SB.LocationHelpers.SBLocationManager;
 import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.Users.ThisUser;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.widget.ProgressBar;
 
@@ -23,9 +28,14 @@ public class StartStrangerBuddyActivity extends Activity {
 	
 	private ProgressBar mProgress;
 	private static final String TAG = "StartStrangerBuddyActivity";
+	Runnable startMapActivity;
+	Intent showSBMapViewActivity;
+	Timer timer;
+	
 	
     /** Called when the activity is first created. */
-    @Override
+   
+	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main); 
@@ -38,19 +48,35 @@ public class StartStrangerBuddyActivity extends Activity {
         SBLocationManager.getInstance().StartListeningtoNetwork();        
         //SBLocationManager.getInstance().StartListeningtoGPS(ThisAppConfig.getInstance().getLong("gpsfreq"),100);
         Log.i(TAG,"started network listening ");
+        
+        ToastTracker.showToast("Connecting to server..");
+        
+               
+        //map activity can get started from 3 places, timer task if location found instantly
+        //else this new runnable posted after 3 seconds
+        //else on first run
+        showSBMapViewActivity = new Intent(this, MapListViewTabActivity.class);
+        showSBMapViewActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        
+        startMapActivity = new Runnable() {
+	          public void run() {     	
+	        	  timer.cancel();
+	              startActivity(showSBMapViewActivity);
+	          }};
+        
+        
         if(ThisUserConfig.getInstance().getString(ThisUserConfig.USERID) == "")
 			firstRun();		
 		else	
 		{
-			ThisUser.getInstance().setUserID(ThisUserConfig.getInstance().getString(ThisUserConfig.USERID));			
-	        final Intent showSBMapViewActivity = new Intent(this, MapListViewTabActivity.class);
-	        showSBMapViewActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-	        Platform.getInstance().getHandler().postDelayed(new Runnable() {
-	          public void run() {        	  
-	              startActivity(showSBMapViewActivity);
-	          }
-	        }, (1000 * 2)); 
-		}        
+			ThisUser.getInstance().setUserID(ThisUserConfig.getInstance().getString(ThisUserConfig.USERID));	
+			timer = new Timer();
+			timer.scheduleAtFixedRate(new getNetworkLocationFixTask(), 500, 500);		
+	        
+	        Platform.getInstance().getHandler().postDelayed(startMapActivity,1000 * 3); 
+		}   
+        
+        
     }
     
     private void firstRun() {
@@ -63,6 +89,8 @@ public class StartStrangerBuddyActivity extends Activity {
 		
 	}
     
+   
+    
     public void onResume()
     {   	
     	super.onResume();    	
@@ -74,6 +102,26 @@ public class StartStrangerBuddyActivity extends Activity {
     	//SBLocationManager.getInstance().StopListeningtoGPS();    	
     	//SBLocationManager.getInstance().StopListeningtoNetwork();
     }
+    
+    public void onStop()
+    {   	
+    	super.onStop();    
+    	finish();
+    }
+    
+    private class getNetworkLocationFixTask extends TimerTask
+    { 
+         public void run() 
+         {
+        	 SBLocation currLoc = SBLocationManager.getInstance().getLastXMinBestLocation(5);
+        	 if(currLoc != null)
+        	 {
+        		 ToastTracker.showToast("found loc in timertask");
+        		 Platform.getInstance().getHandler().removeCallbacks(startMapActivity);
+        		 Platform.getInstance().getHandler().post(startMapActivity);
+        	 }
+          }
+     }
     
     
 }

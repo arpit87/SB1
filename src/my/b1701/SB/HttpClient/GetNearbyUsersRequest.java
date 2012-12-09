@@ -39,7 +39,7 @@ public class GetNearbyUsersRequest extends SBHttpRequest{
 		//prepare getnearby request		
 		url1 = ServerConstants.SERVER_ADDRESS + ServerConstants.REQUESTSERVICE + "/getNearbyRequests/";
 		httpQueryGetNearbyUsers = new HttpPost(url1);
-		jsonobjGetNearbyUsers = new JSONObject();
+		jsonobjGetNearbyUsers = GetServerAuthenticatedJSON();;
 		try {
 			jsonobjGetNearbyUsers.put(UserAttributes.USERID, ThisUser.getInstance().getUserID());			
 		} catch (JSONException e) {

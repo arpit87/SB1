@@ -5,7 +5,7 @@
     android:versionCode="1"
     android:versionName="1.0"   >
     
-     <uses-sdk android:minSdkVersion="7" 
+     <uses-sdk android:minSdkVersion="8" 
           android:targetSdkVersion="11"
           android:maxSdkVersion="16" />
 
@@ -15,14 +15,34 @@
         android:label="@string/app_name"
         android:name=".Activities.StrangerBuddy"
         android:theme="@style/Theme.Sherlock"
-        android:debuggable="true" >
-        <activity
-            android:name=".Activities.StartStrangerBuddyActivity"
-            android:label="@string/app_name" >
+         >
+         
+     <!--   <service android:name="my.b1701.SB.ChatService.SBChatService"
+            android:label="@string/chatservice"
+            android:icon="@drawable/btn_close"
+            android:exported="true">
+             </service>- -->
+             
+       	<service android:name=".ChatService.SBChatService" android:enabled="true"
+			android:label="SB Chat Service" android:permission="my.b1701.SB.ChatService.SBCHAT_SERVICE">
+			<intent-filter>
+				<action android:name="my.b1701.SB.ChatService.SBChatService"></action>
+			</intent-filter>
+		</service>
+         
+       <activity android:name=".test.ChatTestActivity" 
+            android:theme="@android:style/Theme.NoTitleBar" 
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+       
+        <activity
+            android:name=".Activities.StartStrangerBuddyActivity" 
+            android:theme="@android:style/Theme.NoTitleBar" >
+            
         </activity>
         <activity android:name=".Activities.StartButtonActivity" 
             android:theme="@android:style/Theme.NoTitleBar" 
@@ -45,6 +65,10 @@
             android:theme="@android:style/Theme.NoTitleBar" 
             android:screenOrientation="portrait" >
             
+        </activity>
+        <activity android:name=".ChatClient.ChatWindow" 
+            android:theme="@android:style/Theme.NoTitleBar" 
+            android:screenOrientation="portrait" >            
         </activity>
            <activity android:name=".Activities.AddressListViewActivity" 
             android:theme="@android:style/Theme.NoTitleBar" 
@@ -75,6 +99,8 @@
             android:icon="@drawable/btn_close"
             android:exported="false">
              </service>
+         
+      
           <receiver android:name=".BroadcastReceivers.KillLocationServiceReceiver" 
               		android:exported="false">           
         </receiver>
@@ -83,6 +109,10 @@
          <uses-library android:name="com.google.android.maps" />
          
     </application>
+    
+    <permission android:permissionGroup="android.permission-group.NETWORK"
+		android:label="SBChatService" android:description="@string/sbchatservicedescription"
+		android:name="my.b1701.SB.SBCHAT_SERVICE"/>  
 
      <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> 
      <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> 

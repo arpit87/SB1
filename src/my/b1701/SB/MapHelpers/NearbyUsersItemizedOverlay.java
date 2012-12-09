@@ -34,7 +34,7 @@ public class NearbyUsersItemizedOverlay extends BaseItemizedOverlay{
 		while(it.hasNext() )
 		{
 			NearbyUser u = it.next();
-			NearbyUserOverlayItem overlayItem=new NearbyUserOverlayItem(u.getUserLocInfo().getGeoPoint(),u.getUserFBInfo().getImageURL(),u.getUserLocInfo().getUserDestination(),mMapView);
+			NearbyUserOverlayItem overlayItem=new NearbyUserOverlayItem(u.getUserLocInfo().getGeoPoint(),u.getUserFBInfo().getImageURL(),u.getUserFBInfo().getFbid(),mMapView);
 			userList.add(overlayItem);
 			populate();
 		}	    

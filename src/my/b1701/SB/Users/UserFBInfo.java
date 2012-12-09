@@ -15,6 +15,7 @@ public class UserFBInfo {
 	private String studiedAt = "" ;
 	private String hometown = "";
 	private String name = "";	
+	private String fbid = "";
 	
 	public UserFBInfo() {
 		// TODO Auto-generated constructor stub
@@ -25,6 +26,10 @@ public class UserFBInfo {
 				
 		try {
 			name = allInfo.getString(UserAttributes.NAME);			
+		} catch (JSONException e) {	}
+		
+		try {
+			fbid = allInfo.getString(UserAttributes.FBID);			
 		} catch (JSONException e) {	}
 		
 		try {
@@ -56,6 +61,10 @@ public class UserFBInfo {
 		return name;
 	}
 
+
+	public String getFbid() {
+		return fbid;
+	}
 
 	public String getImageURL() {
 		return imageURL;
