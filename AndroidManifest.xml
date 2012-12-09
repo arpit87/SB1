@@ -5,22 +5,44 @@
     android:versionCode="1"
     android:versionName="1.0"   >
     
-     <uses-sdk android:minSdkVersion="7" 
-          android:targetSdkVersion="15"
-          android:maxSdkVersion="15" />
+     <uses-sdk android:minSdkVersion="8" 
+          android:targetSdkVersion="11"
+          android:maxSdkVersion="16" />
 
+     
    <application
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/launcher"
         android:label="@string/app_name"
         android:name=".Activities.StrangerBuddy"
-        android:debuggable="true" >
-        <activity
-            android:name=".Activities.StartStrangerBuddyActivity"
-            android:label="@string/app_name" >
+        android:theme="@style/Theme.Sherlock"
+         >
+         
+     <!--   <service android:name="my.b1701.SB.ChatService.SBChatService"
+            android:label="@string/chatservice"
+            android:icon="@drawable/btn_close"
+            android:exported="true">
+             </service>- -->
+             
+       	<service android:name=".ChatService.SBChatService" android:enabled="true"
+			android:label="SB Chat Service">
+			  <intent-filter>
+				<action android:name="my.b1701.SB.ChatService.SBChatService"></action>
+			</intent-filter>
+		</service>
+         
+       <activity android:name=".test.ChatTestActivity" 
+            android:theme="@android:style/Theme.NoTitleBar" 
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+       
+        <activity
+            android:name=".Activities.StartStrangerBuddyActivity" 
+            android:theme="@android:style/Theme.NoTitleBar" >
+            
         </activity>
         <activity android:name=".Activities.StartButtonActivity" 
             android:theme="@android:style/Theme.NoTitleBar" 
@@ -29,6 +51,11 @@
          <activity android:name=".Activities.SBMapViewActivity" 
             android:theme="@android:style/Theme.NoTitleBar" 
             android:screenOrientation="portrait" >
+        </activity>
+        <activity android:name=".Activities.MapListViewTabActivity"
+            android:screenOrientation="portrait" >
+            <meta-data android:name="android.app.default_searchable"
+                       android:value=".Activities.SearchableActivity" />
         </activity>
         <activity android:name=".Activities.UserPopUpActivity" 
             android:theme="@android:style/Theme.NoTitleBar" 
@@ -39,16 +66,41 @@
             android:screenOrientation="portrait" >
             
         </activity>
+        <activity android:name=".ChatClient.ChatWindow" 
+            android:theme="@android:style/Theme.NoTitleBar" 
+            android:screenOrientation="portrait" >            
+        </activity>
            <activity android:name=".Activities.AddressListViewActivity" 
             android:theme="@android:style/Theme.NoTitleBar" 
             android:screenOrientation="portrait" >
             
-        </activity>        
+        </activity>
+
+       <activity android:name=".Activities.SearchableActivity" >
+           <intent-filter>
+               <action android:name="android.intent.action.SEARCH" />
+           </intent-filter>
+           <meta-data android:name="android.app.searchable"
+                      android:resource="@xml/searchable"/>
+       </activity>
+
+       <provider
+           android:name=".provider.GeoAddressProvider"
+           android:authorities="my.b1701.SB.provider" >
+        </provider>
+
+       <provider
+               android:name=".provider.CustomSuggestionProvider"
+               android:authorities="my.b1701.SB.provider.CustomSuggestionProvider" >
+       </provider>
+
         <service android:name=".LocationHelpers.LocationService"
             android:label="@string/locationupdaterservice"
             android:icon="@drawable/btn_close"
             android:exported="false">
              </service>
+         
+      
           <receiver android:name=".BroadcastReceivers.KillLocationServiceReceiver" 
               		android:exported="false">           
         </receiver>
@@ -57,12 +109,12 @@
          <uses-library android:name="com.google.android.maps" />
          
     </application>
-  
-   
-        
+    
+    
 
      <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> 
      <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> 
          <uses-permission android:name="android.permission.INTERNET" /> 
           <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+          <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 </manifest>

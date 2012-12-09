@@ -1,6 +1,5 @@
 package my.b1701.SB.HttpClient;
 
-import my.b1701.SB.Server.ServerResponse;
 import my.b1701.SB.Server.ServerResponseBase;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -13,12 +12,14 @@ import android.widget.ProgressBar;
 public class SBHttpClient {
 	
 	private static final String TAG = "SBHttpClient";
-	private static SBHttpClient uniqueClient = new SBHttpClient();
+	private static SBHttpClient uniqueClient;
 	private SBHttpClient(){};
 	private ServerResponseBase response;
 	
 	public static SBHttpClient getInstance()
 	{		
+		if(uniqueClient == null)
+			uniqueClient = new SBHttpClient();
 		return uniqueClient; 		
 	}
 	
@@ -26,13 +27,13 @@ public class SBHttpClient {
 	{
 		//currently allowing max 3 sync requests
 		int count = request.length;
-		if (count<=5)
+		if (count<=3)
 			new NewAsyncTask().execute(request);
 		else
 			Log.e(TAG, "Max 3 http request per thread allowed");
 	}	
 	
-	private class NewAsyncTask extends AsyncTask <SBHttpRequest, ProgressBar, ServerResponseBase>
+	private class NewAsyncTask extends AsyncTask <SBHttpRequest, Void, ServerResponseBase>
 	{		
 		protected ServerResponseBase doInBackground(SBHttpRequest... request) {
 			 int count = request.length;	         

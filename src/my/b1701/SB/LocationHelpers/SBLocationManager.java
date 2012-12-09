@@ -2,7 +2,7 @@ package my.b1701.SB.LocationHelpers;
 
 import java.util.List;
 
-import my.b1701.SB.ActivityHandlers.MapActivityHandler;
+import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
 import my.b1701.SB.HelperClasses.Constants;
 import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.Users.ThisUser;
@@ -138,7 +138,7 @@ public class SBLocationManager {
 	        	if ((time > currentLocation.getTime() && accuracy < currentLocation.getAccuracy()))
 	        	{
 	        		ThisUser.getInstance().setLocation(new SBLocation(location));
-	        		MapActivityHandler.getInstance().updateThisUserMapOverlay();
+	        		MapListActivityHandler.getInstance().updateThisUserMapOverlay();
 	        		return new SBLocation(location);
 	        	}
 	        

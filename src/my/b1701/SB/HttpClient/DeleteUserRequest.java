@@ -8,20 +8,25 @@ import my.b1701.SB.Server.ServerResponseBase;
 import my.b1701.SB.Users.ThisUser;
 
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.impl.client.DefaultHttpClient;
 
 public class DeleteUserRequest extends SBHttpRequest{
 			
+	HttpClient httpclient = new DefaultHttpClient();
+	HttpDelete httpQuery =  new HttpDelete(url1);
+	String jsonStr;
 	public DeleteUserRequest()
 	{
 		super();
 		queryMethod = QueryMethod.Post;
-		url = ServerConstants.SERVER_ADDRESS+ "\\"+ ThisUser.getInstance().getUniqueID();
+		url1 = ServerConstants.SERVER_ADDRESS+ "\\"+ ThisUser.getInstance().getUserID();
 	};
 	
 	public ServerResponseBase execute() {
 	
-		httpQuery =  new HttpDelete(url);
+		
 	
 			try {
 				response=httpclient.execute(httpQuery);
@@ -32,8 +37,18 @@ public class DeleteUserRequest extends SBHttpRequest{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		
-		return new DeleteUserResponse(response);
+			
+			try {
+				jsonStr = responseHandler.handleResponse(response);
+			} catch (ClientProtocolException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}   			
+			
+		return new DeleteUserResponse(response,jsonStr);
 	}
 
 }

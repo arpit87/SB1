@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/listview_selector"
+    android:orientation="horizontal"
+    android:padding="5dip" >
+<LinearLayout android:id="@+id/thumbnail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="3dip"
+        android:layout_alignParentLeft="true"        
+        android:layout_marginRight="5dip">
+  <ImageView
+        android:id="@+id/nearbyuser_list_image"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+         />
+  </LinearLayout>
+ <!-- NearbyUser Name-->
+    <TextView
+        android:id="@+id/nearbyusername"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/thumbnail"
+        android:layout_toRightOf="@+id/thumbnail"
+        android:text="Name"
+        android:textColor="#040404"
+        android:typeface="sans"
+        android:textSize="15dip"
+        android:textStyle="bold"/>
+ 
+    <!-- NearbyUser DEstination -->
+    <TextView
+        android:id="@+id/nearbyuserdestination"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/nearbyusername"
+        android:textColor="#343434"
+        android:textSize="10dip"
+        android:layout_marginTop="1dip"
+        android:layout_toRightOf="@+id/thumbnail"
+        android:text="Powai" />
+    
+    <TextView
+        android:id="@+id/nearbyuserlatitude"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/nearbyuserdestination"
+        android:textColor="#343434"
+        android:textSize="10dip"
+        android:layout_marginTop="1dip"
+        android:layout_toRightOf="@+id/thumbnail"
+        android:text="Powai" />
+    
+    <TextView
+        android:id="@+id/nearbyuserlongitude"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/nearbyuserlatitude"
+        android:textColor="#343434"
+        android:textSize="10dip"
+        android:layout_marginTop="1dip"
+        android:layout_toRightOf="@+id/thumbnail"
+        android:text="Powai" />
+ 
+    <!-- NearbyUser Distance -->
+    <TextView
+        android:id="@+id/nearbyuserdistance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@id/nearbyusername"
+        android:gravity="right"
+        android:text="500m"
+        android:layout_marginRight="5dip"
+        android:textSize="10dip"
+        android:textColor="#10bcc9"
+        android:textStyle="bold"/>
+ 
+ </RelativeLayout>

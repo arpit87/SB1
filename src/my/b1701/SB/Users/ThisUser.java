@@ -21,10 +21,15 @@ public class ThisUser {
 	/*
 	 * Fields
 	 */
-	private String uniqueID;	
-	public void setUniqueID(String uniqueID) {
-		Log.i(TAG,"set unique id");
-		this.uniqueID = uniqueID;
+	private String userID;	
+	public void setUserID(String userID) {
+		Log.i(TAG,"set user id");
+		this.userID = userID;
+	}
+	
+	public String getUserID() {
+		Log.i(TAG,"get user id"+this.userID);
+		return this.userID;
 	}
 
 	private SBLocation currlocation=null;
@@ -67,11 +72,6 @@ public class ThisUser {
 		this.destinationGeoPoint = sbGeoPoint;
 	}
 
-	public String getUniqueID() {
-		Log.i(TAG,"get uniqueid");
-		return uniqueID;
-	}
-	
 	public SBGeoPoint getCurrentGeoPoint() {
 		Log.i(TAG,"get curr loc");
 		
