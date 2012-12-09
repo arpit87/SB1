@@ -24,8 +24,8 @@
              </service>- -->
              
        	<service android:name=".ChatService.SBChatService" android:enabled="true"
-			android:label="SB Chat Service" android:permission="my.b1701.SB.ChatService.SBCHAT_SERVICE">
-			<intent-filter>
+			android:label="SB Chat Service">
+			  <intent-filter>
 				<action android:name="my.b1701.SB.ChatService.SBChatService"></action>
 			</intent-filter>
 		</service>
@@ -110,9 +110,7 @@
          
     </application>
     
-    <permission android:permissionGroup="android.permission-group.NETWORK"
-		android:label="SBChatService" android:description="@string/sbchatservicedescription"
-		android:name="my.b1701.SB.SBCHAT_SERVICE"/>  
+    
 
      <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> 
      <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> 

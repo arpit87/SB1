@@ -19,7 +19,7 @@ public class StrangerBuddy extends Application{
 		Log.i(TAG,"App start");
 		context = getApplicationContext();
 		platform=Platform.getInstance();
-		platform.initialize(context);
+		platform.initialize(this);
 		//we check on userid which we wipe out on fb logout. User may login as another user
 		//for which we will provide different userid
 		
