@@ -41,7 +41,7 @@ public class ChatWindow extends Activity{
 	 //   }
 	private static String TAG = "ChatWindow";
 	private IXMPPAPIs xmppApis = null;
-	 private TextView mContactNameTextView;
+	private TextView mContactNameTextView;
     private TextView mContactStatusMsgTextView;	 
     private TextView mContactDestination;	
     private ImageView mContactPic;    
@@ -59,6 +59,7 @@ public class ChatWindow extends Activity{
     private SBBroadcastReceiver mSBBroadcastReceiver = new SBBroadcastReceiver();
     Handler mHandler = new Handler();
     private SBChatListViewAdapter mMessagesListAdapter = new SBChatListViewAdapter();
+    private boolean mBinded = false;
     
 		    
 	    @Override
@@ -106,19 +107,32 @@ public void onResume() {
 		//mMessagesListAdapter.notifyDataSetChanged();		
 	}
 	//setTitle(getString(R.string.conversation_name) +": " +jid);
-	bindToService();
+	if (!mBinded) 
+		bindToService();
 }
-	    
-    @Override
-    public void onDestroy()
-    {
-    	super.onDestroy();
-    	releaseService();
-    }   
+	
     
+    @Override
     protected void onPause() {
-    	super.onPause();
-    	releaseService();
+	super.onPause();
+	try {
+	    if (chatAdapter != null) {
+	    	chatAdapter.setOpen(false);
+	    	chatAdapter.removeMessageListener(mMessageListener);
+	    }
+	    
+	    if (mChatManager != null)
+		mChatManager.removeChatCreationListener(mChatManagerListener);
+	} catch (RemoteException e) {
+	    Log.e(TAG, e.getMessage());
+	}
+	if (mBinded) {
+		releaseService();
+	    mBinded = false;
+	}
+	xmppApis = null;	
+	chatAdapter = null;
+	mChatManager = null;
     }
     
     @Override
@@ -127,17 +141,15 @@ public void onResume() {
 	setIntent(intent);
     }
     
-	    private void bindToService() {
-	        if(mChatServiceConnection == null)
-	        	Toast.makeText(this, "conn obj null!!", Toast.LENGTH_SHORT);
-	        	 Log.d( TAG, "binding chat to service" );        
-	        	
-	           Intent i = new Intent(getApplicationContext(),SBChatService.class);
-	          
-	           getApplicationContext().bindService(i, mChatServiceConnection, BIND_AUTO_CREATE);	           
-	           Log.d( TAG, "service bound" );	        
-	        
-	   }
+    private void bindToService() {
+            Log.d( TAG, "binding chat to service" );        
+        	
+           Intent i = new Intent(getApplicationContext(),SBChatService.class);
+          
+           getApplicationContext().bindService(i, mChatServiceConnection, BIND_AUTO_CREATE);	  
+           mBinded = true;
+        
+   }
 	    
 	    private void releaseService() {
     		if(mChatServiceConnection != null) {
@@ -266,11 +278,6 @@ public void onResume() {
 	    
 	    private final class ChatServiceConnection implements ServiceConnection{
 	    	
-	    	public void ChatServiceConnection(){
-	    		 Log.d( TAG, "ChatServiceConnection mades" );
-	    		ToastTracker.showToast("build on connection obj", Toast.LENGTH_SHORT);
-	    	}
-	    	
 	    	@Override
 	    	public void onServiceConnected(ComponentName className, IBinder boundService) {
 	    		ToastTracker.showToast("onServiceConnected called", Toast.LENGTH_SHORT);
@@ -291,6 +298,7 @@ public void onResume() {
 
 	    	@Override
 	    	public void onServiceDisconnected(ComponentName arg0) {
+	    		ToastTracker.showToast("onService disconnected", Toast.LENGTH_SHORT);
 	    		xmppApis = null;	    		
 	    	    try {	    		
 	    		mChatManager.removeChatCreationListener(mChatManagerListener);

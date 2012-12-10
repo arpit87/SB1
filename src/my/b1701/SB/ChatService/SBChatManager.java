@@ -1,6 +1,5 @@
 package my.b1701.SB.ChatService;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,13 +9,9 @@ import my.b1701.SB.ChatClient.IMessageListener;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ChatManager;
 import org.jivesoftware.smack.ChatManagerListener;
-import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.Roster;
 import org.jivesoftware.smack.Roster.SubscriptionMode;
-import org.jivesoftware.smack.RosterListener;
 import org.jivesoftware.smack.XMPPConnection;
-import org.jivesoftware.smack.packet.Message;
-import org.jivesoftware.smack.packet.Presence;
 
 import android.os.RemoteCallbackList;
 import android.os.RemoteException;
@@ -29,7 +24,7 @@ public class SBChatManager extends IChatManager.Stub {
 	private Roster mRoster;	
 	private static final String TAG = "SBChatManager";   
     private final Map<String, ChatAdapter> mAllChats = new HashMap<String, ChatAdapter>();
-    private final SBChatManagerListener mChatListener = new SBChatManagerListener();
+    private final SBChatManagerAndMsgListener mChatListener = new SBChatManagerAndMsgListener();
     private final RemoteCallbackList<IChatManagerListener> mRemoteChatCreationListeners = new RemoteCallbackList<IChatManagerListener>();	
     private SBChatService mService = null;
     private final SBChatRosterListener mChatRosterListener = new SBChatRosterListener();   
@@ -67,90 +62,8 @@ public class SBChatManager extends IChatManager.Stub {
 	    Log.v(TAG, "Remote exception ", e);
 	}
     }
- 
     
-    //any msg will be sent by chat adapter of that chat
-    public boolean sendMessage(String participant, String message)
-    {    	
-    	ChatAdapter thisChatAdapter = null;
-    	if (mAllChats.containsKey(participant))
-    		thisChatAdapter = mAllChats.get(participant);
-    	else
-    	{
-    		Chat newChat = mChatManager.createChat(participant, new SBSelfStartMessageListener());
-    		thisChatAdapter = new ChatAdapter(newChat);
-    		mAllChats.put(participant, thisChatAdapter);
-    	}    	
-    	return true;
-    }
-
-	
-	private class SBChatManagerListener implements ChatManagerListener{
-
-		@Override
-		public void chatCreated(Chat chat, boolean createdLocally) {
-			
-			
-			if(!createdLocally && !mAllChats.containsKey(chat.getParticipant()))
-			{
-				chat.addMessageListener(new SBRemoteStartMessageListener());
-			}				
-		  
-		    Log.d(TAG, "Chat" + chat.toString() + " created locally " + createdLocally + " with " + chat.getParticipant());
-	    		
-	    	
-		}				
-				
-	} 
-	
-	private class SBRosterListener implements RosterListener{
-
-		@Override
-		public void entriesAdded(Collection<String> paramCollection) {
-			
-			
-		}
-
-		@Override
-		public void entriesUpdated(Collection<String> paramCollection) {
-			
-			
-		}
-
-		@Override
-		public void entriesDeleted(Collection<String> paramCollection) {
-			
-			
-		}
-
-		@Override
-		public void presenceChanged(Presence paramPresence) {
-			
-			
-		}
-		
-	}
-	
-	private class SBRemoteStartMessageListener implements MessageListener{
-
-		@Override
-		public void processMessage(Chat chat, Message msg) {			
-			mService.sendNotification(Integer.parseInt(chat.getParticipant()),msg.getBody());			
-			mAllChats.put(chat.getParticipant(), new ChatAdapter(chat));
-		}
-		
-	}
-	
-	private class SBSelfStartMessageListener implements MessageListener{
-
-		@Override
-		public void processMessage(Chat chat, Message msg) {			
-			
-		}
-		
-	}
-	
-	@Override
+    @Override
     public void addChatCreationListener(IChatManagerListener listener) throws RemoteException {
 	if (listener != null)
 	    mRemoteChatCreationListeners.register(listener);
@@ -182,6 +95,70 @@ public class SBChatManager extends IChatManager.Stub {
 	@Override
     public ChatAdapter getChat(String participant) {	
 	return mAllChats.get(participant);
-    }
+    }   
+   
+	
+	private class SBChatManagerAndMsgListener extends IMessageListener.Stub implements ChatManagerListener {
 
+
+		@Override
+		public void processMessage(IChatAdapter chat,
+				my.b1701.SB.ChatService.Message msg) throws RemoteException {
+			try {
+				String body = msg.getBody();
+				if (!chat.isOpen() && body != null) {
+				    if (chat instanceof ChatAdapter) {
+					mAllChats.put(chat.getParticipant(), (ChatAdapter) chat);
+				    }
+				    //will put it as notification
+				    notifyNewChat(chat, body);
+				}
+			    } catch (RemoteException e) {
+				Log.e(TAG, e.getMessage());
+			    }
+			
+		}		
+		
+
+		@Override
+		public void chatCreated(Chat chat, boolean locally) {
+			 ChatAdapter newchat;
+			 String key = chat.getParticipant();
+				if (mAllChats.containsKey(key)) {
+					newchat= mAllChats.get(key);
+				}
+				else
+					newchat = new ChatAdapter(chat);
+				
+			    Log.d(TAG, "Chat" + chat.toString() + " created locally " + locally + " with " + chat.getParticipant());
+			    try {
+				newchat.addMessageListener(mChatListener);
+				final int n = mRemoteChatCreationListeners.beginBroadcast();
+
+				for (int i = 0; i < n; i++) {
+				    IChatManagerListener listener = mRemoteChatCreationListeners.getBroadcastItem(i);
+				    listener.chatCreated(newchat, locally);
+				}
+				mRemoteChatCreationListeners.finishBroadcast();
+			    } catch (RemoteException e) {
+				// The RemoteCallbackList will take care of removing the
+				// dead listeners.
+				Log.w(TAG, " Error while triggering remote connection listeners in chat creation", e);
+			    }
+			}
+		
+		private void notifyNewChat(IChatAdapter chat, String msgBody) {		    
+		    try {			
+		    	mService.sendNotification(chat.getParticipant(), msgBody);
+		    } catch (RemoteException e) {
+			Log.e(TAG, e.getMessage());
+		    }
+		}
+		
+			
+		}
+		
+	
+		
+	
 }

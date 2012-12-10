@@ -104,7 +104,7 @@ public class SBChatService extends Service {
     }
 	
 	 @SuppressLint("NewApi")
-	public void sendNotification(int id, String text) {
+	public void sendNotification(String id, String text) {
 
 		 Intent chatIntent = new Intent(this,ChatWindow.class);
 		 	chatIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP
@@ -124,7 +124,7 @@ public class SBChatService extends Service {
 			notif.ledOnMS = 1000;
 			notif.ledOffMS = 1000;
 			notif.defaults |= Notification.DEFAULT_LIGHTS;			
-			mNotificationManager.notify(id, notif);
+			mNotificationManager.notify(Integer.parseInt(id), notif);
 		    }
 	 
 	 public void deleteNotification(int id) {

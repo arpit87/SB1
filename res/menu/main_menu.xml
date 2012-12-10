@@ -8,9 +8,8 @@
             android:icon="@drawable/ic_menu_search"
             android:showAsAction="always"
             />
-     <item android:id="@+id/menu_fb_logout"          
-          android:title="@string/fb_logout"
-          android:icon="@drawable/btn_close"
+     <item android:id="@+id/menu_more" 
+          android:icon="@android:drawable/ic_menu_more"
             android:showAsAction="always"
           />  
 </menu>

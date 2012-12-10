@@ -17,15 +17,16 @@ import my.b1701.SB.Users.ThisUser;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.MenuItem.OnMenuItemClickListener;
+import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.TabHost;
 
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -127,15 +128,53 @@ public class MapListViewTabActivity extends SherlockFragmentActivity {
         case R.id.menu_search:
         	onSearchRequested();
         	break;
-        case R.id.menu_fb_logout:        	
-        	FacebookConnector fbconnect = new FacebookConnector(this);
-        	fbconnect.logoutFromFB();
+        case R.id.menu_more:        	
+        	
         	break;       	
         
-        }
+        }      
+        
 		
         return super.onOptionsItemSelected(menuItem);
     }
+    
+    //show main screen popup menu
+    private void showPopupMenu(View v){
+    	   PopupMenu popupMenu = new PopupMenu(MapListViewTabActivity.this, v);
+    	      popupMenu.getMenuInflater().inflate(R.menu.maindropdown, popupMenu.getMenu());
+    	    
+    	      popupMenu.setOnMenuItemClickListener((android.widget.PopupMenu.OnMenuItemClickListener) new OnMainMenuDropDownClickListener());
+    	    
+    	      popupMenu.show();
+    	  }
+    	
+    private class OnMainMenuDropDownClickListener implements OnMenuItemClickListener
+    {
+
+		@Override
+		public boolean onMenuItemClick(android.view.MenuItem menuItem) {
+			switch (menuItem.getItemId())
+	        {
+	        case R.id.fb_logout_menuitem:
+	        	//logout from chat server?
+				FacebookConnector fbconnect = new FacebookConnector(MapListViewTabActivity.this);
+	        	fbconnect.logoutFromFB();
+	        	break;
+	        case R.id.settings_menuitem:
+	        	break;
+	        case R.id.exit_app_menuitem:
+	        	//delete user request,close service
+	        	Platform.getInstance().stopChatService();
+	        	finish();
+	        	break;
+	        	
+	        }
+			
+			return false;
+		}
+    	
+    }
+
     
    /* public void showMainDropDownMenu(View v) {
         PopupMenu popup = new PopupMenu(this, v);         

@@ -44,7 +44,7 @@ public class Platform {
 		startChatService();
 	}
 	
-	 private void startChatService(){
+	 public void startChatService(){
 	        if (mServiceStarted) {
 	        	ToastTracker.showToast("service already started ");
 	        } else {
@@ -58,12 +58,11 @@ public class Platform {
 	                    
 	     }
 	
-	 private void stopChatService() {
+	 public void stopChatService() {
 		 if (!mServiceStarted) {
 	        	ToastTracker.showToast("service not yet started ");
 	        } else {
-	          Intent i = new Intent();
-	          i.setClassName("my.b1701.Chat", "my.b1701.Chat.SBChatService");
+	          Intent i = new Intent("my.b1701.SB.ChatService.SBChatService");
 	          context.stopService(i);
 	          mServiceStarted = true;
 	          ToastTracker.showToast("service stopped ");

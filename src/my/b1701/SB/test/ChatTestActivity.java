@@ -57,6 +57,13 @@ public class ChatTestActivity extends Activity{
 		});
 	}
 	
+	@Override
+	public void onDestroy(){
+		super.onDestroy();
+		stopChatService();
+	}
+	
+	
 	
 	
 	 private void stopChatService() {
