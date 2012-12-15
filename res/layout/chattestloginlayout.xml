@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/white" >
+
+    <TableLayout
+        android:id="@+id/tableLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:padding="10dip"
+        android:stretchColumns="1" >
+
+     
+        <TableRow android:paddingBottom="5dp" >
+
+            <TextView
+                android:gravity="right"
+                android:paddingRight="10dip"
+                android:text="@string/username"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/chattestlogin"
+                android:layout_width="fill_parent"
+             	android:hint="min is 3 characters"
+                android:inputType="text" />
+        </TableRow>
+
+        <TableRow android:paddingBottom="5dip" >
+
+            <TextView
+                android:gravity="right"
+                android:paddingRight="10dip"
+                android:text="@string/stringpassword"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/chattestpassword"
+                android:inputType="textPassword" />
+        </TableRow>
+        
+              
+    </TableLayout>
+
+    
+    <Button
+        android:id="@+id/chatloginbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"         
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="150dp"  
+        android:layout_alignParentBottom="true"         
+        android:padding="15dp"
+        android:text="Login" />
+
+
+</RelativeLayout>

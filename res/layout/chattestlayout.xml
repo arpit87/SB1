@@ -12,51 +12,37 @@
         android:padding="10dip"
         android:stretchColumns="1" >
 
-     
-        <TableRow android:paddingBottom="5dp" >
-
-            <TextView
-                android:gravity="right"
-                android:paddingRight="10dip"
-                android:text="@string/username"
-                android:textColor="@color/black"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/chattestlogin"
-                android:layout_width="fill_parent"
-             	android:hint="min is 3 characters"
-                android:inputType="text" />
-        </TableRow>
-
         <TableRow android:paddingBottom="5dip" >
 
             <TextView
                 android:gravity="right"
                 android:paddingRight="10dip"
-                android:text="@string/stringpassword"
+                android:text="Chat with:"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
 
-            <EditText
-                android:id="@+id/chattestpassword"
-                android:inputType="textPassword" />
+            <EditText android:id="@+id/chatto" />
         </TableRow>
-
-       
     </TableLayout>
 
+    <Button
+        android:id="@+id/chatlogoutbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="50dp"
+        android:padding="15dp"
+        android:text="Logout" />
 
     <Button
         android:id="@+id/chattestbutton"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"  
-        android:layout_alignParentBottom="true"   
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tableLayout1"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="50dp"  
-        
+        android:layout_marginTop="114dp"
         android:padding="15dp"
         android:text="Chat" />
-
 
 </RelativeLayout>

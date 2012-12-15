@@ -38,5 +38,6 @@
     <color name="chicklet_nowhere">#ff2d2d2d</color>
     <color name="chicklet_nowhere_text">#ff596267</color>
     <color name="android_holo_blue">#ff33b5e5</color>
-    <color name="invite_blue">#ff00c0ff</color>
+    <color name="invite_blue">#ff00c0ff</color>	
+
 </resources>

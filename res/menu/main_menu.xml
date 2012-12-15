@@ -8,8 +8,8 @@
             android:icon="@drawable/ic_menu_search"
             android:showAsAction="always"
             />
-     <item android:id="@+id/menu_more" 
-          android:icon="@android:drawable/ic_menu_more"
-            android:showAsAction="always"
-          />  
+    <item android:id="@+id/settings_menuitem" android:title="Settings" android:showAsAction="never"></item> 
+    <item android:id="@+id/fb_logout_menuitem" android:title="Logout" android:showAsAction="never"></item>
+    <item android:id="@+id/exit_app_menuitem" android:title="Exit" android:showAsAction="never" ></item>
+      
 </menu>
