@@ -11,8 +11,8 @@ public class PostUserReqDataResponse extends ServerResponseBase {
 
 	private static final String TAG = "PostUserReqDataResponse";
 	
-	public PostUserReqDataResponse(HttpResponse response) {
-		super(response);
+	public PostUserReqDataResponse(HttpResponse response,String jobjStr) {
+		super(response,jobjStr);
 		
 	}
 

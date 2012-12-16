@@ -1,8 +1,11 @@
 package my.b1701.SB.Activities;
 
 import my.b1701.SB.R;
+import my.b1701.SB.FacebookHelpers.FBUtility;
 import my.b1701.SB.FacebookHelpers.FacebookConnector;
 import my.b1701.SB.HelperClasses.Constants;
+import my.b1701.SB.HelperClasses.Store;
+import my.b1701.SB.HelperClasses.ThisUserConfig;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,7 +26,7 @@ public class LoginActivity extends Activity  {
 		setContentView(R.layout.login_view);
 		queryProgressBar = (ProgressBar) findViewById(R.id.queryLogin_progressBar);
 		fbloginbutton = (Button)findViewById(R.id.signInViaFacebook);
-		fbconnect = new FacebookConnector(this, Constants.FB_PERMISSIONS);
+		fbconnect = new FacebookConnector(this);
 		
 	}
 	
@@ -32,7 +35,7 @@ public class LoginActivity extends Activity  {
 		switch(v.getId())
 		{
 			case R.id.signInViaFacebook:
-				fbconnect.loginToFB();
+				fbconnect.loginToFB();				
 		}
 	}
 	

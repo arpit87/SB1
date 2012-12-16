@@ -10,8 +10,10 @@ import my.b1701.SB.Users.ThisUser;
 import my.b1701.SB.Users.UserAttributes;
 
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
@@ -23,16 +25,18 @@ public class PostUserReqData extends SBHttpRequest{
 	
 	HttpPost httpQuery;
 	JSONObject jsonobj;
+	HttpClient httpclient = new DefaultHttpClient();
+	String jsonStr;
 	
 	public PostUserReqData()
 	{
 		super();
 		queryMethod = QueryMethod.Post;
-		url = ServerConstants.SERVER_ADDRESS;
-		jsonobj=new JSONObject();
-		httpQuery =  new HttpPost(url);
+		url1 = ServerConstants.SERVER_ADDRESS;
+		jsonobj=GetServerAuthenticatedJSON();
+		httpQuery =  new HttpPost(url1);
 		try {
-			jsonobj.put(UserAttributes.USERID, ThisUser.getInstance().getUniqueID());
+			jsonobj.put(UserAttributes.USERID, ThisUser.getInstance().getUserID());
 			jsonobj.put(UserAttributes.SRCLATITUDE, ThisUser.getInstance().getCurrentGeoPoint().getLatitudeE6());
 			jsonobj.put(UserAttributes.SRCLONGITUDE, ThisUser.getInstance().getCurrentGeoPoint().getLongitudeE6());
 			jsonobj.put(UserAttributes.DSTLATITUDE, ThisUser.getInstance().getCurrentGeoPoint().getLatitudeE6());
@@ -64,8 +68,18 @@ public class PostUserReqData extends SBHttpRequest{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	 
-	return new PostUserReqDataResponse(response);
+		
+		try {
+			jsonStr = responseHandler.handleResponse(response);
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 	
+		
+	return new PostUserReqDataResponse(response,jsonStr);
 	
 }
 

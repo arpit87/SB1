@@ -12,8 +12,8 @@ public class DeleteUserResponse extends ServerResponseBase{
 	
 	private static final String TAG = "DeleteUserResponse";
 
-	public DeleteUserResponse(HttpResponse response) {
-		super(response);
+	public DeleteUserResponse(HttpResponse response,String jobjStr) {
+		super(response,jobjStr);
 	}
 
 	@Override

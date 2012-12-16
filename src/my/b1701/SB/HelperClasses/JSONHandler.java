@@ -1,6 +1,7 @@
 package my.b1701.SB.HelperClasses;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -31,41 +32,62 @@ public class JSONHandler {
 		
 	}
 	
-	public JSONObject GetJSONObjectFromHttp(HttpResponse response)
+	public String getFBPicURLFromJSON(JSONObject jObj)
+	{
+		String URL = null;
+		try {
+			JSONObject picture = jObj.getJSONObject("picture");
+			JSONObject data = picture.getJSONObject("data");
+			URL = data.getString("url");
+		
+	} catch (JSONException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+		return URL;
+	}
+	
+	/*public JSONObject GetJSONObjectFromHttp(HttpResponse response)
 	{
 				
 		if(response.getStatusLine().getStatusCode()!=200)
 			jObj = null;
 		StringBuilder builder = new StringBuilder();	   
 	    String json = "";
-		
+	    HttpEntity entity;
+		InputStream inputStream = null;
 		try {
-			HttpEntity entity = response.getEntity();
-			InputStream content = entity.getContent();
-			BufferedReader reader = new BufferedReader(new InputStreamReader(content));
+			entity = response.getEntity();
+			inputStream = entity.getContent();
+			BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream,"UTF-8"));
 			String line;
+			try{
 			while ((line = reader.readLine()) != null) {
 				builder.append(line);
-			}
+			}}finally{
+				reader.close();
+				inputStream.close();
+				}			
             json = builder.toString();
         } catch (Exception e) {
-            //Log.e("Buffer Error", "Error converting result " + e.toString());
+            Log.e("Buffer Error", "Error converting result " + e.toString());
         }
  
         // try parse the string to a JSON object
         try {
-            jObj = new JSONObject(json);
+            jObj = new JSONObject(json);            
         } catch (JSONException e) {
-            //Log.e("JSON Parser", "Error parsing data " + e.toString());
+            Log.e("JSON Parser", "Error parsing data " + e.toString());
         }
 		return jObj;
 		
-	}
+	}*/
 	
 	public static List<NearbyUser> GetNearbyUsersInfoFromJSONObject(JSONObject jObj)
 	{
 		ArrayList<NearbyUser> nearbyUsers = new ArrayList<NearbyUser>();
-		try {
+		try {			
+						
 			JSONArray users = jObj.getJSONArray("NearbyUsers");
 						
 			for(int i=0;i<users.length();i++)
