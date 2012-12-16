@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Mystrangerbuddy</string>
+    <string name="url_strangerbuddy">www.strangerbuddy.com</string>
+    <string name="title1">StrangerBuddy</string>
+    <color name="white">#ffffffff</color>
+    <color name="dark_gray">#808080</color>
+    <string name="slogan">Share,right here,right now</string>
+    <string name="buttonlogin">Login</string>
+    <string name="buttoncarpool">Pool search</string>
+    <string name="buttonhirenow">Hire Now</string>
+    <string name="map_api_key">AIzaSyD7B_JmOOy1C9lCXhRJhdLXUeZ36P_1RuM</string>
+    <string name="chat_header">Chat:</string>
+    <string name="searchaddressheader">Address search</string>
+    <string name="full_name">Name:</string>
+    <string name="stringpassword">Password:</string>
+    <string name="retype_pass">Retype Pass:</string>
+    <string name="buttonregister">Not Registered?</string>
+    <string name="username">Username</string>
+    <string name="stringlogin">Login</string>
+    <string name="registerButton">Register</string>
+    <string name="buttonFindBuddies">Find</string>
+    <string name="MyLocationHintString">My Location</string>
+    <string name="hintDestinationSearch">Enter destination</string>    
+    <string name="arpit">arpit</string>
+    
+    <color name="black">#ff000000</color>
+    <string name="sloganl1">Share,</string>
+    <string name="sloganl2">right now,</string><string name="stranger">Stranger</string>
+    <string name="buddy">Buddy</string>
+    <color name="red">#ffff0000</color>
+    <color name="yellow">#ffffff00</color>
+    
+    <string name="sloganl3">right here</string>
+    <color name="green">#ff00ff00</color>
+    <color name="springgreen">#008B45</color>
+    <color name="firebrickred">#8b1a1a</color>
+    <string name="fblogintext1">One time FaceBook login </string>
+    <string name="fblogintext2">- establish your credentials,</string>
+    <string name="fblogintext3">- see other users credentials,</string>
+    <string name="fblogintext4">- chat with them</string>
+    <string name="fb_logout">logout</string>
+    <string name="hopon">hopon</string>
+    <string name="locationupdaterservice">locationupdaterservice</string>
+    <string name="request_active">You will be notified if anyone mooovs by you</string>
+    <string name="request_cancel">Click to cancel request</string>
+
+</resources>
