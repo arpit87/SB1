@@ -50,6 +50,8 @@ public class Platform {
 	        } else {
 	          Intent i = new Intent("my.b1701.SB.ChatService.SBChatService");
 	         // i.setClassName("my.b1701.SB.ChatService", "my.b1701.SB.ChatService.SBChatService");
+	          ToastTracker.showToast("service starting ");
+	          Log.d( TAG, "Service starting" );
 	          context.startService(i);
 	          mServiceStarted = true;
 	          //ToastTracker.showToast("service started ");
@@ -66,7 +68,7 @@ public class Platform {
 	          context.stopService(i);
 	          mServiceStarted = true;
 	          ToastTracker.showToast("service stopped ");
-	          Log.d( TAG, "Service started" );
+	          Log.d( TAG, "Service stopped" );
 	         }
 	             
  }

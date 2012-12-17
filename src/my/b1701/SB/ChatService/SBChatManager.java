@@ -12,9 +12,11 @@ import org.jivesoftware.smack.ChatManagerListener;
 import org.jivesoftware.smack.Roster;
 import org.jivesoftware.smack.Roster.SubscriptionMode;
 import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.util.StringUtils;
 
 import android.os.RemoteCallbackList;
 import android.os.RemoteException;
+import android.text.InputFilter.AllCaps;
 import android.util.Log;
 
 public class SBChatManager extends IChatManager.Stub {
@@ -24,7 +26,7 @@ public class SBChatManager extends IChatManager.Stub {
 	private Roster mRoster;	
 	private static final String TAG = "SBChatManager";   
     private final Map<String, ChatAdapter> mAllChats = new HashMap<String, ChatAdapter>();
-    private final SBChatManagerAndMsgListener mChatListener = new SBChatManagerAndMsgListener();
+    private final SBChatManagerAndInitialMsgListener mChatAndInitialMsgListener = new SBChatManagerAndInitialMsgListener();
     private final RemoteCallbackList<IChatManagerListener> mRemoteChatCreationListeners = new RemoteCallbackList<IChatManagerListener>();	
     private SBChatService mService = null;
     private final SBChatRosterListener mChatRosterListener = new SBChatRosterListener();   
@@ -34,9 +36,8 @@ public class SBChatManager extends IChatManager.Stub {
 		this.mXMPPConnection = xmppConnection;
 		this.mChatManager = xmppConnection.getChatManager();
 		this.mService = service;
-		this.mRoster = xmppConnection.getRoster();		
-		this.mRoster.setSubscriptionMode(SubscriptionMode.accept_all);
-		this.mChatManager.addChatListener(mChatListener);		
+		this.mRoster = xmppConnection.getRoster();				
+		this.mChatManager.addChatListener(mChatAndInitialMsgListener);		
 	}
 	
 	/**
@@ -45,22 +46,18 @@ public class SBChatManager extends IChatManager.Stub {
      * @return a chat adapter register in the manager
      */
     private ChatAdapter getChatAdapter(Chat chat) {
-	String key = chat.getParticipant();
+	String key = StringUtils.parseName(chat.getParticipant());
 	if (mAllChats.containsKey(key)) {
 	    return mAllChats.get(key);
 	}
-	ChatAdapter newChatAdapter = new ChatAdapter(chat);	
+	ChatAdapter newChatAdapter = new ChatAdapter(chat,this);	
 	mAllChats.put(key, newChatAdapter);
 	return newChatAdapter;
     }
     
     @Override
     public void deleteChatNotification(IChatAdapter chat) {
-	try {
-	    mService.deleteNotification(Integer.parseInt(chat.getParticipant()));
-	} catch (RemoteException e) {
-	    Log.v(TAG, "Remote exception ", e);
-	}
+	mService.deleteNotification(1);
     }
     
     @Override
@@ -77,7 +74,7 @@ public class SBChatManager extends IChatManager.Stub {
 
 	@Override
 	public IChatAdapter createChat(String participant, IMessageListener listener) throws RemoteException {
-			String key = participant;
+			String key = participant+"@54.243.171.212";
 			ChatAdapter chatAdapter;
 			if (mAllChats.containsKey(key)) {
 				chatAdapter = mAllChats.get(key);
@@ -94,14 +91,36 @@ public class SBChatManager extends IChatManager.Stub {
 	
 	@Override
     public ChatAdapter getChat(String participant) {	
-	return mAllChats.get(participant);
+		String key = participant;
+		if (mAllChats.containsKey(key)) {
+		    return mAllChats.get(key);
+		}
+		return null;
     }   
+	
+	public int numChats()
+	{
+		return mAllChats.size();
+	}
+	
+	public void notifyChat(int id,String participant) { 
+	   			
+			
+	    	mService.sendNotification(id,participant);
+	   
+	}
    
 	
-	private class SBChatManagerAndMsgListener extends IMessageListener.Stub implements ChatManagerListener {
+	
+	private class SBChatManagerAndInitialMsgListener implements ChatManagerListener {
 
-
-		@Override
+		/****
+		 * this is initial remote msg listener registered to a newly remote created chat.It is called back only 
+		 * till this window not opened by user and it keeps showing incoming msgs as notifications.
+		 * as soon the user taps on notification and this chat opens we change msg listener to one with 
+		 * client so that further call backs are handled by SBonChatMsgListener
+		 */
+		/*@Override
 		public void processMessage(IChatAdapter chat,
 				my.b1701.SB.ChatService.Message msg) throws RemoteException {
 			try {
@@ -111,51 +130,35 @@ public class SBChatManager extends IChatManager.Stub {
 					mAllChats.put(chat.getParticipant(), (ChatAdapter) chat);
 				    }
 				    //will put it as notification
-				    notifyNewChat(chat, body);
+				    notifyChat(chat, body);
 				}
 			    } catch (RemoteException e) {
 				Log.e(TAG, e.getMessage());
 			    }
 			
-		}		
+		}*/
 		
 
 		@Override
 		public void chatCreated(Chat chat, boolean locally) {
-			 ChatAdapter newchat;
-			 String key = chat.getParticipant();
+			/// no call backs required on remote chat creation as we showing notification
+			//till chat window opened by user. As soon he opens we will register msglistener
+			//which will then take care of further msgs
+			 ChatAdapter newchatAdapter;
+			 String key = StringUtils.parseName(chat.getParticipant());
 				if (mAllChats.containsKey(key)) {
-					newchat= mAllChats.get(key);
+					newchatAdapter= mAllChats.get(key);
 				}
 				else
-					newchat = new ChatAdapter(chat);
-				
-			    Log.d(TAG, "Chat" + chat.toString() + " created locally " + locally + " with " + chat.getParticipant());
-			    try {
-				newchat.addMessageListener(mChatListener);
-				final int n = mRemoteChatCreationListeners.beginBroadcast();
-
-				for (int i = 0; i < n; i++) {
-				    IChatManagerListener listener = mRemoteChatCreationListeners.getBroadcastItem(i);
-				    listener.chatCreated(newchat, locally);
+				{
+					newchatAdapter = new ChatAdapter(chat,SBChatManager.this);	
+					mAllChats.put(key,newchatAdapter);
 				}
-				mRemoteChatCreationListeners.finishBroadcast();
-			    } catch (RemoteException e) {
-				// The RemoteCallbackList will take care of removing the
-				// dead listeners.
-				Log.w(TAG, " Error while triggering remote connection listeners in chat creation", e);
-			    }
-			}
+				//newchatAdapter.addMessageListener(mChatAndInitialMsgListener);
+			    Log.d(TAG, "Chat" + chat.toString() + " created locally " + locally + " with " + chat.getParticipant());
+			   
 		
-		private void notifyNewChat(IChatAdapter chat, String msgBody) {		    
-		    try {			
-		    	mService.sendNotification(chat.getParticipant(), msgBody);
-		    } catch (RemoteException e) {
-			Log.e(TAG, e.getMessage());
-		    }
-		}
-		
-			
+		}	
 		}
 		
 	

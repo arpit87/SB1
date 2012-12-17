@@ -10,10 +10,12 @@ import my.b1701.SB.ChatService.IChatManager;
 import my.b1701.SB.ChatService.IXMPPAPIs;
 import my.b1701.SB.ChatService.Message;
 import my.b1701.SB.ChatService.SBChatService;
+import my.b1701.SB.HelperClasses.AlertDialogBuilder;
 import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.HelperClasses.ToastTracker;
-import my.b1701.SB.Platform.Platform;
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -32,14 +34,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+@SuppressLint("ParserError")
 public class ChatWindow extends Activity{
 	
-	//private static final Intent SERVICE_INTENT = new Intent();
-
-	//static {
-	//	SERVICE_INTENT.setComponent(new ComponentName("my.b1701.SB.ChatService", "my.b1701.SB.ChatService.SBChatService"));
-	 //   }
-	private static String TAG = "ChatWindow";
+	private static String TAG = "ChatWindow";	
 	private IXMPPAPIs xmppApis = null;
 	private TextView mContactNameTextView;
     private TextView mContactStatusMsgTextView;	 
@@ -52,14 +50,18 @@ public class ChatWindow extends Activity{
     private IChatManager mChatManager;
     private IChatManagerListener mChatManagerListener = new ChatManagerListener();
     private IMessageListener mMessageListener = new SBOnChatMessageListener();
+    private ISBChatConnAndMiscListener mCharServiceConnMiscListener = new SBChatServiceConnAndMiscListener();
     private final ChatServiceConnection mChatServiceConnection = new ChatServiceConnection();
-    private String mParticipant = "";    
-    private boolean selfInitiated = true;
-    private String mThisUserChatID = "";
+    private String mReceiver = "";    
+    private boolean selfInitiated = true;   
     private SBBroadcastReceiver mSBBroadcastReceiver = new SBBroadcastReceiver();
     Handler mHandler = new Handler();
     private SBChatListViewAdapter mMessagesListAdapter = new SBChatListViewAdapter();
     private boolean mBinded = false;
+    private String mThiUserChatUserName = "";
+    private String mThisUserChatPassword = "";
+	private ProgressDialog progressDialog;
+	private boolean onProgress = false; //used to track if progress dialog being shown
     
 		    
 	    @Override
@@ -82,63 +84,74 @@ public class ChatWindow extends Activity{
 			sendMessage();
 		    }
 		});
-		mThisUserChatID = ThisUserConfig.getInstance().getString(ThisUserConfig.FBUID);
+		
+		mThiUserChatUserName = ThisUserConfig.getInstance().getString(ThisUserConfig.CHATUSERID);
+		mThisUserChatPassword = ThisUserConfig.getInstance().getString(ThisUserConfig.CHATPASSWORD);
+		
 }
 
 @Override
 public void onResume() {
 	super.onResume();
-	mParticipant = getIntent().getStringExtra("participant");
-	selfInitiated = getIntent().getBooleanExtra("selfInitiated",true);
-	
-	//if other party initiates
-	if(!selfInitiated)
-	{
-		String from = getIntent().getStringExtra("from");
+	//set participant before binding
+	String oldParticipant = mReceiver;
+	mReceiver = getIntent().getStringExtra("participant");
+	if(mReceiver == "")
+		mReceiver = oldParticipant;	
+	mContactNameTextView.setText(mReceiver);
+	if (!mBinded) 
+		bindToService();
+	else
 		try {
-			changeCurrentChat(from);
-		} catch (RemoteException e) {
+			changeCurrentChat(mReceiver);
+		} catch (RemoteException e1) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e1.printStackTrace();
 		}
+	
 		
 		//String fromMessage = getIntent().getStringExtra("frommessage");
 		//mMessagesListAdapter.addMessage(new SBChatMessage(from, from, fromMessage, false, new Date().toString()));    
 		//mMessagesListAdapter.notifyDataSetChanged();		
-	}
+	
 	//setTitle(getString(R.string.conversation_name) +": " +jid);
-	if (!mBinded) 
-		bindToService();
+	
 }
 	
     
     @Override
     protected void onPause() {
 	super.onPause();
-	try {
+	
 	    if (chatAdapter != null) {
-	    	chatAdapter.setOpen(false);
-	    	chatAdapter.removeMessageListener(mMessageListener);
-	    }
-	    
-	    if (mChatManager != null)
-		mChatManager.removeChatCreationListener(mChatManagerListener);
-	} catch (RemoteException e) {
-	    Log.e(TAG, e.getMessage());
-	}
-	if (mBinded) {
-		releaseService();
-	    mBinded = false;
-	}
-	xmppApis = null;	
-	chatAdapter = null;
-	mChatManager = null;
+	    	try {
+				chatAdapter.setOpen(false);
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}	  
+	    }    
+	   
     }
+    
+    @Override
+    public void onDestroy() {
+    	
+    	super.onDestroy();
+    	if (mBinded) {
+    		releaseService();
+    	    mBinded = false;
+    	}
+    	xmppApis = null;	
+    	chatAdapter = null;
+    	mChatManager = null;    	
+    }
+    
     
     @Override
     protected void onNewIntent(Intent intent) {
 	super.onNewIntent(intent);
-	setIntent(intent);
+	setIntent(intent);	
     }
     
     private void bindToService() {
@@ -153,7 +166,7 @@ public void onResume() {
 	    
 	    private void releaseService() {
     		if(mChatServiceConnection != null) {
-    			unbindService(mChatServiceConnection);    			   			
+    			getApplicationContext().unbindService(mChatServiceConnection);    			   			
     			Log.d( TAG, "chat Service released from chatwindow" );
     		} else {
     			 ToastTracker.showToast("Cannot unbind - service not bound", Toast.LENGTH_SHORT);
@@ -164,25 +177,15 @@ public void onResume() {
 		final String inputContent = mInputField.getText().toString();		
 		if(!"".equals(inputContent))
 		{
-			Message newMessage = new Message(mParticipant,Message.MSG_TYPE_CHAT);
+			Message newMessage = new Message(mReceiver,Message.MSG_TYPE_CHAT);
 			newMessage.setBody(inputContent);
+			newMessage.setFrom(mThiUserChatUserName+"@54.243.171.212");
 			
 			//send msg to xmpp
 			 try {
 					if (chatAdapter == null) {
-						if(mChatManager == null)
-						{
-							try {
-								mChatManager = xmppApis.getChatManager();
-			    			if (mChatManager != null) {
-			    			    mChatManager.addChatCreationListener(mChatManagerListener);
-			    			    //changeCurrentChat(thisUserID);
-			    			}
-			    		    } catch (RemoteException e) {
-			    			Log.e(TAG, e.getMessage());
-			    		    }   
-						}							
-						chatAdapter = mChatManager.createChat(mParticipant, mMessageListener);
+											
+						chatAdapter = mChatManager.createChat(mReceiver, mMessageListener);
 						chatAdapter.setOpen(true);
 					}
 					chatAdapter.sendMessage(newMessage);
@@ -191,17 +194,17 @@ public void onResume() {
 				    }
 			 
 			 	//now update on our view
-			 	final String self = "me";
+			 	//sbchatmsg (from,to,...
 			    SBChatMessage lastMessage = null;
 			    if (mMessagesListAdapter.getCount() != 0)
 			    lastMessage = (SBChatMessage) mMessagesListAdapter.getItem(mMessagesListAdapter.getCount() - 1);
 
-			    if (lastMessage != null && lastMessage.getParticipant().equals(self)) {
+			    if (lastMessage != null && lastMessage.getInitiator().equals(mThiUserChatUserName)) {
 				lastMessage.setMessage(lastMessage.getMessage().concat("\n" + inputContent));
 				lastMessage.setTimestamp(new Date().toString());
 				mMessagesListAdapter.setMessage(mMessagesListAdapter.getCount() - 1, lastMessage);
 			    } else{
-			    mMessagesListAdapter.addMessage(new SBChatMessage(self, self, inputContent, false, new Date().toString()));
+			    mMessagesListAdapter.addMessage(new SBChatMessage(mThiUserChatUserName, mReceiver, inputContent, false, new Date().toString()));
 			    }
 			    mMessagesListAdapter.notifyDataSetChanged();
 		   
@@ -209,32 +212,48 @@ public void onResume() {
 		    mInputField.setText(null);
 		}
 	    
+	    
+	  	private void loginWithProgress() 
+	    {
+	    	progressDialog = ProgressDialog.show(ChatWindow.this, "Logging in", "Please wait..", true);
+	    	onProgress = true;
+	    	try {
+				if(mThiUserChatUserName != "" && mThisUserChatPassword != "")
+					xmppApis.loginWithCallBack(mThiUserChatUserName, mThisUserChatPassword,mCharServiceConnMiscListener);
+			} catch (RemoteException e) {
+				progressDialog.dismiss();				
+				AlertDialogBuilder.showOKDialog(this,"Error", "Problem logging,try later");
+				//ToastTracker.showToast("Error loggin,try later");
+				e.printStackTrace();
+			}
+	    }
+	    //in already open chatWindow this function switches chats
 	    private void changeCurrentChat(String participant) throws RemoteException {
-	    	if (chatAdapter != null) {
-	    		chatAdapter.setOpen(false);
-	    		chatAdapter.removeMessageListener(mMessageListener);
-	    	}
+	    	
 	    	chatAdapter = mChatManager.getChat(participant);
 	    	if (chatAdapter != null) {
 	    		chatAdapter.setOpen(true);
 	    		chatAdapter.addMessageListener(mMessageListener);
-	    	    mChatManager.deleteChatNotification(chatAdapter);
 	    	    
 	    	}
 	    	mContactNameTextView.setText(participant);
-	    	playRegisteredTranscript();
+	    	fetchPastMsgsIfAny();
 	        }
 	    
 	    /**
 	     * Get all messages from the current chat and refresh the activity with them.
 	     * @throws RemoteException If a Binder remote-invocation error occurred.
 	     */
-	    private void playRegisteredTranscript() throws RemoteException {
+	    private void fetchPastMsgsIfAny() throws RemoteException {
 	    	mMessagesListAdapter.clearList();
 		if (chatAdapter != null) {
-		    List<SBChatMessage> msgList = convertMessagesList(chatAdapter.getMessages());
-		    mMessagesListAdapter.addAllToList(msgList);
-		    mMessagesListAdapter.notifyDataSetChanged();
+			List<Message> chatMessages = chatAdapter.getMessages();
+			if(chatMessages.size()>0)
+			{
+			    List<SBChatMessage> msgList = convertMessagesList(chatMessages);
+			    mMessagesListAdapter.addAllToList(msgList);
+			    mMessagesListAdapter.notifyDataSetChanged();
+			}
 		}
 	    }
 
@@ -244,35 +263,61 @@ public void onResume() {
 	     * @return a list of message that can be displayed.
 	     */
 	    private List<SBChatMessage> convertMessagesList(List<Message> chatMessages) {
-		List<SBChatMessage> result = new ArrayList<SBChatMessage>(chatMessages.size());
-		String remoteName = "me";
-		String localName = "me";
-		SBChatMessage lastMessage = null;
+		List<SBChatMessage> result = new ArrayList<SBChatMessage>(chatMessages.size());		
+		SBChatMessage lastMessage = null;		
 		for (Message m : chatMessages) {
-		    String name = remoteName;		    
-		    if (m.getType() == Message.MSG_TYPE_ERROR) {
-			lastMessage = null;
-			result.add(new SBChatMessage(name, name, m.getBody(), true, m.getTimestamp()));
-		    } else if  (m.getType() == Message.MSG_TYPE_INFO) {
-			lastMessage = new SBChatMessage("", "", m.getBody(), false);
-			result.add(lastMessage);
-
-		    } else if (m.getType() == Message.MSG_TYPE_CHAT) {
-			if (m.getFrom() == null) { //nofrom or from == yours
-			    name = localName;			    
-			}
-
+		    		    
+		    if (m.getType() == Message.MSG_TYPE_CHAT) {	
+			
 			if (m.getBody() != null) {
 			    if (lastMessage == null ) {
-				lastMessage = new SBChatMessage(localName, name, m.getBody(), false, m.getTimestamp());
+				lastMessage = new SBChatMessage(m.getInitiator(), m.getReceiver(), m.getBody(), false, m.getTimestamp());
 				result.add(lastMessage);
 			    } else {
-				lastMessage.setMessage(lastMessage.getMessage().concat("\n" + m.getBody()));
+			    	if(m.getInitiator().equals(lastMessage.getInitiator()))
+			    		lastMessage.setMessage(lastMessage.getMessage().concat("\n" + m.getBody()));
+			    	else
+			    	{			    		
+			    		lastMessage = new SBChatMessage(m.getInitiator(), m.getReceiver(), m.getBody(), false, m.getTimestamp());
+			    		result.add(lastMessage);
+			    	}
 			    }
 			}
 		    }
+		    
 		}
 		return result;
+	    }
+	    
+	    public void initializeChatWindow() {
+	    	
+	           	
+	    	if(mChatManager == null)
+			{
+				try {
+					mChatManager = xmppApis.getChatManager();
+    			if (mChatManager != null) {
+    				Log.d(TAG, "Chat manager got");
+    				chatAdapter = mChatManager.createChat(mReceiver, mMessageListener);
+    				if(chatAdapter!=null)
+    				{
+						chatAdapter.setOpen(true);
+						fetchPastMsgsIfAny();
+    				}
+    			   // mChatManager.addChatCreationListener(mChatManagerListener);
+    			    //changeCurrentChat(thisUserID);
+    			}
+    			else
+    			{	Log.d(TAG, "Chat manager not got,will try login");
+    				//loginWithProgress();
+    			}
+    		    } catch (RemoteException e) {
+    			Log.e(TAG, e.getMessage());
+    		    }   
+			}		
+	    	
+	          
+	    	
 	    }
 	    
 	    
@@ -283,16 +328,7 @@ public void onResume() {
 	    		ToastTracker.showToast("onServiceConnected called", Toast.LENGTH_SHORT);
 	    		Log.d(TAG,"onServiceConnected called");
 	    		xmppApis = IXMPPAPIs.Stub.asInterface((IBinder)boundService);
-	    		    try {	    			
-	    			mChatManager = xmppApis.getChatManager();
-	    			if (mChatManager != null) {
-	    			    mChatManager.addChatCreationListener(mChatManagerListener);
-	    			    //changeCurrentChat(thisUserID);
-	    			}
-	    		    } catch (RemoteException e) {
-	    			Log.e(TAG, e.getMessage());
-	    		    }   
-	    		
+	    		initializeChatWindow();    	
 	    		Log.d(TAG,"service connected");
 	    	}
 
@@ -311,13 +347,15 @@ public void onResume() {
 	    } 
 	    
  
-//this is callback method executed on client when ChatService receives a message	    
+//this is callback method executed on client when ChatService receives a message	
 private class SBOnChatMessageListener extends IMessageListener.Stub {
+	//this method appends to current chat, we open new chat only on notification tap or user taps on list
+	//i.e. we open new chat window only on intent
 	@Override
-	public void processMessage(IChatAdapter chat, final Message msg)
+	public void processMessage(final IChatAdapter chatAdapter, final Message msg)
 			throws RemoteException {		
 		
-				mHandler.post(new Runnable() {
+		 	mHandler.post(new Runnable() {
 
 				    @Override
 				    public void run() {
@@ -325,25 +363,24 @@ private class SBOnChatMessageListener extends IMessageListener.Stub {
 					   // mMessagesListAdapter.notifyDataSetChanged();
 					} else if (msg.getBody() != null) {
 					    SBChatMessage lastMessage = null;
-					    String self = "me";
+					    
 					    if (mMessagesListAdapter.getCount() != 0)
 					    	lastMessage = (SBChatMessage) mMessagesListAdapter.getItem(mMessagesListAdapter.getCount()-1);
 
-					    if (lastMessage != null && !lastMessage.getParticipant().equals(self)) {
+					    if (lastMessage != null && !lastMessage.getInitiator().equals(mThiUserChatUserName)) {
 					    	lastMessage.setMessage(lastMessage.getMessage().concat("\n" + msg.getBody()));
 					    	lastMessage.setTimestamp(msg.getTimestamp());					    
 					    	mMessagesListAdapter.setMessage(mMessagesListAdapter.getCount() - 1, lastMessage);
 					    
 					    } else if (msg.getBody() != null){
-					    	mMessagesListAdapter.addMessage(new SBChatMessage(msg.getFrom(), msg.getFrom(), msg.getBody(),
-						    false, msg.getTimestamp()));}
+					    	mMessagesListAdapter.addMessage(new SBChatMessage(msg.getInitiator(), msg.getReceiver(), msg.getBody(),false, msg.getTimestamp()));}
 					    mMessagesListAdapter.notifyDataSetChanged();
 					
 				    }}
 				    
 				});
-	
-	    }
+		    }
+	    
 	}
 
 //this is the callback class to track chatmanger on ChatService
@@ -354,7 +391,7 @@ private class ChatManagerListener extends IChatManagerListener.Stub {
 	    if (locally)
 		return;
 	    try {
-	    	mParticipant = chat.getParticipant();
+	    	mReceiver = chat.getParticipant();
 	    	//changeCurrentChat(mParticipant);
 		//String chatJid = chat.getParticipant().getJIDWithRes();
 		
@@ -364,14 +401,63 @@ private class ChatManagerListener extends IChatManagerListener.Stub {
 		    }
 		    chatAdapter = chat;
 		    chatAdapter.setOpen(true);
-		    chatAdapter.addMessageListener(mMessageListener);
-		    mChatManager.deleteChatNotification(chatAdapter);
+		    chatAdapter.addMessageListener(mMessageListener);		   
 		
 	    } catch (RemoteException ex) {
 		Log.e(TAG, "A remote exception occurs during the creation of a chat", ex);
 	    }
 	}
     }
+
+private class SBChatServiceConnAndMiscListener extends ISBChatConnAndMiscListener.Stub{
+
+	@Override
+	public void loggedIn() throws RemoteException {
+		if(progressDialog.isShowing())
+		{
+			progressDialog.dismiss();			
+		}
+		ToastTracker.showToast("chatwindow callback,loggedin");		
+	}
+
+	@Override
+	public void connectionClosed() throws RemoteException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void connectionClosedOnError() throws RemoteException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void reconnectingIn(int seconds) throws RemoteException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void reconnectionFailed() throws RemoteException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void reconnectionSuccessful() throws RemoteException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void connectionFailed(String errorMsg) throws RemoteException {
+		// TODO Auto-generated method stub
+		
+	}
+	
+}
+
 
 
 	    

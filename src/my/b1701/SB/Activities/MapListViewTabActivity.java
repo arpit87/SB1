@@ -31,6 +31,8 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.Window;
+import com.google.android.maps.MapActivity;
 
 
 public class MapListViewTabActivity extends SherlockFragmentActivity {
@@ -47,7 +49,7 @@ public class MapListViewTabActivity extends SherlockFragmentActivity {
 	private SherlockActionBarTab mapTab;
 	private SherlockActionBarTab listTab;
 	private TabHost tabHost;
-	private ImageButton selfLocationButton;
+	private ImageButton selfLocationButton = null;
 	private SBMapFragment mapFrag;
 	private SBListFragment listFrag;
 	ActionBar ab;
@@ -75,10 +77,11 @@ public class MapListViewTabActivity extends SherlockFragmentActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature((int) Window.FEATURE_ACTION_BAR_OVERLAY); 
         setContentView(R.layout.tab_navigation);
         ab= getSupportActionBar();
-        ToastTracker.showToast("Your userid:"+ThisUser.getInstance().getUserID());        
-              
+       ab.setBackgroundDrawable(getResources().getDrawable(R.drawable.abs_transparent));        
+        ToastTracker.showToast("Your userid:"+ThisUser.getInstance().getUserID());
         ab.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);       
         ab.setDisplayHomeAsUpEnabled(false);
         ab.setDisplayShowTitleEnabled(false);
@@ -128,18 +131,25 @@ public class MapListViewTabActivity extends SherlockFragmentActivity {
         case R.id.menu_search:
         	onSearchRequested();
         	break;
-        case R.id.menu_more:        	
-        	
+        case R.id.fb_logout_menuitem:
+        	//logout from chat server?
+			FacebookConnector fbconnect = new FacebookConnector(MapListViewTabActivity.this);
+        	fbconnect.logoutFromFB();
+        	break;
+        case R.id.settings_menuitem:
+        	break;
+        case R.id.exit_app_menuitem:
+        	//delete user request,close service
+        	Platform.getInstance().stopChatService();
+        	finish();
         	break;       	
         
-        }      
-        
-		
+        } 
         return super.onOptionsItemSelected(menuItem);
     }
     
     //show main screen popup menu
-    private void showPopupMenu(View v){
+   /* private void showPopupMenu(View v){
     	   PopupMenu popupMenu = new PopupMenu(MapListViewTabActivity.this, v);
     	      popupMenu.getMenuInflater().inflate(R.menu.maindropdown, popupMenu.getMenu());
     	    
@@ -147,40 +157,25 @@ public class MapListViewTabActivity extends SherlockFragmentActivity {
     	    
     	      popupMenu.show();
     	  }
-    	
-    private class OnMainMenuDropDownClickListener implements OnMenuItemClickListener
-    {
-
-		@Override
-		public boolean onMenuItemClick(android.view.MenuItem menuItem) {
-			switch (menuItem.getItemId())
-	        {
-	        case R.id.fb_logout_menuitem:
-	        	//logout from chat server?
-				FacebookConnector fbconnect = new FacebookConnector(MapListViewTabActivity.this);
-	        	fbconnect.logoutFromFB();
-	        	break;
-	        case R.id.settings_menuitem:
-	        	break;
-	        case R.id.exit_app_menuitem:
-	        	//delete user request,close service
-	        	Platform.getInstance().stopChatService();
-	        	finish();
-	        	break;
-	        	
-	        }
-			
-			return false;
-		}
-    	
-    }
-
+    	*/
+   
     
    /* public void showMainDropDownMenu(View v) {
         PopupMenu popup = new PopupMenu(this, v);         
         popup.getMenuInflater().inflate(R.menu.maindropdown,popup.getMenu());  
         popup.show();
     }*/
+    
+    public void buttonOnMapClick(View button)
+    {
+    	switch(button.getId())
+    	{
+    	case R.id.my_location_button:
+    		MapListActivityHandler.getInstance().myLocationButtonClick();
+    		ab.hide();
+    		break;
+    	}
+    }
 
     public ViewGroup getThisMapContainerWithMapView()
     {
@@ -195,7 +190,7 @@ public class MapListViewTabActivity extends SherlockFragmentActivity {
             Log.i(TAG,"initialize handler");
             Log.i(TAG,"initialize mylocation");
             ToastTracker.showToast("Updating location..",1);
-            MapListActivityHandler.getInstance().initMyLocation();
+            MapListActivityHandler.getInstance().initMyLocation();            
     		//mMapViewContainer.removeView(mMapView);
     	}
     	else

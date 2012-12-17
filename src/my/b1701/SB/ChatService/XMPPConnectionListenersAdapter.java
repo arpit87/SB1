@@ -1,5 +1,7 @@
 package my.b1701.SB.ChatService;
 
+import my.b1701.SB.ChatClient.ISBChatConnAndMiscListener;
+import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.HelperClasses.ToastTracker;
 
 import org.jivesoftware.smack.ConnectionConfiguration;
@@ -9,6 +11,8 @@ import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Presence;
 
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.RemoteCallbackList;
 import android.os.RemoteException;
 import android.util.Log;
 import android.widget.Toast;
@@ -18,33 +22,46 @@ public class XMPPConnectionListenersAdapter {
 	private final XMPPConnection mXMPPConnection;
 	private String TAG = "XMPPConnectionListenersAdapter";
 	SBChatService mService = null;
-	private final String mLogin;
-    private final String mPassword;
+	private String mLogin;
+    private String mPassword;
     private SBChatConnectionListener mConnectionListener = new SBChatConnectionListener();
     private String mErrorMsg = "";   
     public boolean isConnected = false;
     public boolean isLoggedIn = false;
+    public boolean tryinLogging = false;
 	private ConnectToChatServerTask connectToServer = null;
 	private LoginToChatServerTask loginToServer = null;
 	private SBChatManager mChatManager = null;
+	private Handler handler = new Handler();
+	private final RemoteCallbackList<ISBChatConnAndMiscListener> mRemoteMiscListeners = new RemoteCallbackList<ISBChatConnAndMiscListener>();
 	
 	
  public XMPPConnectionListenersAdapter(final ConnectionConfiguration config,  final SBChatService service) {
 		this(new XMPPConnection(config), service);
 	    }
 	
+ public void addMiscCallBackListener(ISBChatConnAndMiscListener listener) throws RemoteException {
+	if (listener != null)
+		mRemoteMiscListeners.register(listener);
+ }
+	
+public void removeMiscCallBackListener(ISBChatConnAndMiscListener listener) throws RemoteException {
+	if (listener != null)
+		mRemoteMiscListeners.unregister(listener);
+ }
+
 
 	 public XMPPConnectionListenersAdapter(final XMPPConnection con,
 			     final SBChatService service) {
 		 mXMPPConnection = con;	
-		//mLogin = ThisUserConfig.getInstance().getString(ThisUserConfig.FBUID);		
-		//mPassword = ThisUserConfig.getInstance().getString(ThisUserConfig.PASSWORD);
-		mLogin = "test";
-		mPassword = "test";
+		mLogin = ThisUserConfig.getInstance().getString(ThisUserConfig.CHATUSERID);		
+		mPassword = ThisUserConfig.getInstance().getString(ThisUserConfig.CHATPASSWORD);
+		//mLogin = "test";
+		//mPassword = "test";
 		mService = service;	
 		Log.d(TAG, "xmpp connection listener will connect");
-		connectToServer = new ConnectToChatServerTask();
-		connectToServer.execute(this);		
+		//connectToServer = new ConnectToChatServerTask();
+		//connectToServer.execute(this);		
 		
 		
 		//try {			
@@ -117,12 +134,35 @@ public class XMPPConnectionListenersAdapter {
 		return true;
 	    }
 	
-	    public boolean login(String login,String password) throws RemoteException {
-	/*	if (mXMPPConnection.isAuthenticated())
+	
+	public void loginAsync(String login,String password)
+	{		
+		if(tryinLogging)
+			return;
+		mLogin = login;
+		mPassword = password;
+		tryinLogging = true;
+		if(!isConnected)
+		{
+			connectToServer = new ConnectToChatServerTask();
+			connectToServer.execute(this);
+		}
+		else
+		{			
+			loginToServer = new LoginToChatServerTask();
+			loginToServer.execute(this);
+		}
+	}
+	
+	//this should be called in separate thread
+	    private boolean login() throws RemoteException {
+	    if( isLoggedIn == true)
+	    		return true;
+		if (mXMPPConnection.isAuthenticated())
 		{
 			isLoggedIn = true;
 		    return isLoggedIn;
-		}*/
+		}
 	    	//ToastTracker.showToast("tryin login but xmppconnected?"+mXMPPConnection.isConnected(), Toast.LENGTH_SHORT);
 		if (!mXMPPConnection.isConnected())
 		{
@@ -132,7 +172,7 @@ public class XMPPConnectionListenersAdapter {
 		    return isLoggedIn;
 		}
 		try {
-			mXMPPConnection.login(login, password);		    
+			mXMPPConnection.login(mLogin, mPassword);		    
 		    isLoggedIn = true;
 		    
 		} catch (XMPPException e) {
@@ -238,10 +278,20 @@ private class ConnectToChatServerTask extends AsyncTask<XMPPConnectionListenersA
 	
 	protected void onPostExecute(Boolean connected) {
 	if(connected)
-	{
-		Toast.makeText(mService, "connected to xmpp", Toast.LENGTH_SHORT).show();
-		loginToServer = new LoginToChatServerTask();
-		loginToServer.execute(adapter);
+	{		
+		if(mLogin != "" && mPassword != ""){
+			loginToServer = new LoginToChatServerTask();
+			loginToServer.execute(adapter);
+			Toast.makeText(mService, "connected to xmpp,logging", Toast.LENGTH_SHORT).show();
+			
+		}
+		else
+		{
+			Toast.makeText(mService, "connected to xmpp but not logging", Toast.LENGTH_SHORT).show();
+			tryinLogging = false;
+		}
+		
+		
 		
 	}
 	}
@@ -258,7 +308,7 @@ private class LoginToChatServerTask extends AsyncTask<XMPPConnectionListenersAda
 		XMPPConnectionListenersAdapter adapter = connection[0];	
 		Log.d(TAG, "logging on separate thread");
 		   try{ 
-		    if (!adapter.login(mLogin,mPassword)) {				
+		    if (!adapter.login()) {				
 			publishProgress(25);
 			return false;
 		    }
@@ -271,10 +321,35 @@ private class LoginToChatServerTask extends AsyncTask<XMPPConnectionListenersAda
 	}	
 	
 	protected void onPostExecute(Boolean connected) {
-		 Toast.makeText(mService, "logged in  to xmpp", Toast.LENGTH_SHORT).show();
+			Toast.makeText(mService, "logged in  to xmpp", Toast.LENGTH_SHORT).show();
+			tryinLogging = false;
 		 	mChatManager = new SBChatManager(mXMPPConnection, mService);
-		 	Presence presence = new Presence(Presence.Type.available);
-		 	mXMPPConnection.sendPacket(presence);
+		 	Runnable sendPresence = new Runnable() {
+				
+				@Override
+				public void run() {
+					Presence presence = new Presence(Presence.Type.available);
+				 	mXMPPConnection.sendPacket(presence);					
+				}
+			};
+			sendPresence.run();
+		 	
+		 	int n = mRemoteMiscListeners.beginBroadcast();
+
+			for (int i = 0; i < n; i++) {
+				ISBChatConnAndMiscListener listener = mRemoteMiscListeners.getBroadcastItem(i);
+			    try {
+					listener.loggedIn();
+					//??can remove before finishbroadcast?
+					
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			mRemoteMiscListeners.finishBroadcast();		
+			
+			
 		}
 
 	

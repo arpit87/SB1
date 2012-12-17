@@ -4,39 +4,15 @@ import java.util.Date;
 
 public class SBChatMessage {
 
-	private String mParticipant;
-	private String mName;
+		private String mName;
 	private String mMessage;
 	private boolean mIsError;
 	private String mTimestamp;
+	private String mFrom;
+	private String mTo;
 
-	/**
-	 * Constructor.
-	 * @param bareJid A String containing the bare JID of the message's author.
-	 * @param name A String containing the name of the message's author.
-	 * @param message A String containing the message.
-	 */
-	public SBChatMessage(final String participant, final String name, final String message) {
-		mParticipant = participant;
-	    mName = name;
-	    mMessage = message;
-	    mIsError = false;
-	}
-
-	/**
-	 * Constructor.
-	 * @param bareJid A String containing the bare JID of the message's author.
-	 * @param name A String containing the name of the message's author.
-	 * @param message A String containing the message.
-	 * @param isError if the message is an error message.
-	 */
-	public SBChatMessage(final String participant, final String name, final String message, final boolean isError) {
-		mParticipant = participant;
-	    mName = name;
-	    mMessage = message;
-	    mIsError = isError;
-	}
-
+	
+	
 	/**
 	 * Constructor.
 	 * @param bareJid A String containing the bare JID of the message's author.
@@ -45,10 +21,10 @@ public class SBChatMessage {
 	 * @param isError if the message is an error message.
 	 * @param date the time of the message.
 	 */
-	public SBChatMessage(final String participant, final String name, final String message, final boolean isError,
+	public SBChatMessage(final String from, String to, final String message, final boolean isError,
 	    final String time) {
-		mParticipant = participant;
-	    mName = name;
+		mTo = to;
+		mFrom = from;	    
 	    mMessage = message;
 	    mIsError = isError;
 	    mTimestamp = time;
@@ -58,8 +34,13 @@ public class SBChatMessage {
 	 * JID attribute accessor.
 	 * @return A String containing the bare JID of the message's author.
 	 */
-	public String getParticipant() {
-	    return mParticipant;
+	public String getReceiver() {
+	    return mTo;
+	}
+	
+	public String getInitiator()
+	{
+		return mFrom;
 	}
 
 	/**
@@ -78,15 +59,7 @@ public class SBChatMessage {
 	    return mMessage;
 	}
 
-	/**
-	 * JID attribute mutator.
-	 * @param bareJid A String containing the author's bare JID of the message.
-	 */
-	@SuppressWarnings("unused")
-	public void setBareJid(String participant) {
-		mParticipant = participant;
-	}
-
+	
 	/**
 	 * Name attribute mutator.
 	 * @param name A String containing the author's name of the message.

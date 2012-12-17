@@ -82,10 +82,10 @@ public class SBChatListViewAdapter extends BaseAdapter {
 	    } else {
 	    chatRowView = convertView;
 	    }
-	    DateFormat df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM);
+	    
 	    SBChatMessage msg = mListMessages.get(position);
 	    TextView msgName = (TextView) chatRowView.findViewById(R.id.chatmessagename);
-	    msgName.setText(msg.getName());
+	    msgName.setText(msg.getInitiator());
 	    msgName.setTextColor(Color.WHITE);
 	    msgName.setError(null);
 	    TextView msgText = (TextView) chatRowView.findViewById(R.id.chatmessagetext);

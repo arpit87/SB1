@@ -1,6 +1,7 @@
 package my.b1701.SB.ChatService;
 
 import my.b1701.SB.ChatService.IChatManager;
+import my.b1701.SB.ChatClient.ISBChatConnAndMiscListener;
 
 interface IXMPPAPIs {
 	     
@@ -16,9 +17,13 @@ interface IXMPPAPIs {
      */
     void disconnect();
     
-     void login(in String login, in String password);
+     void loginAsync(in String login, in String password);
+     
+     void loginWithCallBack(in String login, in String password,in ISBChatConnAndMiscListener listener);
      
      boolean isLoggedIn();
+     
+     boolean tryingLogging();
 
     /**
      * Get the chat manager.

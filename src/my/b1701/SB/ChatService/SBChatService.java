@@ -8,8 +8,8 @@ import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.ConnectionListener;
 import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.Roster;
-import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.Roster.SubscriptionMode;
+import org.jivesoftware.smack.XMPPConnection;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -23,12 +23,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.IBinder;
-import android.os.RemoteException;
 import android.util.Log;
 import android.widget.Toast;
 
-
-@SuppressLint({ "NewApi", "NewApi", "NewApi", "NewApi", "NewApi", "NewApi" })
 public class SBChatService extends Service {
 
 	private static String TAG = "SBChatService";
@@ -45,6 +42,7 @@ public class SBChatService extends Service {
 	private Roster mRoster = null;
 	private ConnectionListener connectionListener = null;
 	private PacketListener msgListener = null;	
+	public static boolean isRunning=false;
 	
 	 /** Broadcast intent type. */
     public static final String SBCHAT_CONNECTION_CLOSED = "SBConnectionClosed";
@@ -54,14 +52,17 @@ public class SBChatService extends Service {
 	@Override
 	public void onCreate(){
 		super.onCreate();
+		if(isRunning)
+		{
+			Toast.makeText(this, "Already running ChatService", Toast.LENGTH_SHORT);
+			Log.d(TAG, "Already running ChatService");
+			return;
+		}
 		Log.d(TAG, "Started ChatService");
-		Toast.makeText(this, "started service", Toast.LENGTH_SHORT).show();
-		android.os.Debug.waitForDebugger();
+		Toast.makeText(this, "started service", Toast.LENGTH_SHORT).show();		
 		registerReceiver(mReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 		registerReceiver(mReceiver, new IntentFilter(SBLOGIN_TO_CHAT));
-		//mUserName = ThisUserConfig.getInstance().getString(ThisUserConfig.FBUID);		
-		//mPassword = ThisUserConfig.getInstance().getString(ThisUserConfig.PASSWORD);
-		
+				
 		mPort = DEFAULT_XMPP_PORT;
 		
 		initializeConfigration();
@@ -75,12 +76,21 @@ public class SBChatService extends Service {
 		
 		mXMPPAPIs = new XMPPAPIs(mConnectionAdapter);
 		Log.d(TAG, "Created ChatService");
-		
+		isRunning = true;
 	}
+	
+	@Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.i("LocalService", "Received start id " + startId + ": " + intent);
+        // We want this service to continue running until it is explicitly
+        // stopped, so return sticky.
+        return START_STICKY;
+    }
 	
 	@Override
     public void onDestroy() {
 	super.onDestroy();
+	isRunning = false;
 	mNotificationManager.cancelAll();
 	unregisterReceiver(mReceiver);
 	if (mConnectionAdapter.isAuthenticated() && SBConnectivity.isConnected(this))
@@ -103,28 +113,30 @@ public class SBChatService extends Service {
 	return mXMPPAPIs;
     }
 	
-	 @SuppressLint("NewApi")
-	public void sendNotification(String id, String text) {
+
+	public void sendNotification(int id,String participant) {
 
 		 Intent chatIntent = new Intent(this,ChatWindow.class);
-		 	chatIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP
-		 			| Intent.FLAG_ACTIVITY_NEW_TASK);
-		   chatIntent.putExtra("participant", id);	 
+		 	chatIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+		   chatIntent.putExtra("participant", participant);	 
 			    
-		 PendingIntent pintent = PendingIntent.getActivity(this, 0, chatIntent, 0);			
+		 PendingIntent pintent = PendingIntent.getActivity(this, 0, chatIntent, PendingIntent.FLAG_ONE_SHOT);			
 		 
-		 Notification notif = new Notification.Builder(this).setContentTitle("New Chat")
-         .setContentText(text)
-         .setSmallIcon(R.drawable.chat_horn3)   
+		 Notification notif = new Notification(R.drawable.chat_horn,"New message from:"+participant,System.currentTimeMillis());
+		 notif.flags |= Notification.FLAG_AUTO_CANCEL;
+		 notif.setLatestEventInfo(this, "Tap to open chat", "new message", pintent);
+				 /*
+         .setContentText("New message from:"+participant)
+         .setSmallIcon(R.drawable.chat_horn3)  
          .setAutoCancel(true)
          .setContentIntent(pintent)
-         .build();
+         .build();*/
 		 
 			notif.ledARGB = 0xff0000ff; // Blue color
 			notif.ledOnMS = 1000;
 			notif.ledOffMS = 1000;
 			notif.defaults |= Notification.DEFAULT_LIGHTS;			
-			mNotificationManager.notify(Integer.parseInt(id), notif);
+			mNotificationManager.notify(id, notif);
 		    }
 	 
 	 public void deleteNotification(int id) {
@@ -134,8 +146,6 @@ public class SBChatService extends Service {
 	
 
 class SBChatBroadcastReceiver extends BroadcastReceiver{
-
-   
    
     @Override
     public void onReceive(final Context context, final Intent intent) {
@@ -160,12 +170,7 @@ class SBChatBroadcastReceiver extends BroadcastReceiver{
 		String password = intent.getStringExtra("password");
 		Toast.makeText(context, "tryin loggin from intent",
 			    Toast.LENGTH_SHORT).show();
-		//TODO:waht if not able to login here
-		try {
-			mConnectionAdapter.login(login, password);
-		} catch (RemoteException e) {			
-			e.printStackTrace();
-		}
+		mConnectionAdapter.loginAsync(login, password);
 	}
   }
 }

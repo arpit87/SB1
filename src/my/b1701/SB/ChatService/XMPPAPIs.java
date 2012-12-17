@@ -1,5 +1,6 @@
 package my.b1701.SB.ChatService;
 
+import my.b1701.SB.ChatClient.ISBChatConnAndMiscListener;
 import android.os.RemoteException;
 
 
@@ -38,8 +39,15 @@ public class XMPPAPIs extends IXMPPAPIs.Stub {
 	}
 
 	@Override
-	public void login(String login,String password) throws RemoteException {
-		mConnectionAdapter.login(login, password);
+	public void loginAsync(String login,String password) throws RemoteException {
+		mConnectionAdapter.loginAsync(login, password);
+		
+	}
+	
+	@Override
+	public void loginWithCallBack(String login,String password,ISBChatConnAndMiscListener listener) throws RemoteException {
+		mConnectionAdapter.addMiscCallBackListener(listener);
+		mConnectionAdapter.loginAsync(login, password);
 		
 	}
 
@@ -53,6 +61,12 @@ public class XMPPAPIs extends IXMPPAPIs.Stub {
 	public boolean isConnected() throws RemoteException {
 		// TODO Auto-generated method stub
 		return mConnectionAdapter.isConnected;
+	}
+
+	@Override
+	public boolean tryingLogging() throws RemoteException {
+		// TODO Auto-generated method stub
+		return mConnectionAdapter.tryinLogging;
 	}
 
 	

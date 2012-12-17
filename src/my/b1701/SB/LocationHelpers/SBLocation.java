@@ -7,9 +7,6 @@ public class SBLocation extends Location{
 	public SBLocation(Location l) {		
 		super(l);
 		
-	}
-	
-		
-	
+	}	
 
 }

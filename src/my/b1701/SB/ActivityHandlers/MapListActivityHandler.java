@@ -3,11 +3,10 @@ package my.b1701.SB.ActivityHandlers;
 import java.util.List;
 
 import my.b1701.SB.Activities.MapListViewTabActivity;
-import my.b1701.SB.CustomViewsAndListeners.OnSingleTapListener;
 import my.b1701.SB.CustomViewsAndListeners.SBMapView;
 import my.b1701.SB.Fragments.SBListFragment;
 import my.b1701.SB.Fragments.SBMapFragment;
-import my.b1701.SB.HelperClasses.ToastTracker;
+import my.b1701.SB.LocationHelpers.SBGeoPoint;
 import my.b1701.SB.LocationHelpers.SBLocation;
 import my.b1701.SB.LocationHelpers.SBLocationManager;
 import my.b1701.SB.MapHelpers.BaseItemizedOverlay;
@@ -20,7 +19,6 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.util.Log;
-import android.view.MotionEvent;
 
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
@@ -96,14 +94,15 @@ public class MapListActivityHandler  {
 		
 	public void initMyLocation() 
 	{ 
-		SBLocation currLoc = SBLocationManager.getInstance().getLastXMinBestLocation(5);
+		
+		SBLocation currLoc = SBLocationManager.getInstance().getLastXSecBestLocation(5*60);
 		if(currLoc == null)
 		{
 			//location not found yet after initial screen!try more for 6 secs
 			progressDialog = ProgressDialog.show(underlyingActivity, "Problem fetching location", "Trying,please wait..", true);			
 			 Runnable fetchLocation = new Runnable() {
 			      public void run() {
-			    	  SBLocation currLoc = SBLocationManager.getInstance().getLastXMinBestLocation(2);
+			    	  SBLocation currLoc = SBLocationManager.getInstance().getLastXSecBestLocation(6*60);
 			    	  progressDialog.dismiss();
 			    	  if(currLoc != null)
 			    	  {			    		  
@@ -132,6 +131,44 @@ public class MapListActivityHandler  {
 			putInitialOverlay();		
 		}
 	}
+	
+	public void myLocationButtonClick()
+	{
+		if(!mapInitialized)
+		{
+			initMyLocation();	
+			return;
+		}
+		
+		int startInterval = 60;
+		SBLocation thisCurrLoc = SBLocationManager.getInstance().getLastXSecBestLocation(startInterval);
+		if(thisCurrLoc == null)
+		{
+			progressDialog = ProgressDialog.show(underlyingActivity, "Fetching location", "Please wait..", true);
+			for(int attempt = 1 ; attempt <= 4; attempt++ )
+			{
+				thisCurrLoc = SBLocationManager.getInstance().getLastXSecBestLocation(startInterval*attempt);
+				if(thisCurrLoc != null)
+				{
+					progressDialog.dismiss();
+					ThisUser.getInstance().setLocation(thisCurrLoc);
+					updateThisUserMapOverlay();
+					centreMapTo(ThisUser.getInstance().getCurrentGeoPoint());
+					return;
+				}
+			}
+			progressDialog.dismiss();
+	}
+		centreMapTo(ThisUser.getInstance().getCurrentGeoPoint());
+	}
+		
+public void centreMapTo(SBGeoPoint centrePoint)
+{
+	if(centrePoint !=null)
+		mapcontroller.animateTo(centrePoint);
+}
+	
+	
 	
 	private void putInitialOverlay()
 	{

@@ -2,6 +2,9 @@ package my.b1701.SB.ChatService;
 
 import java.util.Date;
 
+import my.b1701.SB.R;
+import my.b1701.SB.Platform.Platform;
+
 import org.jivesoftware.smack.packet.XMPPError;
 import org.jivesoftware.smack.util.StringUtils;
 
@@ -9,7 +12,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
-
+//mFrom,to should have ip appended
+//getParticipant gives name widout ip
 public class Message implements Parcelable {
 
 	private static String TAG = "Message";
@@ -58,7 +62,7 @@ private String mTime;
  * @param type the message type
  */
 public Message(final String to, final int type) {
-mTo = to;
+mTo = to ;
 mType = type;
 mBody = "";
 mSubject = "";
@@ -101,7 +105,7 @@ switch (smackMsg.getType()) {
 	Log.w(TAG, "message type error" + smackMsg.getType());
 	break;
 }
-this.mFrom = StringUtils.parseName(smackMsg.getFrom());
+this.mFrom = smackMsg.getFrom();
 if (mType == MSG_TYPE_ERROR) {
     XMPPError er = smackMsg.getError();
     String msg = er.getMessage();
@@ -223,6 +227,18 @@ this.mFrom = from;
  */
 public String getFrom() {
 return mFrom;
+}
+
+/**
+ * Get the from field of the message.
+ * @return the mFrom
+ */
+public String getReceiver() {
+return StringUtils.parseName(mTo);
+}
+
+public String getInitiator() {
+return StringUtils.parseName(mFrom);
 }
 
 /**
