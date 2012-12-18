@@ -60,5 +60,6 @@
     <string name="chatservice">chatservice</string>
     <string name="sbchatservicedescription">chat service</string>
     <string name="serverip">54.243.171.212</string>
+    <string name="icon_offerride">offer ride?</string>
 
 </resources>
