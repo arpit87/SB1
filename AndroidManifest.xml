@@ -33,21 +33,22 @@
         
        <activity android:name=".test.ChatLoginActivity" 
             android:theme="@android:style/Theme.NoTitleBar" 
-            android:screenOrientation="portrait" >    
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>       
+            android:screenOrientation="portrait" >   
+                  
         </activity>
        
         <activity
             android:name=".Activities.StartStrangerBuddyActivity" 
             android:theme="@android:style/Theme.NoTitleBar" >
-             
+              <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity android:name=".Activities.StartButtonActivity" 
             android:theme="@android:style/Theme.NoTitleBar" 
             android:screenOrientation="portrait" >
+			  
         </activity>
          <activity android:name=".Activities.SBMapViewActivity" 
             android:theme="@android:style/Theme.NoTitleBar" 
