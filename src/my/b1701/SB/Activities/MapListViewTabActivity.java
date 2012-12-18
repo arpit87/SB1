@@ -14,6 +14,8 @@ import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.TabHelpers.SherLockActionBarTabListener;
 import my.b1701.SB.TabHelpers.SherlockActionBarTab;
 import my.b1701.SB.Users.ThisUser;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -25,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TabHost;
+import android.widget.ToggleButton;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -50,6 +53,7 @@ public class MapListViewTabActivity extends SherlockFragmentActivity {
 	private SherlockActionBarTab listTab;
 	private TabHost tabHost;
 	private ImageButton selfLocationButton = null;
+	private ToggleButton offerRideButton = null;
 	private SBMapFragment mapFrag;
 	private SBListFragment listFrag;
 	ActionBar ab;
@@ -171,19 +175,40 @@ public class MapListViewTabActivity extends SherlockFragmentActivity {
     	switch(button.getId())
     	{
     	case R.id.my_location_button:
-    		MapListActivityHandler.getInstance().myLocationButtonClick();
-    		ab.hide();
+    		MapListActivityHandler.getInstance().myLocationButtonClick();    		
+    		break;
+    	
+    	case R.id.offerride_button:
+    		offerRideClick();
     		break;
     	}
     }
 
-    public ViewGroup getThisMapContainerWithMapView()
+    private void offerRideClick() {
+    	String message = "";
+    	final boolean currentIsOfferMode = ThisUserConfig.getInstance().getBool(ThisUserConfig.IsOfferMode);
+    	 if(!currentIsOfferMode)
+        	{
+        		message = "Ride offering mode enabled";
+        		ThisUserConfig.getInstance().putBool(ThisUserConfig.IsOfferMode,true);
+        	}
+        	else
+        	{
+        		message = "Ride offering mode disabled";
+        		ThisUserConfig.getInstance().putBool(ThisUserConfig.IsOfferMode,false);
+        	}	
+    		
+    	ToastTracker.showToast(message);		
+	}
+
+	public ViewGroup getThisMapContainerWithMapView()
     {
     	if(mMapViewContainer == null)
     	{
     		mMapViewContainer = (ViewGroup) getLayoutInflater().inflate(R.layout.map,null,false);
     		mMapView = (SBMapView) mMapViewContainer.findViewById(R.id.map_view);
     		selfLocationButton = (ImageButton) mMapViewContainer.findViewById(R.id.my_location_button);
+    		offerRideButton = (ToggleButton) mMapViewContainer.findViewById(R.id.offerride_button);
     		mMapView.getOverlays().clear();
     		MapListActivityHandler.getInstance().setMapView(mMapView);
             MapListActivityHandler.getInstance().setUnderlyingActivity(this);

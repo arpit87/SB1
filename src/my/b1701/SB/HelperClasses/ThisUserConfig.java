@@ -18,6 +18,7 @@ public class ThisUserConfig extends ConfigBase{
 	public static final String PASSWORD = "password";
 	public static final String CHATPASSWORD = "password";
 	public static final String CHATUSERID = "chat_userid";
+	public static final String IsOfferMode = "offer_mode";
 	
 	
 	private ThisUserConfig(){super(Constants.USER_CONF_FILE);}

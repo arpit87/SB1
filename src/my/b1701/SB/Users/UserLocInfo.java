@@ -27,6 +27,7 @@ public class UserLocInfo {
 	private String dstlocality = "";
 	
 	
+	
 	private JSONObject srcLocjObj = null;
 	private JSONObject dstLocjObj = null;
 		

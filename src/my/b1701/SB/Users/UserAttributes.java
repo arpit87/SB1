@@ -10,6 +10,10 @@ package my.b1701.SB.Users;
 
 public class UserAttributes {
 	
+	//other info
+	public static String SHAREOFFERTYPE = "type";
+	public static String OTHERINFO = "other_info";
+	public static String PERCENTMATCH = "percent_match";
 	
 	//user loc attributes
 	public static String FIRSTNAME = "first_name";

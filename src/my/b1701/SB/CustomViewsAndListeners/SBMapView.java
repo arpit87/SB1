@@ -2,6 +2,7 @@ package my.b1701.SB.CustomViewsAndListeners;
 
 
 import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
+import my.b1701.SB.MapHelpers.BaseItemizedOverlay;
 import my.b1701.SB.Platform.Platform;
 import android.content.Context;
 import android.util.AttributeSet;
@@ -10,7 +11,6 @@ import android.view.GestureDetector.OnDoubleTapListener;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.MotionEvent;
 
-import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapView;
 
 public class SBMapView extends MapView implements OnGestureListener {
@@ -42,7 +42,9 @@ public class SBMapView extends MapView implements OnGestureListener {
 
 			 
 			public boolean onSingleTapConfirmed(MotionEvent e) {
-				MapListActivityHandler.getInstance().getNearbyUserItemizedOverlay().removeExpandedShowSmallViews();
+				BaseItemizedOverlay nearbyUserOverlay = MapListActivityHandler.getInstance().getNearbyUserItemizedOverlay();
+				if(nearbyUserOverlay!=null)
+					nearbyUserOverlay.removeExpandedShowSmallViews();
 				return true;
 			}
 

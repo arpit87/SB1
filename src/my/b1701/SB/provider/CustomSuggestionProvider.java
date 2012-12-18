@@ -11,6 +11,10 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
+import org.json.JSONException;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class CustomSuggestionProvider extends ContentProvider {
 
@@ -20,7 +24,7 @@ public class CustomSuggestionProvider extends ContentProvider {
     // client-provided configuration values
     private String mAuthority;
     private int mMode;
-    private boolean mTwoLineDisplay;
+    //private boolean mTwoLineDisplay;
 
     // general database configuration and tables
     private SQLiteOpenHelper mOpenHelper;
@@ -43,16 +47,12 @@ public class CustomSuggestionProvider extends ContentProvider {
      * @see #setupSuggestions(String, int)
      */
     public static final int DATABASE_MODE_QUERIES = 1;
-    /**
-     * This mode bit configures the database to include a 2nd annotation line with each entry.
-     * <i>optional</i>
-     *
-     * @see #setupSuggestions(String, int)
-     */
-    public static final int DATABASE_MODE_2LINES = 2;
 
     // Uri and query support
     private static final int URI_MATCH_SUGGEST = 1;
+    private static final int URI_MATCH_DB_FETCH_ONLY = 2;
+
+    public static final String DB_FETCH_ONLY ="db_fetch_only";
 
     private Uri mSuggestionsUri;
     private UriMatcher mUriMatcher;
@@ -77,11 +77,8 @@ public class CustomSuggestionProvider extends ContentProvider {
      */
     private static class DatabaseHelper extends SQLiteOpenHelper {
 
-        private int mNewVersion;
-
         public DatabaseHelper(Context context, int newVersion) {
             super(context, sDatabaseName, null, newVersion);
-            mNewVersion = newVersion;
         }
 
         @Override
@@ -89,11 +86,9 @@ public class CustomSuggestionProvider extends ContentProvider {
             StringBuilder builder = new StringBuilder();
             builder.append("CREATE TABLE suggestions (" +
                     "_id INTEGER PRIMARY KEY" +
-                    ",display1 TEXT UNIQUE ON CONFLICT REPLACE");
-            if (0 != (mNewVersion & DATABASE_MODE_2LINES)) {
-                builder.append(",display2 TEXT");
-            }
-            builder.append(",query TEXT" +
+                    ",display1 TEXT UNIQUE ON CONFLICT REPLACE" +
+                    ",query TEXT" +
+                    ",data TEXT" +
                     ",date LONG" +
                     ");");
             db.execSQL(builder.toString());
@@ -108,25 +103,11 @@ public class CustomSuggestionProvider extends ContentProvider {
         }
     }
 
-    /**
-     * In order to use this class, you must extend it, and call this setup function from your
-     * constructor.  In your application or activities, you must provide the same values when
-     * you create the {@link android.provider.SearchRecentSuggestions} helper.
-     *
-     * @param authority This must match the authority that you've declared in your manifest.
-     * @param mode      You can use mode flags here to determine certain functional aspects of your
-     *                  database.  Note, this value should not change from run to run, because when it does change,
-     *                  your suggestions database may be wiped.
-     * @see #DATABASE_MODE_QUERIES
-     * @see #DATABASE_MODE_2LINES
-     */
     protected void setupSuggestions(String authority, int mode) {
         if (TextUtils.isEmpty(authority) ||
                 ((mode & DATABASE_MODE_QUERIES) == 0)) {
             throw new IllegalArgumentException();
         }
-        // unpack mode flags
-        mTwoLineDisplay = (0 != (mode & DATABASE_MODE_2LINES));
 
         // saved values
         mAuthority = new String(authority);
@@ -136,36 +117,21 @@ public class CustomSuggestionProvider extends ContentProvider {
         mSuggestionsUri = Uri.parse("content://" + mAuthority + "/suggestions");
         mUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         mUriMatcher.addURI(mAuthority, SearchManager.SUGGEST_URI_PATH_QUERY, URI_MATCH_SUGGEST);
+        mUriMatcher.addURI(mAuthority, DB_FETCH_ONLY, URI_MATCH_DB_FETCH_ONLY);
 
-        if (mTwoLineDisplay) {
-            mSuggestSuggestionClause = "display1 LIKE ? OR display2 LIKE ?";
-
-            mSuggestionProjection = new String[]{
-                    "0 AS " + SearchManager.SUGGEST_COLUMN_FORMAT,
-                    "'android.resource://system/"
-                            + R.drawable.ic_menu_recent_history + "' AS "
-                            + SearchManager.SUGGEST_COLUMN_ICON_1,
-                    "display1 AS " + SearchManager.SUGGEST_COLUMN_TEXT_1,
-                    "display2 AS " + SearchManager.SUGGEST_COLUMN_TEXT_2,
-                    "query AS " + SearchManager.SUGGEST_COLUMN_QUERY,
-                    "_id"
-            };
-        } else {
-            mSuggestSuggestionClause = "display1 LIKE ?";
-
-            mSuggestionProjection = new String[]{
-                    "0 AS " + SearchManager.SUGGEST_COLUMN_FORMAT,
-                    "'android.resource://system/"
-                            + R.drawable.ic_menu_recent_history + "' AS "
-                            + SearchManager.SUGGEST_COLUMN_ICON_1,
-                    "display1 AS " + SearchManager.SUGGEST_COLUMN_TEXT_1,
-                    "query AS " + SearchManager.SUGGEST_COLUMN_QUERY,
-                    "_id",
-                    "'"+ Intent.ACTION_SEARCH+"' AS " + SearchManager.SUGGEST_COLUMN_INTENT_ACTION,
-                    "display1 AS " + SearchManager.SUGGEST_COLUMN_INTENT_DATA
-            };
-        }
-
+        mSuggestSuggestionClause = "display1 LIKE ?";
+        mSuggestionProjection = new String[]{
+                "0 AS " + SearchManager.SUGGEST_COLUMN_FORMAT,
+                "'android.resource://system/"
+                        + R.drawable.ic_menu_recent_history + "' AS "
+                        + SearchManager.SUGGEST_COLUMN_ICON_1,
+                "display1 AS " + SearchManager.SUGGEST_COLUMN_TEXT_1,
+                "query AS " + SearchManager.SUGGEST_COLUMN_QUERY,
+                "_id",
+                "'" + Intent.ACTION_VIEW + "' AS " + SearchManager.SUGGEST_COLUMN_INTENT_ACTION,
+                "data AS " + SearchManager.SUGGEST_COLUMN_INTENT_DATA,
+                "'true' AS " + SearchManager.SUGGEST_COLUMN_INTENT_EXTRA_DATA
+        };
 
     }
 
@@ -273,7 +239,18 @@ public class CustomSuggestionProvider extends ContentProvider {
         SQLiteDatabase db = mOpenHelper.getReadableDatabase();
 
         // special case for actual suggestions (from search manager)
-        if (mUriMatcher.match(uri) == URI_MATCH_SUGGEST) {
+        int match = mUriMatcher.match(uri);
+        if (match == URI_MATCH_DB_FETCH_ONLY){
+            String suggestSelection;
+            String[] myArgs = new String[]{selectionArgs[0]};
+            suggestSelection = "display1 = ?";
+
+            Cursor cSavedSug = db.query(sSuggestions, projection,
+                    suggestSelection, myArgs, null, null, ORDER_BY, null);
+            cSavedSug.setNotificationUri(getContext().getContentResolver(), uri);
+            return  cSavedSug;
+        }
+        else if (match == URI_MATCH_SUGGEST) {
             String suggestSelection;
             String[] myArgs;
             if (TextUtils.isEmpty(selectionArgs[0])) {
@@ -281,11 +258,7 @@ public class CustomSuggestionProvider extends ContentProvider {
                 myArgs = null;
             } else {
                 String like = "%" + selectionArgs[0] + "%";
-                if (mTwoLineDisplay) {
-                    myArgs = new String[]{like, like};
-                } else {
-                    myArgs = new String[]{like};
-                }
+                myArgs = new String[]{like};
                 suggestSelection = mSuggestSuggestionClause;
             }
 
@@ -296,6 +269,14 @@ public class CustomSuggestionProvider extends ContentProvider {
 
             if (TextUtils.isEmpty(selectionArgs[0])) {
                 return cSavedSug;
+            }
+
+            //fetch keys stored in the db to be used to avoid duplication in results
+            Set<String> keys = new HashSet<String>();
+            if (cSavedSug.moveToFirst()) {
+                do {
+                    keys.add(cSavedSug.getString(2));
+                } while (cSavedSug.moveToNext());
             }
 
             Uri urlForCustomSug = Uri.parse(GeoAddressProvider.CONTENT_URI + "/" + selectionArgs[0]);
@@ -310,12 +291,22 @@ public class CustomSuggestionProvider extends ContentProvider {
                     SearchManager.SUGGEST_COLUMN_TEXT_1,
                     SearchManager.QUERY, "_id",
                     SearchManager.SUGGEST_COLUMN_INTENT_ACTION,
-                    SearchManager.SUGGEST_COLUMN_INTENT_DATA});
+                    SearchManager.SUGGEST_COLUMN_INTENT_DATA,
+                    SearchManager.SUGGEST_COLUMN_INTENT_EXTRA_DATA
+            });
 
             int offset = 1000;
             if (cCustSug.moveToFirst()) {
                 do {
-                    cCombSug.addRow(new Object[]{0, null, cCustSug.getString(0), selectionArgs[0], offset++, Intent.ACTION_VIEW, cCustSug.getString(1)});
+                    try {
+                        String name = GeoAddress.getName(cCustSug.getString(0));
+                        if (keys.contains(name)) {
+                            continue;
+                        }
+                        cCombSug.addRow(new Object[]{0, null, name, selectionArgs[0], offset++, Intent.ACTION_VIEW, cCustSug.getString(0), "false"});
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 } while (cCustSug.moveToNext());
             }
 

@@ -9,21 +9,41 @@ public class NearbyUser {
 	
 		 
 	private UserLocInfo userLocInfo;
-	private UserFBInfo userFBInfo;	
+	private UserFBInfo userFBInfo;
+	private UserOtherInfo userOtherInfo; 
 	
 	 
 	public NearbyUser(JSONObject thisOtherUserJObj)
 	{			
 			getUserLocInfo(thisOtherUserJObj);
 			getUserFBInfo(thisOtherUserJObj);
+			getUserOtherInfo(thisOtherUserJObj);
 	}
 	
+	private void getUserOtherInfo(JSONObject thisOtherUserJObj) {
+		
+
+		JSONObject userOtherInfoJObj;
+		try {
+			userOtherInfoJObj = thisOtherUserJObj.getJSONObject(UserAttributes.OTHERINFO);
+			userOtherInfo = new UserOtherInfo(userOtherInfoJObj);					
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+		
+	}
+
 	public UserFBInfo getUserFBInfo() {
 		return userFBInfo;
 	}
 	
 	public UserLocInfo getUserLocInfo() {
 		return userLocInfo;
+	}
+	
+	public UserOtherInfo getUserOtherInfo() {
+		return userOtherInfo;
 	}
 	
 	private void getUserLocInfo(JSONObject thisOtherUserJObj) {

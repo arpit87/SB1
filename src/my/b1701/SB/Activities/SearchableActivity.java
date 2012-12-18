@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.SearchRecentSuggestions;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -24,6 +23,7 @@ import my.b1701.SB.Users.ThisUser;
 import my.b1701.SB.provider.CustomSuggestionProvider;
 import my.b1701.SB.provider.GeoAddress;
 import my.b1701.SB.provider.GeoAddressProvider;
+import my.b1701.SB.provider.SearchRecentSuggestions;
 import org.json.JSONException;
 
 import java.util.ArrayList;
@@ -35,20 +35,27 @@ public class SearchableActivity extends Activity {
     private TextView textView;
     private ListView listView;
 
+    SearchRecentSuggestions searchRecentSuggestions = new SearchRecentSuggestions(this, CustomSuggestionProvider.AUTHORITY, CustomSuggestionProvider.MODE);
+
     AdapterView.OnItemClickListener listviewResultOnItemClickListener
             = new AdapterView.OnItemClickListener() {
 
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             Log.i(TAG, "address item clicked");
-            int lat = (int) (((GeoAddress) parent.getItemAtPosition(position)).getLatitude() * 1e6);
-            int lon = (int) (((GeoAddress) parent.getItemAtPosition(position)).getLongitude() * 1e6);
-            setDestination(lat, lon);
+            GeoAddress geoAddress = (GeoAddress) parent.getItemAtPosition(position);
+            searchRecentSuggestions.saveRecentQuery(geoAddress.getAddressLine(), geoAddress.getJson());
+            setDestination(geoAddress);
         }
     };
 
-    public void setDestination(int lat, int lon) {
+    public void setDestination(GeoAddress geoAddress) {
         ThisUser.getInstance().setShareReqGeoPoint();
-        ThisUser.getInstance().setDestinationGeoPoint(new SBGeoPoint(lat, lon));
+        int lat = (int) (geoAddress.getLatitude() * 1e6);
+        int lon = (int) (geoAddress.getLongitude() * 1e6);
+        String subLocality = geoAddress.getSubLocality();
+        String address = geoAddress.getAddressLine();
+
+        ThisUser.getInstance().setDestinationGeoPoint(new SBGeoPoint(lat, lon, subLocality, address));
         Log.i(TAG, "user destination set... querying server");
         SBHttpRequest addThisUserSrcDstRequest = new AddThisUserSrcDstRequest();
         SBHttpRequest getNearbyUsersRequest = new GetNearbyUsersRequest();
@@ -73,12 +80,6 @@ public class SearchableActivity extends Activity {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String searchAddress = intent.getStringExtra(SearchManager.QUERY);
 
-            if (intent.getDataString() == null) { // if not null already in suggestions table
-                SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this, CustomSuggestionProvider.AUTHORITY, CustomSuggestionProvider.MODE);
-                suggestions.saveRecentQuery(searchAddress, null);
-                //TODO clear history
-            }
-
             Uri uri = Uri.parse(GeoAddressProvider.CONTENT_URI + "/" + searchAddress);
             Cursor cursor = getContentResolver().query(uri, null, null, null, "");
 
@@ -93,7 +94,7 @@ public class SearchableActivity extends Activity {
                 if (cursor.moveToFirst()) {
                     do {
                         try {
-                            GeoAddress geoAddress = new GeoAddress(cursor.getString(0), cursor.getString(1));
+                            GeoAddress geoAddress = new GeoAddress(cursor.getString(0));
                             address.add(geoAddress);
                         } catch (JSONException e) {
                             Log.e(TAG, e.getMessage());
@@ -106,12 +107,14 @@ public class SearchableActivity extends Activity {
                 listView.setOnItemClickListener(listviewResultOnItemClickListener);
             }
         } else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
-            String locationJson = intent.getDataString();
+            String geoAddressJson = intent.getDataString();
+            boolean isSuggestionSaved = "true".equals(intent.getStringExtra(SearchManager.EXTRA_DATA_KEY));
             try {
-                double[] latLong = GeoAddress.getLatLongFromJson(locationJson);
-                int lat = (int) (latLong[0] * 1e6);
-                int lon = (int) (latLong[1] * 1e6);
-                setDestination(lat, lon);
+                GeoAddress geoAddress = new GeoAddress(geoAddressJson);
+                if (!isSuggestionSaved){
+                    searchRecentSuggestions.saveRecentQuery(geoAddress.getAddressLine(), geoAddress.getJson());
+                }
+                setDestination(geoAddress);
             } catch (JSONException e) {
                 Log.e(TAG, e.getMessage());
             }

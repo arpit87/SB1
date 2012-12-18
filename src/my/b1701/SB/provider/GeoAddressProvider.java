@@ -18,7 +18,7 @@ import java.util.List;
 public class GeoAddressProvider extends ContentProvider {
     private static final String TAG = "GeoAddressProvider";
     private static final int MAX_RESULT = 10;
-    public static final String AUTHORITY = "my.b1701.SB.provider";
+    public static final String AUTHORITY = "my.b1701.SB.provider.GeoAddressProvider";
     private static final String BASE_PATH = "addresses";
     private static final int _ID = 20;
 
@@ -29,7 +29,7 @@ public class GeoAddressProvider extends ContentProvider {
         uriMatcher.addURI(AUTHORITY, BASE_PATH + "/*", _ID);
     }
 
-    private Geocoder geocoder;
+    public static Geocoder geocoder;
 
     @Override
     public boolean onCreate() {
@@ -43,7 +43,7 @@ public class GeoAddressProvider extends ContentProvider {
 
         MatrixCursor cursor;
         if (uriType == _ID) {
-            cursor = new MatrixCursor(new String[]{"AddressLine", "LAT_LONG"});
+            cursor = new MatrixCursor(new String[]{"GeoAddress"});
             String searchAddress = uri.getLastPathSegment();
             List<Address> addressList = null;
             try {
@@ -54,7 +54,7 @@ public class GeoAddressProvider extends ContentProvider {
             if (addressList != null && !addressList.isEmpty()) {
                 for (Address address : addressList) {
                     try {
-                        cursor.addRow(new Object[]{GeoAddress.constructAddressLine(address), GeoAddress.constructLocationJSon(address)});
+                        cursor.addRow(new Object[]{new GeoAddress(address).getJson()});
                     } catch (JSONException e) {
                         Log.e(TAG, e.getMessage());
                     }
