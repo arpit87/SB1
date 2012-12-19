@@ -3,6 +3,7 @@ package my.b1701.SB.Activities;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import my.b1701.SB.R;
 import my.b1701.SB.ChatService.SBChatService;
@@ -31,6 +32,7 @@ public class StartStrangerBuddyActivity extends Activity {
 	Runnable startMapActivity;
 	Intent showSBMapViewActivity;
 	Timer timer;
+	AtomicBoolean mapActivityStarted = new AtomicBoolean(false);
 	
 	
     /** Called when the activity is first created. */
@@ -61,7 +63,9 @@ public class StartStrangerBuddyActivity extends Activity {
         startMapActivity = new Runnable() {
 	          public void run() {     	
 	        	  timer.cancel();
-	              startActivity(showSBMapViewActivity);
+	        	  timer.purge();
+	        	  if(!mapActivityStarted.getAndSet(true))
+	        		  startActivity(showSBMapViewActivity);
 	          }};
         
         

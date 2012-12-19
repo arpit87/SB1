@@ -51,8 +51,7 @@
 
     <style name="abstransparent_transparent_ActionBar" parent="@style/Widget.Sherlock.ActionBar">
         <item name="background">@drawable/ab_transparent_abstransparent</item>
-        <item name="progressBarStyle">@style/abstransparent_ProgressBar</item>
-        
+        <item name="progressBarStyle">@style/abstransparent_ProgressBar</item>       
         <item name="android:background">@drawable/ab_transparent_abstransparent</item>
         <item name="android:progressBarStyle">@style/abstransparent_ProgressBar</item>
     </style>
@@ -66,7 +65,7 @@
     </style>
 
     <style name="abstransparent_ActionBarTabStyle" parent="@style/Widget.Sherlock.ActionBar.TabView">
-        <item name="background">@drawable/tab_indicator_ab_abstransparent</item>		
+        <item name="background">@drawable/tab_indicator_ab_abstransparent</item>        		
         <item name="android:background">@drawable/tab_indicator_ab_abstransparent</item>
     </style>
 	

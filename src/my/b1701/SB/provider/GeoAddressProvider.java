@@ -17,7 +17,7 @@ import java.util.List;
 
 public class GeoAddressProvider extends ContentProvider {
     private static final String TAG = "GeoAddressProvider";
-    private static final int MAX_RESULT = 10;
+    private static final int MAX_RESULT = 5;
     public static final String AUTHORITY = "my.b1701.SB.provider.GeoAddressProvider";
     private static final String BASE_PATH = "addresses";
     private static final int _ID = 20;
@@ -49,6 +49,7 @@ public class GeoAddressProvider extends ContentProvider {
             try {
                 addressList = geocoder.getFromLocationName(searchAddress, MAX_RESULT);
             } catch (IOException e) {
+            	Log.e(TAG, "search address "+searchAddress);
                 Log.e(TAG, e.getMessage());
             }
             if (addressList != null && !addressList.isEmpty()) {

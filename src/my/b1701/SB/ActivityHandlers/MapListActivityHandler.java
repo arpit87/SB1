@@ -195,6 +195,9 @@ public void centreMapTo(SBGeoPoint centrePoint)
 	
 	public void updateNearbyUsers(List<NearbyUser> nearbyUsers) {
 		
+		if(nearbyUsers.size()==0)
+			return;
+		
 		this.nearbyUserList = nearbyUsers;
 		
 		//update map view

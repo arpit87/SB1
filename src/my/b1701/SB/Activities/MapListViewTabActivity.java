@@ -14,18 +14,15 @@ import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.TabHelpers.SherLockActionBarTabListener;
 import my.b1701.SB.TabHelpers.SherlockActionBarTab;
 import my.b1701.SB.Users.ThisUser;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.PopupMenu;
 import android.widget.TabHost;
 import android.widget.ToggleButton;
 
@@ -34,8 +31,6 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.Window;
-import com.google.android.maps.MapActivity;
 
 
 public class MapListViewTabActivity extends SherlockFragmentActivity {
@@ -57,7 +52,7 @@ public class MapListViewTabActivity extends SherlockFragmentActivity {
 	private SBMapFragment mapFrag;
 	private SBListFragment listFrag;
 	ActionBar ab;
-	
+	private boolean currentIsOfferMode;
 	
 	public Fragment getListFrag() {
 		return listFrag;		
@@ -81,10 +76,11 @@ public class MapListViewTabActivity extends SherlockFragmentActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature((int) Window.FEATURE_ACTION_BAR_OVERLAY); 
+        requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY); 
         setContentView(R.layout.tab_navigation);
         ab= getSupportActionBar();
-       ab.setBackgroundDrawable(getResources().getDrawable(R.drawable.abs_transparent));        
+        
+        ab.setBackgroundDrawable(getResources().getDrawable(R.drawable.abs_transparent));        
         ToastTracker.showToast("Your userid:"+ThisUser.getInstance().getUserID());
         ab.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);       
         ab.setDisplayHomeAsUpEnabled(false);
@@ -186,15 +182,15 @@ public class MapListViewTabActivity extends SherlockFragmentActivity {
 
     private void offerRideClick() {
     	String message = "";
-    	final boolean currentIsOfferMode = ThisUserConfig.getInstance().getBool(ThisUserConfig.IsOfferMode);
+    	currentIsOfferMode = ThisUserConfig.getInstance().getBool(ThisUserConfig.IsOfferMode);
     	 if(!currentIsOfferMode)
         	{
-        		message = "Ride offering mode enabled";
+        		message = "Enabled ride offering mode";
         		ThisUserConfig.getInstance().putBool(ThisUserConfig.IsOfferMode,true);
         	}
         	else
         	{
-        		message = "Ride offering mode disabled";
+        		message = "Disabled ride offering mode";
         		ThisUserConfig.getInstance().putBool(ThisUserConfig.IsOfferMode,false);
         	}	
     		
@@ -209,6 +205,8 @@ public class MapListViewTabActivity extends SherlockFragmentActivity {
     		mMapView = (SBMapView) mMapViewContainer.findViewById(R.id.map_view);
     		selfLocationButton = (ImageButton) mMapViewContainer.findViewById(R.id.my_location_button);
     		offerRideButton = (ToggleButton) mMapViewContainer.findViewById(R.id.offerride_button);
+    		if(currentIsOfferMode)
+    			offerRideButton.setChecked(true);
     		mMapView.getOverlays().clear();
     		MapListActivityHandler.getInstance().setMapView(mMapView);
             MapListActivityHandler.getInstance().setUnderlyingActivity(this);
@@ -222,6 +220,9 @@ public class MapListViewTabActivity extends SherlockFragmentActivity {
     	{
     		mMapViewContainer.addView(mMapView);
     		mMapViewContainer.addView(selfLocationButton);
+    		mMapViewContainer.addView(offerRideButton);
+    		if(currentIsOfferMode)
+    			offerRideButton.setChecked(true);
     	}
     	return mMapViewContainer;
     }

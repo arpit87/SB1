@@ -89,7 +89,7 @@
 
        <provider
            android:name=".provider.GeoAddressProvider"
-           android:authorities="my.b1701.SB.provider" >
+           android:authorities="my.b1701.SB.provider.GeoAddressProvider" >
         </provider>
 
        <provider
