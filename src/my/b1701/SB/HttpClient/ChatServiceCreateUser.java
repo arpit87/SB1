@@ -4,10 +4,9 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 import my.b1701.SB.HelperClasses.ThisUserConfig;
-import my.b1701.SB.Server.AddThisUserSrcDstResponse;
+import my.b1701.SB.Server.ChatServiceCreateUserResponse;
 import my.b1701.SB.Server.ServerConstants;
 import my.b1701.SB.Server.ServerResponseBase;
-import my.b1701.SB.Users.ThisUser;
 import my.b1701.SB.Users.UserAttributes;
 
 import org.apache.http.client.ClientProtocolException;
@@ -25,9 +24,9 @@ import android.util.Log;
 public class ChatServiceCreateUser extends SBHttpRequest{
 		
 		HttpPost httpQueryAddRequest;	
-		JSONObject jsonobjAddRequest;
+		JSONObject jsonobjAddRequest = new JSONObject();
 		HttpClient httpclient = new DefaultHttpClient();
-		AddThisUserSrcDstResponse addThisUserResponse;
+		ChatServiceCreateUserResponse chatServiceCreateUserResponse;
 		String jsonStr;
 		
 		public ChatServiceCreateUser()
@@ -40,7 +39,7 @@ public class ChatServiceCreateUser extends SBHttpRequest{
 			url1 = ServerConstants.SERVER_ADDRESS + ServerConstants.CHATSERVICE + "/createUser/";
 			httpQueryAddRequest =  new HttpPost(url1);		
 			try {
-				jsonobjAddRequest.put(UserAttributes.CHATUSERID, ThisUser.getInstance().getUserID());
+				jsonobjAddRequest.put(UserAttributes.CHATUSERID, ThisUserConfig.getInstance().getString(ThisUserConfig.USERID));
 				jsonobjAddRequest.put(UserAttributes.CHATUSERNAME, ThisUserConfig.getInstance().getString(ThisUserConfig.FBUID));
 					
 			} catch (JSONException e) {
@@ -83,8 +82,8 @@ public class ChatServiceCreateUser extends SBHttpRequest{
 					e.printStackTrace();
 				}   
 							
-				addThisUserResponse = new AddThisUserSrcDstResponse(response,jsonStr);			
-				return addThisUserResponse;
+				chatServiceCreateUserResponse = new ChatServiceCreateUserResponse(response,jsonStr);			
+				return chatServiceCreateUserResponse;
 			
 		}
 		

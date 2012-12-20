@@ -37,9 +37,9 @@
     <color name="springgreen">#008B45</color>
     <color name="firebrickred">#8b1a1a</color>
     <string name="fblogintext1">One time FaceBook login </string>
-    <string name="fblogintext2">- establish your credentials,</string>
-    <string name="fblogintext3">- see other users credentials,</string>
-    <string name="fblogintext4">- chat with them</string>
+    <string name="fblogintext2">Establish your credentials</string>
+    <string name="fblogintext3">See other users credentials</string>
+    <string name="fblogintext4">Chat with nearby users</string>
     <string name="fb_logout">logout</string>
     <string name="hopon">hopon</string>
     <string name="locationupdaterservice">locationupdaterservice</string>

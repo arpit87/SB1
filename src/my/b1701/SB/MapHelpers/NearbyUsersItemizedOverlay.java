@@ -11,21 +11,26 @@ import my.b1701.SB.CustomViewsAndListeners.SBMapView;
 import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.Users.NearbyUser;
+import android.annotation.SuppressLint;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
+
 
 public class NearbyUsersItemizedOverlay extends BaseItemizedOverlay{
 
 	ArrayList<NearbyUserOverlayItem> userList=new ArrayList<NearbyUserOverlayItem>();
 	private SBMapView mMapView = null;
+	private static Context context = MapListActivityHandler.getInstance().getUnderlyingActivity();
 	
 	public NearbyUsersItemizedOverlay(SBMapView mapView) {
-		super(boundCenter(Platform.getInstance().getContext().getResources().getDrawable(R.drawable.my_dot_green)));
+		super(boundCenter(context.getResources().getDrawable(R.drawable.my_dot_green)));
 		this.mMapView = mapView;
 	}
 	
 	public NearbyUsersItemizedOverlay() {
-		super(boundCenter(Platform.getInstance().getContext().getResources().getDrawable(R.drawable.my_dot_green)));
+		super(boundCenter(context.getResources().getDrawable(R.drawable.my_dot_green)));
 		}
 	
 	@Override
@@ -81,7 +86,22 @@ public class NearbyUsersItemizedOverlay extends BaseItemizedOverlay{
 		userList.get(i).toggleSmallView();
 		if(!ThisUserConfig.getInstance().getBool(ThisUserConfig.FBCHECK))
 		{
-			Intent fbLoginIntent = new Intent(MapListActivityHandler.getInstance().getUnderlyingActivity(),LoginActivity.class);			
+			
+			final Dialog dialog = new Dialog(context);
+			dialog.setContentView(R.layout.fblogin_dialog);
+			dialog.setTitle("One time FB login..");
+			
+			/*Button dialogButton = (Button) dialog.findViewById(R.id.signInViaFacebook);
+			// if button is clicked, close the custom dialog
+			dialogButton.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					
+				}
+			});*/
+ 
+			//dialog.show();
+			Intent fbLoginIntent = new Intent(context,LoginActivity.class);			
 			MapListActivityHandler.getInstance().getUnderlyingActivity().startActivity(fbLoginIntent);
 		}
 		Toast toast = Toast.makeText(Platform.getInstance().getContext(), "FB acces tok:"+ThisUserConfig.getInstance().getString(ThisUserConfig.FBACCESSTOKEN), Toast.LENGTH_SHORT);       

@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -53,6 +54,8 @@ public class MapListViewTabActivity extends SherlockFragmentActivity {
 	private SBListFragment listFrag;
 	ActionBar ab;
 	private boolean currentIsOfferMode;
+	private Button fbloginbutton;
+	private FacebookConnector fbconnect;
 	
 	public Fragment getListFrag() {
 		return listFrag;		
@@ -76,7 +79,8 @@ public class MapListViewTabActivity extends SherlockFragmentActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY); 
+       // requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
+       // requestWindowFeature((int) Window.FEATURE_ACTION_BAR & ~Window.FEATURE_ACTION_BAR_OVERLAY);
         setContentView(R.layout.tab_navigation);
         ab= getSupportActionBar();
         
@@ -176,6 +180,8 @@ public class MapListViewTabActivity extends SherlockFragmentActivity {
     	
     	case R.id.offerride_button:
     		offerRideClick();
+    		break;
+    	case R.id.signInViaFacebook:
     		break;
     	}
     }

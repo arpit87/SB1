@@ -31,15 +31,17 @@ public class ChatServiceCreateUserResponse extends ServerResponseBase{
 				body = jobj.getJSONObject("body");
 				String username = body.getString("username");
 				String password = body.getString("password");
+				ToastTracker.showToast("chtusr:"+username);
+				Log.i(TAG, "chat user created usrname:"+username + " pass:"+password);
 				ThisUserConfig.getInstance().putString(ThisUserConfig.CHATUSERID, username);
 				ThisUserConfig.getInstance().putString(ThisUserConfig.CHATPASSWORD, password);
 				
 				Intent loginToChatServer = new Intent();
 				loginToChatServer.setAction("SBLoginToChatServer");
 				loginToChatServer.putExtra("username", username);
-				loginToChatServer.putExtra("password", username);
+				loginToChatServer.putExtra("password", password);
 				Platform.getInstance().getContext().sendBroadcast(loginToChatServer);				
-				ToastTracker.showToast("added this user for chat");
+				ToastTracker.showToast("chat login intent sent for chat");
 			} catch (JSONException e) {
 				Log.e(TAG, "Error returned by server on chat user add");
 				ToastTracker.showToast("Unable to add this chat user ");

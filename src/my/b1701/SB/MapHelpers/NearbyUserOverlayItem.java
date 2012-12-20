@@ -1,9 +1,11 @@
 package my.b1701.SB.MapHelpers;
 
 import my.b1701.SB.R;
+import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
 import my.b1701.SB.ChatClient.ChatWindow;
 import my.b1701.SB.HelperClasses.SBImageLoader;
 import my.b1701.SB.Platform.Platform;
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,7 +24,8 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 	private static String TAG = "NearbyUserOverlayItem";
 
 	protected MapView mMapView = null;
-	protected static LayoutInflater mInflater = (LayoutInflater) Platform.getInstance().getContext().getSystemService(Platform.getInstance().getContext().LAYOUT_INFLATER_SERVICE);
+	private static Context context =MapListActivityHandler.getInstance().getUnderlyingActivity();
+	protected static LayoutInflater mInflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
 	View viewOnMarkerSmall = null; 
 	View viewOnMarkerExpanded = null;
 	ImageView picViewSmall = null;
@@ -110,6 +113,7 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 					startChatIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP
 				 			| Intent.FLAG_ACTIVITY_NEW_TASK);
 					startChatIntent.putExtra("participant", mUserFBID);
+					context.startActivity(startChatIntent);
 					
 				}
 			});

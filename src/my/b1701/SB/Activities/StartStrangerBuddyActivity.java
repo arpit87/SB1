@@ -47,7 +47,7 @@ public class StartStrangerBuddyActivity extends Activity {
         ThisAppConfig.getInstance().putLong(ThisAppConfig.GPSFREQ, 2*60*1000);	 //2 min
         ThisAppConfig.getInstance().putLong(ThisAppConfig.USERCUTOFFDIST,1000);  //1000 meter
         ThisAppConfig.getInstance().putLong(ThisAppConfig.USERPOSCHECKFREQ,2*60*1000);  //2min*/
-        SBLocationManager.getInstance().StartListeningtoNetwork();        
+                
         //SBLocationManager.getInstance().StartListeningtoGPS(ThisAppConfig.getInstance().getLong("gpsfreq"),100);
         Log.i(TAG,"started network listening ");
         
@@ -117,12 +117,16 @@ public class StartStrangerBuddyActivity extends Activity {
     { 
          public void run() 
          {
-        	 SBLocation currLoc = SBLocationManager.getInstance().getLastXSecBestLocation(5*60);
+        	 SBLocation currLoc = SBLocationManager.getInstance().getLastXSecBestLocation(10*60);
         	 if(currLoc != null)
         	 {
         		 ToastTracker.showToast("found loc in timertask");
         		 Platform.getInstance().getHandler().removeCallbacks(startMapActivity);
         		 Platform.getInstance().getHandler().post(startMapActivity);
+        	 }
+        	 else
+        	 {
+        		 Log.i(TAG, "loc not found in this timer task");
         	 }
           }
      }

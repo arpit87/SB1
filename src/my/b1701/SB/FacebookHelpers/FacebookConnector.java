@@ -102,9 +102,8 @@ public class FacebookConnector {
 	    	ThisUserConfig.getInstance().putString(ThisUserConfig.FBACCESSTOKEN, facebook.getAccessToken());
         	ThisUserConfig.getInstance().putLong(ThisUserConfig.FBACCESSEXPIRES, facebook.getAccessExpires()); 
         	ThisUserConfig.getInstance().putBool(ThisUserConfig.FBCHECK, true);
-        	ToastTracker.showToast("Authentication successsful");   
-        	SBHttpRequest chatServiceAddUserRequest = new ChatServiceCreateUser();
-        	SBHttpClient.getInstance().executeRequest(chatServiceAddUserRequest);
+        	ToastTracker.showToast("Authentication successsful");  
+        	
         	requestUserData();
         	underlying_activity.finish();
         }    
@@ -124,9 +123,11 @@ public class FacebookConnector {
 	    }
 	}
 
-    private void sendAddFBInfoToServer() {
+    private void sendAddFBAndChatInfoToServer() {
     	//this should only be called from fbpostloginlistener to ensure we have fbid
-    	Log.i(TAG,"in sendAddFBInfoToServer");
+    	Log.i(TAG,"in sendAddFBAndChatInfoToServer");
+    	 SBHttpRequest chatServiceAddUserRequest = new ChatServiceCreateUser();
+     	SBHttpClient.getInstance().executeRequest(chatServiceAddUserRequest);
 		SBHttpRequest sendFBInfoRequest = new SaveFBInfoRequest(ThisUserConfig.getInstance().getString(ThisUserConfig.USERID), ThisUserConfig.getInstance().getString(ThisUserConfig.FBUID), ThisUserConfig.getInstance().getString(ThisUserConfig.FBACCESSTOKEN));
 		SBHttpClient.getInstance().executeRequest(sendFBInfoRequest);			
 	}
@@ -153,8 +154,8 @@ public class FacebookConnector {
 	            picurl = "http://graph.facebook.com/" + id + "/picture?type=small";
 	            ThisUserConfig.getInstance().putString(ThisUserConfig.FBPICURL, picurl);
 	            ThisUserConfig.getInstance().putString(ThisUserConfig.FBNAME, name);
-	            ThisUserConfig.getInstance().putString(ThisUserConfig.FBUID,id );
-	            sendAddFBInfoToServer();
+	            ThisUserConfig.getInstance().putString(ThisUserConfig.FBUID,id );	           
+	            sendAddFBAndChatInfoToServer();
 	            Log.i(TAG,"fbpicurl:"+jsonObject.getString("picture"));
 	            ToastTracker.showToast("fbpicurl:"+jsonObject.getString("picture"));
 	            //Bitmap bmp = FBUtility.getBitmap(ThisUserConfig.getInstance().getString(ThisUserConfig.FBPICURL));

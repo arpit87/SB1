@@ -10,7 +10,7 @@ public class ServerConstants {
 	public static String USERSERVICE="/UserService";
 	public static String USERDETAILSSERVICE="/UserDetailsService";
 	public static String REQUESTSERVICE="/RequestService";
-	public static String CHATSERVICE= "/ChatsService";
+	public static String CHATSERVICE= "/ChatService";
 	
 
 }

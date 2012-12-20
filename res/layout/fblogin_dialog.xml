@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/black_75" >
+    <TableLayout
+        android:id="@+id/tableLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_centerHorizontal="true"
+        android:padding="10dip" >
+        <TableRow
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="50dp"
+            android:paddingBottom="5dp" >
+            <ImageView
+                android:paddingRight="10dip"
+                android:paddingLeft="70dip"
+                android:layout_gravity="right|center_vertical"
+                android:src="@drawable/bluelinemarker" />
+
+             <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"            
+        android:text="@string/fblogintext2"/>
+             
+        </TableRow>
+
+        <TableRow android:paddingBottom="5dp" >
+
+             <ImageView
+                android:paddingRight="10dip"
+                android:paddingLeft="70dip"
+                android:layout_gravity="right|center_vertical"
+                android:src="@drawable/bluelinemarker" />
+
+             <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"            
+        android:text="@string/fblogintext3" />
+        </TableRow>
+
+        <TableRow android:paddingBottom="5dip" >
+
+             <ImageView
+                android:paddingRight="10dip"
+                android:paddingLeft="70dip"
+                android:layout_gravity="right|center_vertical"
+                android:src="@drawable/bluelinemarker" />
+
+             <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"            
+        android:text="@string/fblogintext4" />
+        </TableRow>
+
+           </TableLayout>
+
+    
+    <Button
+        android:id="@+id/signInViaFacebook"
+        android:layout_width="wrap_content"
+        android:layout_height="30dip"        
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/tableLayout1"
+        android:paddingTop="50dp"
+        android:background="@drawable/button_sign_in_with_facebook"
+        android:onClick="onClickButtons" />
+  
+
+</RelativeLayout>
