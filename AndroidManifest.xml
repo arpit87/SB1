@@ -88,7 +88,7 @@
        </activity>
 
        <provider
-           android:name=".provider.GeoAddressProvider"
+           android:name="my.b1701.SB.provider.GeoAddressProvider"
            android:authorities="my.b1701.SB.provider.GeoAddressProvider" >
         </provider>
 
