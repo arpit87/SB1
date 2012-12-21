@@ -14,6 +14,7 @@ import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.TabHelpers.SherLockActionBarTabListener;
 import my.b1701.SB.TabHelpers.SherlockActionBarTab;
 import my.b1701.SB.Users.ThisUser;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -99,6 +100,8 @@ public class MapListViewTabActivity extends SherlockFragmentActivity {
         listTab.setText(R.string.listviewstr).setTabListener(new SherLockActionBarTabListener(this, SBListFragment.class));
         ab.addTab((ActionBar.Tab)listTab.getTab());
         
+        fbconnect = new FacebookConnector(this);
+        
     }
     
     public void onResume(){
@@ -118,6 +121,12 @@ public class MapListViewTabActivity extends SherlockFragmentActivity {
         SBLocationManager.getInstance().StopListeningtoNetwork();
     	//mymapview.getOverlays().clear();
     	//mymapview.postInvalidate();
+    }
+	
+	@Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        fbconnect.authorizeCallback(requestCode, resultCode, data);
     }
 
     @Override
@@ -182,7 +191,9 @@ public class MapListViewTabActivity extends SherlockFragmentActivity {
     		offerRideClick();
     		break;
     	case R.id.signInViaFacebook:
+    		fbconnect.loginToFB();
     		break;
+    	
     	}
     }
 

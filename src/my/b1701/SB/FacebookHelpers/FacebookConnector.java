@@ -104,22 +104,21 @@ public class FacebookConnector {
         	ThisUserConfig.getInstance().putBool(ThisUserConfig.FBCHECK, true);
         	ToastTracker.showToast("Authentication successsful");  
         	
-        	requestUserData();
-        	underlying_activity.finish();
+        	requestUserData();        	
         }    
 	    
 
 		public void onFacebookError(FacebookError error) {
 	    	ToastTracker.showToast("Authentication with Facebook failed!");
-	    	underlying_activity.finish();
+	    	
 	    }
 	    public void onError(DialogError error) {
 	    	ToastTracker.showToast("Authentication with Facebook failed!");
-	    	underlying_activity.finish();
+	    	
 	    }
 	    public void onCancel() {
 	    	ToastTracker.showToast("Authentication with Facebook cancelled!");
-	    	underlying_activity.finish();
+	    	
 	    }
 	}
 
@@ -179,8 +178,8 @@ public class FacebookConnector {
 			  ThisUserConfig.getInstance().putString(ThisUserConfig.FBUID, "");
 			  Store.getInstance().deleteFile(ThisUserConfig.FBPICFILENAME);
 			  ProgressHandler.dismissDialoge();
-			  ToastTracker.showToast("Successfully logged out");			
-			  //underlying_activity.finish();
+			  ToastTracker.showToast("Successfully logged out");		
+			 
 		  }
 		  
 		  public void onIOException(IOException e, Object state) {}

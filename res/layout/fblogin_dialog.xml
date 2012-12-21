@@ -2,7 +2,16 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/black_75" >
+    android:background="@color/black_75" >
+    <Button
+        android:id="@+id/button_close_fb_login_dialog"
+        android:background="@drawable/button_close_blue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        />
+    
     <TableLayout
         android:id="@+id/tableLayout1"
         android:layout_width="fill_parent"
@@ -21,7 +30,7 @@
                 android:src="@drawable/bluelinemarker" />
 
              <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"            
         android:text="@string/fblogintext2"/>
@@ -37,7 +46,7 @@
                 android:src="@drawable/bluelinemarker" />
 
              <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"            
         android:text="@string/fblogintext3" />
@@ -52,7 +61,7 @@
                 android:src="@drawable/bluelinemarker" />
 
              <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"            
         android:text="@string/fblogintext4" />
@@ -68,8 +77,9 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@id/tableLayout1"
         android:paddingTop="50dp"
+        android:paddingBottom="50dp"
         android:background="@drawable/button_sign_in_with_facebook"
-        android:onClick="onClickButtons" />
+         />
   
 
 </RelativeLayout>

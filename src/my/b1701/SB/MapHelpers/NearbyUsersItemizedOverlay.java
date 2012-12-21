@@ -83,29 +83,7 @@ public class NearbyUsersItemizedOverlay extends BaseItemizedOverlay{
 	protected boolean onTap(int i)
 	{
 		//on tap check if user logged in to fb
-		userList.get(i).toggleSmallView();
-		if(!ThisUserConfig.getInstance().getBool(ThisUserConfig.FBCHECK))
-		{
-			
-			final Dialog dialog = new Dialog(context);
-			dialog.setContentView(R.layout.fblogin_dialog);
-			dialog.setTitle("One time FB login..");
-			
-			/*Button dialogButton = (Button) dialog.findViewById(R.id.signInViaFacebook);
-			// if button is clicked, close the custom dialog
-			dialogButton.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					
-				}
-			});*/
- 
-			//dialog.show();
-			Intent fbLoginIntent = new Intent(context,LoginActivity.class);			
-			MapListActivityHandler.getInstance().getUnderlyingActivity().startActivity(fbLoginIntent);
-		}
-		Toast toast = Toast.makeText(Platform.getInstance().getContext(), "FB acces tok:"+ThisUserConfig.getInstance().getString(ThisUserConfig.FBACCESSTOKEN), Toast.LENGTH_SHORT);       
-		toast.show();
+		userList.get(i).toggleSmallView();		
 		return true;
 		
 	}

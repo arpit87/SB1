@@ -1,10 +1,13 @@
 package my.b1701.SB.MapHelpers;
 
 import my.b1701.SB.R;
+import my.b1701.SB.Activities.MapListViewTabActivity;
 import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
 import my.b1701.SB.ChatClient.ChatWindow;
 import my.b1701.SB.HelperClasses.SBImageLoader;
+import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.Platform.Platform;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -14,6 +17,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.google.android.maps.GeoPoint;
@@ -109,11 +114,45 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 			chatIcon.setOnClickListener(new OnClickListener() {				
 				@Override
 				public void onClick(View chatIconView) {
-					Intent startChatIntent = new Intent(Platform.getInstance().getContext(),ChatWindow.class);					
-					startChatIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP
-				 			| Intent.FLAG_ACTIVITY_NEW_TASK);
-					startChatIntent.putExtra("participant", mUserFBID);
-					context.startActivity(startChatIntent);
+					
+					if(!ThisUserConfig.getInstance().getBool(ThisUserConfig.FBCHECK))
+					{
+						
+						final Dialog dialog = new Dialog(context);
+						dialog.setContentView(R.layout.fblogin_dialog);
+						dialog.setTitle("One time FB login..");
+						
+						Button dialogCloseButton = (Button) dialog.findViewById(R.id.button_close_fb_login_dialog);
+						// if button is clicked, close the custom dialog
+						dialogCloseButton.setOnClickListener(new OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								dialog.dismiss();
+							}
+						});
+						
+						Button fbLoginButton = (Button) dialog.findViewById(R.id.signInViaFacebook);
+						// if button is clicked, close the custom dialog
+						fbLoginButton.setOnClickListener(new OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								dialog.dismiss();
+								((MapListViewTabActivity)context).buttonOnMapClick(v);
+							}
+						});
+			 
+						dialog.show();
+						//Intent fbLoginIntent = new Intent(context,LoginActivity.class);			
+						//MapListActivityHandler.getInstance().getUnderlyingActivity().startActivity(fbLoginIntent);
+					}	
+					else
+					{
+						Intent startChatIntent = new Intent(Platform.getInstance().getContext(),ChatWindow.class);					
+						startChatIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP
+					 			| Intent.FLAG_ACTIVITY_NEW_TASK);
+						startChatIntent.putExtra("participant", mUserFBID);
+						context.startActivity(startChatIntent);
+					}
 					
 				}
 			});
