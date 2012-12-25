@@ -1,10 +1,5 @@
 package my.b1701.SB.ActivityHandlers;
 
-import java.util.List;
-
-import my.b1701.SB.R;
-import my.b1701.SB.HelperClasses.SBImageLoader;
-import my.b1701.SB.Users.NearbyUser;
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -13,6 +8,13 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import my.b1701.SB.HelperClasses.SBImageLoader;
+import my.b1701.SB.R;
+import my.b1701.SB.Users.NearbyUser;
+import my.b1701.SB.Users.UserFBInfo;
+import my.b1701.SB.Users.UserLocInfo;
+
+import java.util.List;
 
 public class NearbyUsersListViewAdapter extends BaseAdapter{
 
@@ -52,17 +54,22 @@ public class NearbyUsersListViewAdapter extends BaseAdapter{
         	thisUserView = inflater.inflate(R.layout.nearbyuser_list_row, null);
         ImageView userImageView = (ImageView)thisUserView.findViewById(R.id.nearbyuser_list_image); 
         TextView userName = (TextView)thisUserView.findViewById(R.id.nearbyusername);
+        TextView userGender = (TextView)thisUserView.findViewById(R.id.nearbyusergender);
         TextView userDestination = (TextView)thisUserView.findViewById(R.id.nearbyuserdestination);
         TextView userDistance = (TextView)thisUserView.findViewById(R.id.nearbyuserdistance);
-        TextView userLatitude = (TextView)thisUserView.findViewById(R.id.nearbyuserlatitude);
-        TextView userLongitudee = (TextView)thisUserView.findViewById(R.id.nearbyuserlongitude);
-        
+
         SBImageLoader.getInstance().displayImageElseStub(thisUser.getUserFBInfo().getImageURL(), userImageView, R.id.userpic);
-        userName.setText(thisUser.getUserFBInfo().getName());
-        userDestination.setText(thisUser.getUserLocInfo().getUserDstLocality());
-        userLatitude.setText(thisUser.getUserLocInfo().getSrcLatitude());
-        userLatitude.setText(thisUser.getUserLocInfo().getSrcLongitude());
-		
+        UserFBInfo thisUserFBInfo = thisUser.getUserFBInfo();
+        UserLocInfo thisUserLocInfo = thisUser.getUserLocInfo();
+        String name = thisUserFBInfo.getFirstName() + " " + thisUserFBInfo.getLastName();
+        String gender = thisUserFBInfo.getGender();
+        String destination = thisUserLocInfo.getUserDstLocality();
+        String distance = "100m";
+        userName.setText(name);
+        userGender.setText(gender);
+        userDestination.setText(destination);
+        userDistance.setText(distance);
+
 		return thisUserView;
 	}
 

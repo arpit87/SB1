@@ -13,8 +13,8 @@
         android:layout_marginRight="5dip">
   <ImageView
         android:id="@+id/nearbyuser_list_image"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
          />
   </LinearLayout>
  <!-- NearbyUser Name-->
@@ -30,30 +30,29 @@
         android:textSize="15dip"
         android:textStyle="bold"/>
  
-    <!-- NearbyUser DEstination -->
+    <!-- NearbyUser Gender -->
     <TextView
-        android:id="@+id/nearbyuserdestination"
+        android:id="@+id/nearbyusergender"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/nearbyusername"
         android:textColor="#343434"
         android:textSize="10dip"
         android:layout_marginTop="1dip"
-        android:layout_toRightOf="@+id/thumbnail"
-        android:text="Powai" />
-    
+        android:layout_toRightOf="@+id/thumbnail" />
+
+    <!-- NearbyUser Destination -->
     <TextView
-        android:id="@+id/nearbyuserlatitude"
+        android:id="@+id/nearbyuserdestination"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/nearbyuserdestination"
+        android:layout_below="@id/nearbyusergender"
         android:textColor="#343434"
         android:textSize="10dip"
         android:layout_marginTop="1dip"
-        android:layout_toRightOf="@+id/thumbnail"
-        android:text="Powai" />
+        android:layout_toRightOf="@+id/thumbnail" />
     
-    <TextView
+<!--    <TextView
         android:id="@+id/nearbyuserlongitude"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -62,7 +61,7 @@
         android:textSize="10dip"
         android:layout_marginTop="1dip"
         android:layout_toRightOf="@+id/thumbnail"
-        android:text="Powai" />
+        android:text="Powai" />-->
  
     <!-- NearbyUser Distance -->
     <TextView

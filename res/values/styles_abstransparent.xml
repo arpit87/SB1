@@ -19,7 +19,7 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="Theme.abstransparent" parent="@style/Theme.Sherlock">
-        <item name="windowActionBarOverlay">true</item>
+        <item name="windowActionBarOverlay">false</item>
         <item name="actionBarItemBackground">@drawable/selectable_background_abstransparent</item>        
         <item name="popupMenuStyle">@style/abstransparent_PopupMenu</item>
         <item name="dropDownListViewStyle">@style/abstransparent_DropDownListView</item>
