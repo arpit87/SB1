@@ -5,17 +5,10 @@ import java.util.Iterator;
 import java.util.List;
 
 import my.b1701.SB.R;
-import my.b1701.SB.Activities.LoginActivity;
 import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
 import my.b1701.SB.CustomViewsAndListeners.SBMapView;
-import my.b1701.SB.HelperClasses.ThisUserConfig;
-import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.Users.NearbyUser;
-import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
-import android.widget.Toast;
 
 
 public class NearbyUsersItemizedOverlay extends BaseItemizedOverlay{

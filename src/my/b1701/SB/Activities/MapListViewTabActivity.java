@@ -11,16 +11,15 @@ import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.HelperClasses.ToastTracker;
 import my.b1701.SB.LocationHelpers.SBLocationManager;
 import my.b1701.SB.Platform.Platform;
-import my.b1701.SB.TabHelpers.SherLockActionBarTabListener;
 import my.b1701.SB.TabHelpers.SherlockActionBarTab;
-import my.b1701.SB.Users.ThisUser;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -57,6 +56,8 @@ public class MapListViewTabActivity extends SherlockFragmentActivity {
 	private boolean currentIsOfferMode;
 	private Button fbloginbutton;
 	private FacebookConnector fbconnect;
+	FragmentManager fm = getSupportFragmentManager();
+	private boolean isMapShowing = true;
 	
 	public Fragment getListFrag() {
 		return listFrag;		
@@ -82,8 +83,10 @@ public class MapListViewTabActivity extends SherlockFragmentActivity {
         super.onCreate(savedInstanceState);
        // requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
        // requestWindowFeature((int) Window.FEATURE_ACTION_BAR & ~Window.FEATURE_ACTION_BAR_OVERLAY);
-        setContentView(R.layout.tab_navigation);
-        ab= getSupportActionBar();
+        setContentView(R.layout.tab_navigation_trial);
+        fm.enableDebugLogging(true);
+        showMapView();
+       /* ab= getSupportActionBar();
         
         ab.setBackgroundDrawable(getResources().getDrawable(R.drawable.abs_transparent));        
         ToastTracker.showToast("Your userid:"+ThisUser.getInstance().getUserID());
@@ -98,7 +101,7 @@ public class MapListViewTabActivity extends SherlockFragmentActivity {
 
         listTab = new SherlockActionBarTab(this, "ListFragment");
         listTab.setText(R.string.listviewstr).setTabListener(new SherLockActionBarTabListener(this, SBListFragment.class));
-        ab.addTab((ActionBar.Tab)listTab.getTab());
+        ab.addTab((ActionBar.Tab)listTab.getTab());*/
         
         fbconnect = new FacebookConnector(this);
         
@@ -155,7 +158,7 @@ public class MapListViewTabActivity extends SherlockFragmentActivity {
         	//delete user request,close service
         	Platform.getInstance().stopChatService();
         	finish();
-        	break;       	
+        	break;      
         
         } 
         return super.onOptionsItemSelected(menuItem);
@@ -193,10 +196,49 @@ public class MapListViewTabActivity extends SherlockFragmentActivity {
     	case R.id.signInViaFacebook:
     		fbconnect.loginToFB();
     		break;
+    	 case R.id.btn_togglemaplistview:
+         	toggleMapListView();
+         	break;	
     	
     	}
     }
 
+    private void toggleMapListView()
+    {
+    	if(!isMapShowing)
+    	{
+    		isMapShowing = true;
+    		showMapView();
+    	}
+    	else
+    	{
+    		isMapShowing = false;
+    		showListView();
+    	}
+    		
+    }
+    
+    private void showMapView()
+    {
+    	if (fm != null) {
+            
+            FragmentTransaction ft = fm.beginTransaction();
+            ft.replace(R.id.tabcontent, new SBMapFragment());
+            ft.commit();
+        }
+    }
+    
+    private void showListView()
+    {
+if (fm != null) {
+            
+            FragmentTransaction ft = fm.beginTransaction();
+            ft.replace(R.id.tabcontent, new SBListFragment());
+            ft.commit();
+        }
+    }
+    
+    
     private void offerRideClick() {
     	String message = "";
     	currentIsOfferMode = ThisUserConfig.getInstance().getBool(ThisUserConfig.IsOfferMode);

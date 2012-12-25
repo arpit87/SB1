@@ -36,8 +36,7 @@ public class Platform {
 	
 	public void initialize(Context context) {
 		this.context= context;
-		locManager = SBLocationManager.getInstance();
-		SBLocationManager.getInstance().StartListeningtoNetwork();
+		locManager = SBLocationManager.getInstance();		
 		httpClient = SBHttpClient.getInstance();
 		handler = new Handler();
 		
