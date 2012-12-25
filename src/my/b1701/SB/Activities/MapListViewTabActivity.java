@@ -12,6 +12,7 @@ import my.b1701.SB.HelperClasses.ToastTracker;
 import my.b1701.SB.LocationHelpers.SBLocationManager;
 import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.TabHelpers.SherlockActionBarTab;
+import my.b1701.SB.Users.ThisUser;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -86,16 +87,16 @@ public class MapListViewTabActivity extends SherlockFragmentActivity {
         setContentView(R.layout.tab_navigation_trial);
         fm.enableDebugLogging(true);
         showMapView();
-       /* ab= getSupportActionBar();
+        ab= getSupportActionBar();
         
         ab.setBackgroundDrawable(getResources().getDrawable(R.drawable.abs_transparent));        
         ToastTracker.showToast("Your userid:"+ThisUser.getInstance().getUserID());
-        ab.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);       
+        ab.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);       
         ab.setDisplayHomeAsUpEnabled(false);
         ab.setDisplayShowTitleEnabled(false);
-        ab.setIcon(R.drawable.hoponlogoforactionbar);
+        //ab.setIcon(R.drawable.hoponlogoforactionbar);
         //ab.setDisplayUseLogoEnabled(true);
-        mapTab = new SherlockActionBarTab(this, "MapFragment");
+       /* mapTab = new SherlockActionBarTab(this, "MapFragment");
         mapTab.setText(R.string.mapviewstr).setTabListener(new SherLockActionBarTabListener(this, SBMapFragment.class));
         ab.addTab((ActionBar.Tab)mapTab.getTab());       
 

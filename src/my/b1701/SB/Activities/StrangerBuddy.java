@@ -1,20 +1,27 @@
 package my.b1701.SB.Activities;
 
-
 import my.b1701.SB.Platform.Platform;
+import static org.acra.ReportField.*;
+
+import org.acra.ACRA;
+import org.acra.ReportingInteractionMode;
+import org.acra.annotation.ReportsCrashes;
 
 import android.app.Application;
 import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
-import org.acra.*;
-import org.acra.annotation.*;
-
-@ReportsCrashes(formKey = "dFk3X3UtSjI5WVRNR0YzN0NScFk3R2c6MQ",mailTo = "strangerbuddy@googlegroups.com",
-customReportContent = { ReportField.ANDROID_VERSION, ReportField.PHONE_MODEL, ReportField.CUSTOM_DATA, ReportField.STACK_TRACE, ReportField.LOGCAT },
-logcatArguments = { "-t", "100", "-v", "long", "ActivityManager:I", "MyApp:D", "*:S" }
-)
+@ReportsCrashes(formKey = "dDZQYXlhUldnM192YWhpdUhmTm1MLUE6MQ" ,
+customReportContent = {APP_VERSION_NAME,
+		APP_VERSION_CODE,  PACKAGE_NAME,PHONE_MODEL,BRAND, ANDROID_VERSION,
+		TOTAL_MEM_SIZE, AVAILABLE_MEM_SIZE ,CUSTOM_DATA, STACK_TRACE,
+		 DISPLAY,USER_APP_START_DATE , USER_CRASH_DATE,LOGCAT },
+logcatArguments = { "-t", "100", "-v", "long", "StrangerBuddy:I", "*:D", "*:S" },
+mode = ReportingInteractionMode.TOAST,
+forceCloseDialogAfterToast = false, // optional, default false
+resToastText = my.b1701.SB.R.string.crash_toast_text
+) 
 public class StrangerBuddy extends Application{
 	
 	private Context context;
