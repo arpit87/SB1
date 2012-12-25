@@ -80,11 +80,11 @@ public class UserLocInfo {
 		} catch (JSONException e) {}
 		
 		try {									
-			dstaddress = srcLocjObj.getString(UserAttributes.DSTADDRESS);			
+			dstaddress = dstLocjObj.getString(UserAttributes.DSTADDRESS);
 		} catch (JSONException e) {}
 		
 		try {									
-			dstlocality = srcLocjObj.getString(UserAttributes.DSTLOCALITY);			
+			dstlocality = dstLocjObj.getString(UserAttributes.DSTLOCALITY);
 		} catch (JSONException e) {}
 		
 		getUserGeopoint();

@@ -32,7 +32,7 @@ public class CustomSuggestionProvider extends ContentProvider {
     private static final String sSuggestions = "suggestions";
     private static final String ORDER_BY = "date DESC";
     private static final String NULL_COLUMN = "query";
-
+    private static final String searchIcon = "android.resource://system/" + R.drawable.ic_menu_search;
     // Table of database versions.  Don't forget to update!
     // NOTE:  These version values are shifted left 8 bits (x 256) in order to create space for
     // a small set of mode bitflags in the version int.
@@ -295,6 +295,7 @@ public class CustomSuggestionProvider extends ContentProvider {
                     SearchManager.SUGGEST_COLUMN_INTENT_EXTRA_DATA
             });
 
+
             int offset = 1000;
             if (cCustSug.moveToFirst()) {
                 do {
@@ -303,7 +304,7 @@ public class CustomSuggestionProvider extends ContentProvider {
                         if (keys.contains(name)) {
                             continue;
                         }
-                        cCombSug.addRow(new Object[]{0, null, name, selectionArgs[0], offset++, Intent.ACTION_VIEW, cCustSug.getString(0), "false"});
+                        cCombSug.addRow(new Object[]{0, searchIcon, name, selectionArgs[0], offset++, Intent.ACTION_VIEW, cCustSug.getString(0), "false"});
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

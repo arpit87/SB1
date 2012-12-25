@@ -43,6 +43,7 @@ public class SearchableActivity extends Activity {
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             Log.i(TAG, "address item clicked");
             GeoAddress geoAddress = (GeoAddress) parent.getItemAtPosition(position);
+            geoAddress.resetLocalityIfNull();
             searchRecentSuggestions.saveRecentQuery(geoAddress.getAddressLine(), geoAddress.getJson());
             setDestination(geoAddress);
         }
@@ -112,6 +113,7 @@ public class SearchableActivity extends Activity {
             try {
                 GeoAddress geoAddress = new GeoAddress(geoAddressJson);
                 if (!isSuggestionSaved){
+                    geoAddress.resetLocalityIfNull();
                     searchRecentSuggestions.saveRecentQuery(geoAddress.getAddressLine(), geoAddress.getJson());
                 }
                 setDestination(geoAddress);

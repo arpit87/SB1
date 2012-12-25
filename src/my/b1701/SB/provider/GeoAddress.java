@@ -1,8 +1,12 @@
 package my.b1701.SB.provider;
 
 import android.location.Address;
+import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.List;
 
 public class GeoAddress {
     private String addressLine;
@@ -46,7 +50,7 @@ public class GeoAddress {
         jsonObject.put("NAME", addressLine);
         jsonObject.put("LAT", lat);
         jsonObject.put("LONG", lon);
-        jsonObject.put("SUBLOCALITY", subLocality);
+        jsonObject.put("SUBLOCALITY", (subLocality != null) ? subLocality : JSONObject.NULL);
         return jsonObject.toString();
     }
 
@@ -60,7 +64,11 @@ public class GeoAddress {
         this.addressLine = constructAddressLine(address);
         this.latitude = address.getLatitude();
         this.longitude = address.getLongitude();
-        this.subLocality = address.getSubLocality();
+        String locality = address.getSubLocality();
+        locality = locality == null ? address.getPremises() : locality;
+        locality = locality == null ? address.getSubAdminArea() : locality;
+        locality = locality == null ? address.getLocality() : locality;
+        this.subLocality = locality;
         this.json = constructJson(addressLine, latitude, longitude, subLocality);
     }
     public GeoAddress(String json) throws JSONException {
@@ -70,6 +78,27 @@ public class GeoAddress {
         this.longitude = jsonObject.getDouble("LONG");
         this.subLocality = jsonObject.getString("SUBLOCALITY");
         this.json = json;
+    }
+
+    public void resetLocalityIfNull(){
+        if (this.subLocality.equals("null")){
+            List<Address> addressList = null;
+            try {
+                addressList = GeoAddressProvider.geocoder.getFromLocation(latitude, longitude, 1);
+            } catch (IOException e) {
+                Log.e("GeoAddress", e.getMessage());
+            }
+
+            if (addressList != null && !addressList.isEmpty()) {
+                Address addr = addressList.get(0);
+                subLocality = addr.getSubLocality();
+                try {
+                    json = constructJson(addressLine, latitude, longitude, subLocality);
+                } catch (JSONException e) {
+                    Log.e("GeoAddress", e.getMessage());
+                }
+            }
+        }
     }
 
     @Override

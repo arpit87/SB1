@@ -18,7 +18,7 @@ public class SBLocation extends Location{
 		super(l);
         try {
             List<Address> addressList = GeoAddressProvider.geocoder.getFromLocation(l.getLatitude(), l.getLongitude(), 1);
-            if (!addressList.isEmpty()) {
+            if (addressList != null  && !addressList.isEmpty()) {
                 Address addr = addressList.get(0);
                 this.subLocality = addr.getSubLocality();
                 this.address = GeoAddress.constructAddressLine(addr);

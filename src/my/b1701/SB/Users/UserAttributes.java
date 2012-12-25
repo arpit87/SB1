@@ -39,13 +39,15 @@ public class UserAttributes {
 	public static String  FBINFO = "fb_info";
 	public static String  FBID = "fbid";
 	public static String  FBTOKEN = "fbtoken";
-	public static String NAME = "name";
+	public static String  FB_FIRSTNAME = "firstname";
+	public static String  FB_LASTNAME = "lastname";
 	public static String  IMAGEURL = "image_url";
 	public static String  WORKSAT = "works_at";
 	public static String  LIVESIN = "lives_in";
-	public static String  STUDIEDAT = "studied_at";
+	public static String  STUDYAT = "study_at";
 	public static String  HOMETOWN = "hometown";
-	
+	public static String  GENDER = "gender";
+
 	//chat 
 	public static String  CHATUSERID = "user_id";
 	public static String  CHATUSERNAME = "username";
