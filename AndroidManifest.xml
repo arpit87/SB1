@@ -93,7 +93,7 @@
         </provider>
 
        <provider
-               android:name=".provider.CustomSuggestionProvider"
+               android:name="my.b1701.SB.provider.CustomSuggestionProvider"
                android:authorities="my.b1701.SB.provider.CustomSuggestionProvider" >
        </provider>
 
