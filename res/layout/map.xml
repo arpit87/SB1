@@ -8,7 +8,7 @@
          
     <ImageButton android:id="@+id/my_location_button" android:background="@drawable/my_location" 
         android:layout_width="40.0dip" android:layout_height="40.0dip" 
-        android:layout_marginTop="?android:attr/actionBarSize" android:layout_marginRight="8.0dip" 
+        android:layout_marginTop="60dip" android:layout_marginRight="8.0dip" 
         android:paddingTop="5dip" 
         android:layout_alignParentRight="true" android:contentDescription="@string/icon_my_location" 
         android:onClick="buttonOnMapClick"/>
