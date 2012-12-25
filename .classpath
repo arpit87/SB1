@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="my/b1701/SB/Activities/SBMapViewActivity.java|my/b1701/SB/Activities/AddressListViewActivity.java|my/b1701/SB/Activities/StartButtonActivity.java|my/b1701/SB/Activities/BaseActivityHandler.java|my/b1701/SB/ChatService/Contact.java" kind="src" path="src"/>
+	<classpathentry excluding="my/b1701/SB/Activities/SBMapViewActivity.java|my/b1701/SB/Activities/AddressListViewActivity.java|my/b1701/SB/Activities/StartButtonActivity.java|my/b1701/SB/Activities/BaseActivityHandler.java|my/b1701/SB/ChatService/Contact.java|my/b1701/SB/test/JSONTest.java" kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>

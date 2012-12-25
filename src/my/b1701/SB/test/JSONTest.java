@@ -1,9 +1,5 @@
 package my.b1701.SB.test; 
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.util.Log;
 
 public class JSONTest {
 	public static String jsonStr="{\"NearbyUsers\":[{ \"userid\":\"arpit\",\"latitude\":\"32.456\",\"longitude\":\"50.345\"},{\"userid\":\"rahul\",\"latitude\":\"33.456\",\"longitude\":\"51.345\"}]}";
