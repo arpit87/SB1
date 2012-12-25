@@ -20,18 +20,5 @@
         android:layout_width="40.0dip" android:layout_height="40.0dip" 
         android:layout_marginRight="8.0dip"  
         android:layout_alignParentRight="true" android:contentDescription="@string/icon_offerride" 
-        android:onClick="buttonOnMapClick"/>
-    
-    <ImageButton
-        android:id="@+id/switch_listview_button"
-        android:layout_width="40.0dip"
-        android:layout_height="60.0dip"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/offerride_button"
-        android:layout_marginRight="8.0dip"
-        android:background="@drawable/maplistshift_arrow"
-        android:layout_marginTop="30dip"
-        android:contentDescription="@string/icon_my_location"
-        android:onClick="buttonOnMapClick" />
-    
+        android:onClick="buttonOnMapClick"/>   
 </RelativeLayout>

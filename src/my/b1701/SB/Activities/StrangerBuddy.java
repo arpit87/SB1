@@ -11,7 +11,10 @@ import android.widget.Toast;
 import org.acra.*;
 import org.acra.annotation.*;
 
-@ReportsCrashes(formKey = "dFk3X3UtSjI5WVRNR0YzN0NScFk3R2c6MQ") 
+@ReportsCrashes(formKey = "dFk3X3UtSjI5WVRNR0YzN0NScFk3R2c6MQ",mailTo = "strangerbuddy@googlegroups.com",
+customReportContent = { ReportField.ANDROID_VERSION, ReportField.PHONE_MODEL, ReportField.CUSTOM_DATA, ReportField.STACK_TRACE, ReportField.LOGCAT },
+logcatArguments = { "-t", "100", "-v", "long", "ActivityManager:I", "MyApp:D", "*:S" }
+)
 public class StrangerBuddy extends Application{
 	
 	private Context context;

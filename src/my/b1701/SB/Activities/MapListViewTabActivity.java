@@ -158,7 +158,10 @@ public class MapListViewTabActivity extends SherlockFragmentActivity {
         	//delete user request,close service
         	Platform.getInstance().stopChatService();
         	finish();
-        	break;      
+        	break;   
+   	 case R.id.menu_switch_listview:
+      	toggleMapListView();
+      	break; 	
         
         } 
         return super.onOptionsItemSelected(menuItem);
@@ -196,9 +199,7 @@ public class MapListViewTabActivity extends SherlockFragmentActivity {
     	case R.id.signInViaFacebook:
     		fbconnect.loginToFB();
     		break;
-    	 case R.id.btn_togglemaplistview:
-         	toggleMapListView();
-         	break;	
+    	
     	
     	}
     }
