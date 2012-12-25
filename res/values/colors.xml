@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="abs__background_holo_dark">#ff000000</color>
+    <color name="abs__background_holo_light">#fff3f3f3</color>
+    <color name="abs__bright_foreground_holo_dark">@color/abs__background_holo_light</color>
+    <color name="abs__bright_foreground_holo_light">@color/abs__background_holo_dark</color>
+    <color name="abs__bright_foreground_disabled_holo_dark">#ff4c4c4c</color>
+    <color name="abs__bright_foreground_disabled_holo_light">#ffb2b2b2</color>
+    <color name="abs__bright_foreground_inverse_holo_dark">@color/abs__bright_foreground_holo_light</color>
+    <color name="abs__bright_foreground_inverse_holo_light">@color/abs__bright_foreground_holo_dark</color>
+    <color name="abs__holo_blue_light">#ff33b5e5</color>
+    <color name="none">#00000000</color>
+    <color name="black_75">#c0000000</color>
+    <color name="black">#ff000000</color>
+    <color name="white">#ffffffff</color>
+    <color name="background">#ff181818</color>
+    <color name="foreground">#ff303030</color>
+    <color name="gray">#ff808080</color>
+    <color name="yellow">#ffffff00</color>
+    <color name="blue">#ff0080c0</color>
+    <color name="cyan">#ffccffff</color>
+    <color name="lightgrey">#ffcdcdcd</color>
+    <color name="lightergrey">#ffc0c0c0</color>
+    <color name="green">#ff00ff30</color>
+    <color name="actionbar_default">#ff414141</color>
+    <color name="actionbar_pressed">#ffc19c00</color>
+    <color name="actionbar_selected">#ffffcc00</color>
+    <color name="actionbar_default_text">#ffc6c6c6</color>
+    <color name="settings_divider">#ff5d5d5d</color>
+    <color name="bg_user_white">#fffbfbfb</color>
+    <color name="bg_user_gray">#ffb9b9b9</color>
+    <color name="bg_venueuser_pressed">#ffcdcdcd</color>
+    <color name="text_user_gray">#ff616161</color>
+    <color name="text_user_black">#ff565656</color>
+    <color name="chat_background">#ffeeeeee</color>
+    <color name="chat_text_me">#ff39bced</color>
+    <color name="chat_text_you">#ff54b948</color>
+    <color name="chicklet_nowhere">#ff2d2d2d</color>
+    <color name="chicklet_nowhere_text">#ff596267</color>
+    <color name="android_holo_blue">#ff33b5e5</color>
+    <color name="invite_blue">#ff00c0ff</color>	
+
+</resources>

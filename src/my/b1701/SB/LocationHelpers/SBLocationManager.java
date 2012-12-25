@@ -2,7 +2,7 @@ package my.b1701.SB.LocationHelpers;
 
 import java.util.List;
 
-import my.b1701.SB.ActivityHandlers.MapActivityHandler;
+import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
 import my.b1701.SB.HelperClasses.Constants;
 import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.Users.ThisUser;
@@ -88,11 +88,11 @@ public class SBLocationManager {
 	}
 
 	//need to start listening first
-	public SBLocation getLastXMinBestLocation(long xMin ) {
+	public SBLocation getLastXSecBestLocation(long xMin ) {
 	    Location bestResult = null;
 	    float bestAccuracy = Float.MAX_VALUE;
 	    long bestTime = Long.MIN_VALUE;	    
-	    long minTime = System.currentTimeMillis() - xMin*60*1000;
+	    long minTime = System.currentTimeMillis() - xMin*1000;
 	    List<String> matchingProviders = locManager.getAllProviders();
 	    for (String provider: matchingProviders) {
 	      Location location = locManager.getLastKnownLocation(provider);
@@ -138,7 +138,7 @@ public class SBLocationManager {
 	        	if ((time > currentLocation.getTime() && accuracy < currentLocation.getAccuracy()))
 	        	{
 	        		ThisUser.getInstance().setLocation(new SBLocation(location));
-	        		MapActivityHandler.getInstance().updateThisUserMapOverlay();
+	        		MapListActivityHandler.getInstance().updateThisUserMapOverlay();
 	        		return new SBLocation(location);
 	        	}
 	        

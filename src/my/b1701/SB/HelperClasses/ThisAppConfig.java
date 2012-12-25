@@ -6,7 +6,9 @@ public class ThisAppConfig extends ConfigBase{
 	public static final String USERCUTOFFDIST = "user_cutoff_dist";
 	public static final String GPSFREQ = "gps_freq";
 	public static final String NETWORKFREQ = "network_freq";
-	public static final String USERPOSCHECKFREQ = "user_pos_chk_freq"; 
+	public static final String USERPOSCHECKFREQ = "user_pos_chk_freq";
+	public static final String APPUUID = "uuid";
+	
 	
 	private ThisAppConfig(){super(Constants.APP_CONF_FILE);}
 	

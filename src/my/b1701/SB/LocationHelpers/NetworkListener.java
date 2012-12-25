@@ -1,6 +1,7 @@
 package my.b1701.SB.LocationHelpers;
 
-import my.b1701.SB.ActivityHandlers.MapActivityHandler;
+import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
+import my.b1701.SB.HelperClasses.ToastTracker;
 import my.b1701.SB.Users.ThisUser;
 import android.location.Location;
 import android.location.LocationListener;
@@ -24,6 +25,7 @@ public class NetworkListener implements LocationListener{
 	public void start()
 	{
 		Log.i(TAG,"strted listening to network");
+		ToastTracker.showToast("strted listning to network");
 		//thisWindowBestLocation = null;
 		SBLocationManager.getInstance().locManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
 	}
@@ -52,7 +54,7 @@ public class NetworkListener implements LocationListener{
 		//so we find most accurate location of a window and set it to thisWindowBest
 		Log.i(TAG,"network location changed");
 		Log.i(TAG,"new network location acc:"+ location.getAccuracy());
-		
+		ToastTracker.showToast("loc changed:acc:"+location.getAccuracy());
 		if(thisWindowBestLocation == null)
 		{		
 			//window starting
@@ -64,10 +66,10 @@ public class NetworkListener implements LocationListener{
 			//window continuing
 			//Log.i(TAG,"thiswindowbest location:"+thisWindowBestLocation.toString());
 			thisWindowBestLocation = location;		
-			if(MapActivityHandler.getInstance().isUpdateMapRealTime())
+			if(MapListActivityHandler.getInstance().isUpdateMapRealTime())
 			{
 				ThisUser.getInstance().setLocation(new SBLocation(location));
-				MapActivityHandler.getInstance().updateThisUserMapOverlay();				
+				MapListActivityHandler.getInstance().updateThisUserMapOverlay();				
 			}
 				
 			Log.i(TAG,"thiswindowbest location:"+thisWindowBestLocation.toString());

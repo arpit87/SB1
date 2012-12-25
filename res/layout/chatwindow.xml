@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:orientation="vertical">
+	<LinearLayout android:id="@+id/chat_header"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:orientation="horizontal" android:gravity="center_vertical"
+		android:background="#222222" android:padding="4px">
+		<ImageView android:id="@+id/chat_contact_pic"
+			android:layout_width="70.0dip"
+            android:layout_height="70.0dip"
+            android:layout_margin="10.0dip"
+            android:scaleType="centerCrop"
+            android:gravity="left" />
+		<LinearLayout android:orientation="vertical"
+			android:layout_width="fill_parent" android:layout_height="wrap_content"
+			android:paddingLeft="15sp">
+			<TextView android:id="@+id/chat_contact_name"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:lines="1" android:singleLine="true" android:textSize="16sp"
+				android:textStyle="bold" android:textColor="#FFFFFF" />
+			<TextView android:id="@+id/chat_contact_status_msg"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:autoLink="all" android:textSize="12sp" android:textColor="#FFFFFF"
+				android:textColorLink="#FFFFFF" />
+			<TextView android:id="@+id/chat_contact_destination"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:lines="1" android:singleLine="true" android:textSize="12sp"
+				android:textStyle="bold" android:textColor="#FFFFFF" />
+		</LinearLayout>
+	</LinearLayout>
+	<View android:layout_width="fill_parent" android:layout_height="2dp"
+		android:fadingEdge="horizontal" android:background="#555555" />
+	<ListView android:id="@+id/chat_messages"
+		android:layout_width="fill_parent" android:layout_height="0px"
+		android:layout_weight="1" android:transcriptMode="normal"
+		android:fastScrollEnabled="true" android:smoothScrollbar="false"
+		android:layout_marginBottom="20sp" android:padding="4px" />
+	<LinearLayout android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:orientation="horizontal"
+		android:background="#222222" android:padding="8px">
+		<EditText android:id="@+id/chat_input" android:layout_width="wrap_content"
+			android:layout_height="fill_parent" android:layout_weight="1"
+			android:maxLines="5"
+			android:inputType="textShortMessage|textAutoCorrect|textMultiLine"
+			android:imeOptions="actionSend" android:cursorVisible="true"
+			 />
+		<Button android:id="@+id/chat_send_message"
+			android:layout_width="wrap_content" android:layout_height="fill_parent"
+			android:text="Send" />
+	</LinearLayout>
+</LinearLayout>

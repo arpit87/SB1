@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              >
+              <View android:id="@+id/listpadding"
+			        android:layout_width="fill_parent"
+                    android:layout_height="50dip"                    
+                    android:background="#ffffffff"/>
+    <RelativeLayout android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"                    
+                    android:background="#ffffffff">
+			
+        <LinearLayout android:id="@+id/thumbnail"            		
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:padding="3dip"
+                      android:layout_alignParentLeft="true"
+                      android:layout_marginRight="5dip">
+            <ImageView
+                    android:id="@+id/list_user_image"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    />
+        </LinearLayout>
+        <TextView
+                android:id="@+id/UserNameInList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/thumbnail"
+                android:paddingLeft="15dp"
+                android:text="Name"
+                android:textSize="16sp"
+                android:textStyle="bold"/>
+
+        <TextView
+                android:id="@+id/DestinationInList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/UserNameInList"
+                android:layout_toRightOf="@+id/thumbnail"
+                android:paddingLeft="15dp"
+                android:text="Destination"
+                android:textSize="16sp"
+                android:textStyle="bold"/>
+    </RelativeLayout>
+    <View android:layout_width="fill_parent" android:layout_height="2dp"
+          android:fadingEdge="horizontal" android:background="#d3d3d3"/>
+
+    <ListView xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@android:id/list"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:textSize="24dp"
+              android:background="#D3D3D3">
+    </ListView>
+
+    <TextView android:id="@id/android:empty"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="#D3D3D3"/>
+</LinearLayout>

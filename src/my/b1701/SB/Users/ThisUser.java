@@ -1,5 +1,6 @@
 package my.b1701.SB.Users;
 
+import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.LocationHelpers.SBGeoPoint;
 import my.b1701.SB.LocationHelpers.SBLocation;
 import android.location.Location;
@@ -21,10 +22,28 @@ public class ThisUser {
 	/*
 	 * Fields
 	 */
-	private String uniqueID;	
-	public void setUniqueID(String uniqueID) {
-		Log.i(TAG,"set unique id");
-		this.uniqueID = uniqueID;
+	private String userID;	
+	public void setUserID(String userID) {
+		Log.i(TAG,"set user id");
+		this.userID = userID;
+	}
+	
+	public String getUserID() {
+		Log.i(TAG,"get user id"+this.userID);
+		return this.userID;
+	}
+	
+	/**
+	 * if offering => 1
+	 * seeking => 0
+	 * @return
+	 */
+	public int getrequestType() {
+		Log.i(TAG,"get req type"+this.userID);
+		if(ThisUserConfig.getInstance().getBool(ThisUserConfig.IsOfferMode))
+			return 1;
+		else
+			return 0;
 	}
 
 	private SBLocation currlocation=null;
@@ -41,7 +60,7 @@ public class ThisUser {
 
 	public void setLocation(SBLocation location) {
 		this.currlocation = location;		 
-		currentGeoPoint = new SBGeoPoint((int)(location.getLatitude()*1e6),(int)(location.getLongitude()*1e6));
+		currentGeoPoint = new SBGeoPoint(location);
 		Log.i(TAG,"setting location"+currentGeoPoint.toString());
 	}
 	
@@ -67,11 +86,6 @@ public class ThisUser {
 		this.destinationGeoPoint = sbGeoPoint;
 	}
 
-	public String getUniqueID() {
-		Log.i(TAG,"get uniqueid");
-		return uniqueID;
-	}
-	
 	public SBGeoPoint getCurrentGeoPoint() {
 		Log.i(TAG,"get curr loc");
 		
