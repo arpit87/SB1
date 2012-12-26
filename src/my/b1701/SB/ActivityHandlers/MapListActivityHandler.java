@@ -147,6 +147,7 @@ public class MapListActivityHandler  {
 			progressDialog = ProgressDialog.show(underlyingActivity, "Fetching location", "Please wait..", true);
 			for(int attempt = 1 ; attempt <= 4; attempt++ )
 			{
+				//thisCurrLoc = SBLocationManager.getInstance().getCurrentBestLocation(location)
 				thisCurrLoc = SBLocationManager.getInstance().getLastXSecBestLocation(startInterval*attempt);
 				if(thisCurrLoc != null)
 				{

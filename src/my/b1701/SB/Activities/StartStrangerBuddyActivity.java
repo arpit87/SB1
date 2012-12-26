@@ -47,7 +47,7 @@ public class StartStrangerBuddyActivity extends Activity {
         ThisAppConfig.getInstance().putLong(ThisAppConfig.GPSFREQ, 2*60*1000);	 //2 min
         ThisAppConfig.getInstance().putLong(ThisAppConfig.USERCUTOFFDIST,1000);  //1000 meter
         ThisAppConfig.getInstance().putLong(ThisAppConfig.USERPOSCHECKFREQ,2*60*1000);  //2min*/
-        SBLocationManager.getInstance().StartListeningtoNetwork();        
+        SBLocationManager.getInstance().StartListeningtoNetwork(500,10);        
         //SBLocationManager.getInstance().StartListeningtoGPS(ThisAppConfig.getInstance().getLong("gpsfreq"),100);
         Log.i(TAG,"started network listening ");
         

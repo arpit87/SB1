@@ -27,7 +27,8 @@ public class NetworkListener implements LocationListener{
 		Log.i(TAG,"strted listening to network");
 		ToastTracker.showToast("strted listning to network");
 		//thisWindowBestLocation = null;
-		SBLocationManager.getInstance().locManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
+		SBLocationManager.getInstance().locManager.removeUpdates(this);
+		SBLocationManager.getInstance().locManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0L, 0F, this);
 	}
 	
 	public void start(long minTime,float minDistance)
@@ -35,6 +36,7 @@ public class NetworkListener implements LocationListener{
 		Log.i(TAG,"strted listening to network wid mintim"+minTime+",mindist:"+minDistance);
 		this.minTime=minTime;
 		this.minDistnce=minDistance;
+		SBLocationManager.getInstance().locManager.removeUpdates(this);
 		SBLocationManager.getInstance().locManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, minTime, minDistnce, this);
 	}
 	
