@@ -12,7 +12,7 @@
     <item
             android:id="@+id/btn_listview"
             android:title="@string/listviewstr"
-            android:icon="@drawable/maptolistgrey2"            
+            android:icon="@drawable/maptolist"            
             android:showAsAction="always"
             /> 
              
