@@ -6,7 +6,6 @@ import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import my.b1701.SB.R;
-import my.b1701.SB.ChatService.SBChatService;
 import my.b1701.SB.HelperClasses.ThisAppConfig;
 import my.b1701.SB.HelperClasses.ThisAppInstallation;
 import my.b1701.SB.HelperClasses.ThisUserConfig;
@@ -20,6 +19,7 @@ import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.Users.ThisUser;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,7 +32,8 @@ public class StartStrangerBuddyActivity extends Activity {
 	Runnable startMapActivity;
 	Intent showSBMapViewActivity;
 	Timer timer;
-	AtomicBoolean mapActivityStarted = new AtomicBoolean(false);
+	AtomicBoolean mapActivityStarted = new AtomicBoolean(false);	
+	private Context platformContext;
 	
 	
     /** Called when the activity is first created. */
@@ -49,10 +50,11 @@ public class StartStrangerBuddyActivity extends Activity {
         ThisAppConfig.getInstance().putLong(ThisAppConfig.USERPOSCHECKFREQ,2*60*1000);  //2min*/
         SBLocationManager.getInstance().StartListeningtoNetwork(500,10);        
         //SBLocationManager.getInstance().StartListeningtoGPS(ThisAppConfig.getInstance().getLong("gpsfreq"),100);
-        Log.i(TAG,"started network listening ");
+        Log.i(TAG,"started network listening "); 
+        platformContext = Platform.getInstance().getContext();
         
-        ToastTracker.showToast("Connecting to server..");
-        
+      //this might only connect to xmpp server and not login if new user and not yet fb login
+        startChatService();
                
         //map activity can get started from 3 places, timer task if location found instantly
         //else this new runnable posted after 3 seconds
@@ -75,9 +77,9 @@ public class StartStrangerBuddyActivity extends Activity {
 		{
 			ThisUser.getInstance().setUserID(ThisUserConfig.getInstance().getString(ThisUserConfig.USERID));	
 			timer = new Timer();
-			timer.scheduleAtFixedRate(new getNetworkLocationFixTask(), 500, 500);		
+			timer.scheduleAtFixedRate(new GetNetworkLocationFixTask(), 500, 500);		
 	        
-	        Platform.getInstance().getHandler().postDelayed(startMapActivity,1000 * 3); 
+	       // Platform.getInstance().getHandler().postDelayed(startMapActivity,1000 * 3); 
 		}   
         
         
@@ -113,23 +115,39 @@ public class StartStrangerBuddyActivity extends Activity {
     	finish();
     }
     
-    private class getNetworkLocationFixTask extends TimerTask
+    private class GetNetworkLocationFixTask extends TimerTask
     { 
+    	private int counter = 0;
          public void run() 
          {
+        	 counter++;
+        	 Log.i(TAG, "timer task counter:"+counter);
         	 SBLocation currLoc = SBLocationManager.getInstance().getLastXSecBestLocation(10*60);
         	 if(currLoc != null)
         	 {
-        		 ToastTracker.showToast("found loc in timertask");
-        		 Platform.getInstance().getHandler().removeCallbacks(startMapActivity);
+        		 ToastTracker.showToast("found loc in timertask");  
+        		 ThisUser.getInstance().setLocation(currLoc);
         		 Platform.getInstance().getHandler().post(startMapActivity);
         	 }
-        	 else
+        	 else if(counter>5)
         	 {
+        		 ToastTracker.showToast("no loc in timertask");
+        		 Platform.getInstance().getHandler().post(startMapActivity);
         		 Log.i(TAG, "loc not found in this timer task");
         	 }
           }
      }
     
-    
+    public void startChatService(){
+     
+          Intent i = new Intent("my.b1701.SB.ChatService.SBChatService");
+         // i.setClassName("my.b1701.SB.ChatService", "my.b1701.SB.ChatService.SBChatService");
+          ToastTracker.showToast("service starting ");
+          Log.d( TAG, "Service starting" );
+          platformContext.startService(i);
+         
+          //ToastTracker.showToast("service started ");
+          //Log.d( TAG, "Service started" );
+         }
+                    
 }

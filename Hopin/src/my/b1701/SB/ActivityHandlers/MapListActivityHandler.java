@@ -95,7 +95,7 @@ public class MapListActivityHandler  {
 	public void initMyLocation() 
 	{ 
 		
-		SBLocation currLoc = SBLocationManager.getInstance().getLastXSecBestLocation(5*60);
+		SBLocation currLoc = ThisUser.getInstance().getLocation();
 		if(currLoc == null)
 		{
 			//location not found yet after initial screen!try more for 6 secs
@@ -126,8 +126,7 @@ public class MapListActivityHandler  {
 			Platform.getInstance().getHandler().postDelayed(fetchLocation, 6000);// post after 6 secs
 		}
 		else
-		{
-			ThisUser.getInstance().setLocation(currLoc);		
+		{					
 			putInitialOverlay();		
 		}
 	}

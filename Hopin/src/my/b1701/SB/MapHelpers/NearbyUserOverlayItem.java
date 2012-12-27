@@ -166,7 +166,10 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 				@Override
 				public void onClick(View chatIconView) {
 					
-					if(!ThisUserConfig.getInstance().getBool(ThisUserConfig.FBCHECK))
+					String thiUserChatUserName = ThisUserConfig.getInstance().getString(ThisUserConfig.CHATUSERID);
+					String thisUserChatPassword = ThisUserConfig.getInstance().getString(ThisUserConfig.CHATPASSWORD);
+					
+					if(thiUserChatUserName == "" || thisUserChatPassword == "")
 					{
 						
 						final Dialog dialog = new Dialog(context);

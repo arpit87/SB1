@@ -88,11 +88,11 @@ public class SBLocationManager {
 	}
 
 	//need to start listening first
-	public SBLocation getLastXSecBestLocation(long xMin ) {
+	public SBLocation getLastXSecBestLocation(long xSec ) {
 	    Location bestResult = null;
 	    float bestAccuracy = Float.MAX_VALUE;
 	    long bestTime = Long.MIN_VALUE;	    
-	    long minTime = System.currentTimeMillis() - xMin*1000;
+	    long minTime = System.currentTimeMillis() - xSec*1000;
 	    List<String> matchingProviders = locManager.getAllProviders();
 	    for (String provider: matchingProviders) {
 	      Location location = locManager.getLastKnownLocation(provider);

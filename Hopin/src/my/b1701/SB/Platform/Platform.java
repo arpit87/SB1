@@ -16,7 +16,7 @@ public class Platform {
 	private SBLocationManager locManager;
 	private SBHttpClient httpClient;
 	private Handler handler;
-	private boolean mServiceStarted = false;
+	
 	
 	private Platform() {
 	}
@@ -40,36 +40,15 @@ public class Platform {
 		httpClient = SBHttpClient.getInstance();
 		handler = new Handler();
 		
-		//this might only connect to xmpp server and not login if new user and not yet fb login
-		startChatService();
+		
 	}
 	
-	 public void startChatService(){
-	        if (mServiceStarted) {
-	        	ToastTracker.showToast("service already started ");
-	        } else {
-	          Intent i = new Intent("my.b1701.SB.ChatService.SBChatService");
-	         // i.setClassName("my.b1701.SB.ChatService", "my.b1701.SB.ChatService.SBChatService");
-	          ToastTracker.showToast("service starting ");
-	          Log.d( TAG, "Service starting" );
-	          context.startService(i);
-	          mServiceStarted = true;
-	          //ToastTracker.showToast("service started ");
-	          //Log.d( TAG, "Service started" );
-	         }
-	                    
-	     }
 	
-	 public void stopChatService() {
-		 if (!mServiceStarted) {
-	        	ToastTracker.showToast("service not yet started ");
-	        } else {
+	 public void stopChatService() {		
 	          Intent i = new Intent("my.b1701.SB.ChatService.SBChatService");
-	          context.stopService(i);
-	          mServiceStarted = true;
+	          context.stopService(i);	          
 	          ToastTracker.showToast("service stopped ");
-	          Log.d( TAG, "Service stopped" );
-	         }
+	          Log.d( TAG, "Service stopped" );	         
 	             
  }
 

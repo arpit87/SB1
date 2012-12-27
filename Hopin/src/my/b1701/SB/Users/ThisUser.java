@@ -9,6 +9,13 @@ import android.util.Log;
 
 public class ThisUser {
 	
+	
+	private SBLocation currlocation=null;
+	//private SBLocation dstlocation=null;
+
+	private SBGeoPoint currentGeoPoint=null;
+	private SBGeoPoint shareReqGeoPoint=null;
+	private SBGeoPoint destinationGeoPoint=null;
 	/*
 	 * Singleton
 	 */
@@ -46,12 +53,7 @@ public class ThisUser {
 			return 0;
 	}
 
-	private SBLocation currlocation=null;
-	//private SBLocation dstlocation=null;
 
-	private SBGeoPoint currentGeoPoint=null;
-	private SBGeoPoint shareReqGeoPoint=null;
-	private SBGeoPoint destinationGeoPoint=null;
 	
 	public SBLocation getLocation() {
 		 Log.i(TAG,"getlocation called");
@@ -62,6 +64,11 @@ public class ThisUser {
 		this.currlocation = location;		 
 		currentGeoPoint = new SBGeoPoint(location);
 		Log.i(TAG,"setting location"+currentGeoPoint.toString());
+	}
+	
+	public SBLocation getCurrentLocation()
+	{
+		return this.currlocation;
 	}
 	
 	//thr is no dst location but only geopoint

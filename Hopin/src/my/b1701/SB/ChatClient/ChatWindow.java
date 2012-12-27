@@ -10,6 +10,7 @@ import my.b1701.SB.ChatService.IChatManager;
 import my.b1701.SB.ChatService.IXMPPAPIs;
 import my.b1701.SB.ChatService.Message;
 import my.b1701.SB.ChatService.SBChatService;
+import my.b1701.SB.FacebookHelpers.FacebookConnector;
 import my.b1701.SB.HelperClasses.AlertDialogBuilder;
 import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.HelperClasses.ToastTracker;
@@ -62,6 +63,7 @@ public class ChatWindow extends Activity{
     private String mThisUserChatPassword = "";
 	private ProgressDialog progressDialog;
 	private boolean onProgress = false; //used to track if progress dialog being shown
+	private FacebookConnector fbconnect; // required if user not logged in
     
 		    
 	    @Override
@@ -163,6 +165,12 @@ public void onResume() {
            mBinded = true;
         
    }
+    
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        fbconnect.authorizeCallback(requestCode, resultCode, data);
+    }
 	    
 	    private void releaseService() {
     		if(mChatServiceConnection != null) {
@@ -214,12 +222,20 @@ public void onResume() {
 	    
 	    
 	  	private void loginWithProgress() 
-	    {
-	    	progressDialog = ProgressDialog.show(ChatWindow.this, "Logging in", "Please wait..", true);
-	    	onProgress = true;
+	    {	    	
 	    	try {
 				if(mThiUserChatUserName != "" && mThisUserChatPassword != "")
+				{
+					progressDialog = ProgressDialog.show(ChatWindow.this, "Logging in", "Please wait..", true);
+			    	onProgress = true;
+					Log.d(TAG,"logging in chat window  with username,pass:" + mThiUserChatUserName + ","+mThisUserChatPassword);
 					xmppApis.loginWithCallBack(mThiUserChatUserName, mThisUserChatPassword,mCharServiceConnMiscListener);
+				}
+				else
+				{									
+					//AlertDialogBuilder.showOKDialog(this,"FB login required", "You need to login one time to FB to chat with user");	
+					fbconnect.loginToFB();
+				}
 			} catch (RemoteException e) {
 				progressDialog.dismiss();				
 				AlertDialogBuilder.showOKDialog(this,"Error", "Problem logging,try later");
@@ -309,7 +325,7 @@ public void onResume() {
     			}
     			else
     			{	Log.d(TAG, "Chat manager not got,will try login");
-    				//loginWithProgress();
+    				loginWithProgress();
     			}
     		    } catch (RemoteException e) {
     			Log.e(TAG, e.getMessage());
@@ -413,11 +429,21 @@ private class SBChatServiceConnAndMiscListener extends ISBChatConnAndMiscListene
 
 	@Override
 	public void loggedIn() throws RemoteException {
+		Log.d(TAG, "Chat window login call back");
 		if(progressDialog.isShowing())
 		{
 			progressDialog.dismiss();			
 		}
-		ToastTracker.showToast("chatwindow callback,loggedin");		
+		if(mChatManager == null)
+			mChatManager = xmppApis.getChatManager();
+		
+		if(mChatManager == null)
+		{
+			ToastTracker.showToast("chatwindow login callback,loggedin but still chatmanager null!!");	
+			Log.d(TAG, "Chat window login call back,logged in but still didnt find chat manager");
+		}
+		else
+			Log.d(TAG, "Chat window login call back,logged in and found chat manager");
 	}
 
 	@Override
