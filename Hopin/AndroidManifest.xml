@@ -97,11 +97,9 @@
                android:authorities="my.b1701.SB.provider.CustomSuggestionProvider" >
        </provider>
 
-        <service android:name=".LocationHelpers.LocationService"
-            android:label="@string/locationupdaterservice"
-            android:icon="@drawable/btn_close"
+        <receiver android:name=".LocationHelpers.LocationUpdaterFromIntent"           
             android:exported="false">
-             </service>
+             </receiver>
          
       
           <receiver android:name=".BroadcastReceivers.KillLocationServiceReceiver" 

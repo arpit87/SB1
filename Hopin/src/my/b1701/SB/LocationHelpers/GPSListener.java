@@ -69,13 +69,13 @@ public class GPSListener implements LocationListener{
 	}
 
 	public void onStatusChanged(String provider, int status, Bundle extras) {
-		Log.i(TAG,"gps status:"+status);
+		/*Log.i(TAG,"gps status:"+status);
 		//Toast toast = Toast.makeText(Platform.getInstance().getContext(), "GPS status change to"+status, Toast.LENGTH_SHORT);       
 		//toast.show();
 		if(status == AVAILABLE) //window starting
 			thisWindowBestLocation = null;
 		if(status == TEMPORARILY_UNAVAILABLE) //window ending
-			LocationUpdater.getInstance().UpdateToBestCurrentLocation(new SBLocation(thisWindowBestLocation));
+			LocationUpdaterFromIntent.getInstance().UpdateToBestCurrentLocation(new SBLocation(thisWindowBestLocation));*/
 		
 	}	
 

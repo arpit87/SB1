@@ -17,10 +17,10 @@ import my.b1701.SB.LocationHelpers.SBLocation;
 import my.b1701.SB.LocationHelpers.SBLocationManager;
 import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.Users.ThisUser;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ProgressBar;
@@ -48,7 +48,13 @@ public class StartStrangerBuddyActivity extends Activity {
         ThisAppConfig.getInstance().putLong(ThisAppConfig.GPSFREQ, 2*60*1000);	 //2 min
         ThisAppConfig.getInstance().putLong(ThisAppConfig.USERCUTOFFDIST,1000);  //1000 meter
         ThisAppConfig.getInstance().putLong(ThisAppConfig.USERPOSCHECKFREQ,2*60*1000);  //2min*/
-        SBLocationManager.getInstance().StartListeningtoNetwork(500,10);        
+        SBLocationManager.getInstance().StartListeningtoNetwork(500,10);      
+        
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.FROYO)
+        {
+        	Log.d(TAG, "requested for single loc intent");
+        	SBLocationManager.getInstance().requestSingleLocationUpdate();
+        }
         //SBLocationManager.getInstance().StartListeningtoGPS(ThisAppConfig.getInstance().getLong("gpsfreq"),100);
         Log.i(TAG,"started network listening "); 
         platformContext = Platform.getInstance().getContext();
@@ -63,9 +69,8 @@ public class StartStrangerBuddyActivity extends Activity {
         showSBMapViewActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         
         startMapActivity = new Runnable() {
-	          public void run() {     	
-	        	  timer.cancel();
-	        	  timer.purge();
+	          public void run() {    	
+	        	  
 	        	  if(!mapActivityStarted.getAndSet(true))
 	        		  startActivity(showSBMapViewActivity);
 	          }};
@@ -122,18 +127,22 @@ public class StartStrangerBuddyActivity extends Activity {
          {
         	 counter++;
         	 Log.i(TAG, "timer task counter:"+counter);
-        	 SBLocation currLoc = SBLocationManager.getInstance().getLastXSecBestLocation(10*60);
-        	 if(currLoc != null)
+        	 SBLocation currLoc;
+        	 
+        	 //check if it got location by singleUpdateintent which works for froyo+
+        	 currLoc = ThisUser.getInstance().getCurrentLocation();
+        	 
+        	 if(currLoc == null)
+        		 currLoc = SBLocationManager.getInstance().getLastXSecBestLocation(10*60);
+        	 
+        	 if(currLoc != null || counter>5)
         	 {
-        		 ToastTracker.showToast("found loc in timertask");  
+        		 timer.cancel();
+	        	 timer.purge();
+        		 ToastTracker.showToast("starting activity in counter:"+counter);  
         		 ThisUser.getInstance().setLocation(currLoc);
+        		 Platform.getInstance().getHandler().removeCallbacks(startMapActivity);
         		 Platform.getInstance().getHandler().post(startMapActivity);
-        	 }
-        	 else if(counter>5)
-        	 {
-        		 ToastTracker.showToast("no loc in timertask");
-        		 Platform.getInstance().getHandler().post(startMapActivity);
-        		 Log.i(TAG, "loc not found in this timer task");
         	 }
           }
      }

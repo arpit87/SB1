@@ -6,6 +6,7 @@ import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
 import my.b1701.SB.HelperClasses.Constants;
 import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.Users.ThisUser;
+import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -22,7 +23,7 @@ public class SBLocationManager {
 	GPSListener gpsListener = null;
 	NetworkListener networkListener = null;
 	PassiveListener passiveListener = null;
-	LocationUpdater locationUpdater = null;
+	LocationUpdaterFromIntent locationUpdater = new LocationUpdaterFromIntent();
 	
 	private static  SBLocationManager instance = new SBLocationManager();
 	public LocationManager locManager = (LocationManager) Platform.getInstance().getContext().getSystemService(Context.LOCATION_SERVICE);
@@ -48,6 +49,7 @@ public class SBLocationManager {
 			networkListener = new NetworkListener();		
 		networkListener.start();		
 	}	
+	
 	
 	public void StopListeningtoNetwork()
 	{
@@ -76,6 +78,17 @@ public class SBLocationManager {
 		gpsListener.start(minTime,minDistance);		
 	}
 	
+	public void requestPassiveLocationUpdates() {
+		
+		Intent updateIntent = new Intent(Constants.PASSIVE_LOCATION_UPDATE);  
+        PendingIntent passiveUpatePI = PendingIntent.getBroadcast(Platform.getInstance().getContext(), 0, updateIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        IntentFilter locIntentFilter = new IntentFilter(Constants.PASSIVE_LOCATION_UPDATE);
+        Platform.getInstance().getContext().registerReceiver((BroadcastReceiver)locationUpdater, locIntentFilter);
+		locManager.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER,
+				0, 0, passiveUpatePI);    
+		}
+	
+	@SuppressLint("NewApi")
 	public void requestSingleLocationUpdate()
 	{
 		Criteria criteria = new Criteria();
@@ -83,8 +96,9 @@ public class SBLocationManager {
 		Intent updateIntent = new Intent(Constants.SINGLE_LOCATION_UPDATE);  
         PendingIntent singleUpatePI = PendingIntent.getBroadcast(Platform.getInstance().getContext(), 0, updateIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         IntentFilter locIntentFilter = new IntentFilter(Constants.SINGLE_LOCATION_UPDATE);
-        Platform.getInstance().getContext().registerReceiver((BroadcastReceiver)locationUpdater, locIntentFilter);      
-        //locManager.requestSingleUpdate(criteria, singleUpatePI);		
+        Platform.getInstance().getContext().registerReceiver((BroadcastReceiver)locationUpdater, locIntentFilter);
+        //cant call this for old API
+        locManager.requestSingleUpdate(criteria, singleUpatePI);		
 	}
 
 	//need to start listening first
