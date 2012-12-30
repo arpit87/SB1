@@ -9,6 +9,8 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.util.Log;
+import my.b1701.SB.LocationHelpers.SBLocation;
+import my.b1701.SB.Users.ThisUser;
 import org.json.JSONException;
 
 import java.io.IOException;
@@ -21,6 +23,7 @@ public class GeoAddressProvider extends ContentProvider {
     public static final String AUTHORITY = "my.b1701.SB.provider.GeoAddressProvider";
     private static final String BASE_PATH = "addresses";
     private static final int _ID = 20;
+    private static final double BOUNDS_DELTA = 0.5;
 
     public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + BASE_PATH);
     private static final UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -46,8 +49,15 @@ public class GeoAddressProvider extends ContentProvider {
             cursor = new MatrixCursor(new String[]{"GeoAddress"});
             String searchAddress = uri.getLastPathSegment();
             List<Address> addressList = null;
+            SBLocation currentLocation = ThisUser.getInstance().getCurrentLocation();
+            double latitude = currentLocation.getLatitude();
+            double longitude = currentLocation.getLongitude();
             try {
-                addressList = geocoder.getFromLocationName(searchAddress, MAX_RESULT);
+                addressList = geocoder.getFromLocationName(searchAddress, MAX_RESULT,
+                        latitude - BOUNDS_DELTA,
+                        longitude - BOUNDS_DELTA,
+                        latitude + BOUNDS_DELTA,
+                        longitude + BOUNDS_DELTA);
             } catch (IOException e) {
             	Log.e(TAG, "search address "+searchAddress);
                 Log.e(TAG, e.getMessage());
