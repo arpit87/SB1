@@ -62,5 +62,7 @@
     <string name="serverip">54.243.171.212</string>
     <string name="icon_offerride">offer ride?</string>
     <string name="crash_toast_text">App has crashed</string>
+    <string name="set_username">Set UserName</string>
+    <string name="cancel">Cancel</string>
 
 </resources>

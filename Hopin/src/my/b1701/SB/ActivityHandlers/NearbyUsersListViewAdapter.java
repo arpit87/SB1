@@ -61,7 +61,7 @@ public class NearbyUsersListViewAdapter extends BaseAdapter{
         SBImageLoader.getInstance().displayImageElseStub(thisUser.getUserFBInfo().getImageURL(), userImageView, R.id.userpic);
         UserFBInfo thisUserFBInfo = thisUser.getUserFBInfo();
         UserLocInfo thisUserLocInfo = thisUser.getUserLocInfo();
-        String name = thisUserFBInfo.getFirstName() + " " + thisUserFBInfo.getLastName();
+        String name = thisUserFBInfo.getName();
         String gender = thisUserFBInfo.getGender();
         String destination = thisUserLocInfo.getUserDstLocality();
         String distance = "100m";

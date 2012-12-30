@@ -11,6 +11,7 @@ public class ThisUserConfig extends ConfigBase{
 	public static final String FBACCESSTOKEN = "fb_access_token";
 	public static final String FBACCESSEXPIRES = "fb_excess_expires";
 	public static final String USERID = "user_id";
+    public static final String USERNAME = "username";
 	public static final String FBPICURL = "fb_pic_url";
 	public static final String FBNAME = "fb_name";
 	public static final String FBUID = "fb_user_uid";

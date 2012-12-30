@@ -29,10 +29,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/thumbnail"
+                android:layout_toLeftOf="@+id/Login"
                 android:paddingLeft="15dp"
-                android:text="Name"
-                android:textSize="16sp"
-                android:textStyle="bold"/>
+                android:text="Tap to set Name"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#040404"/>
 
         <TextView
                 android:id="@+id/DestinationInList"
@@ -40,10 +42,26 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/UserNameInList"
                 android:layout_toRightOf="@+id/thumbnail"
+                android:layout_toLeftOf="@+id/Login"
                 android:paddingLeft="15dp"
-                android:text="Destination"
+                android:text="Destination not set"
                 android:textSize="16sp"
-                android:textStyle="bold"/>
+                android:textColor="#040404"
+                android:maxLines="2"
+                android:ellipsize="marquee" />
+
+        <LinearLayout android:id="@+id/Login"
+                      android:layout_width="40dp"
+                      android:layout_height="wrap_content"
+                      android:layout_alignParentRight="true"
+                      android:padding="5dip">
+            <ImageView
+                    android:id="@+id/FbLogin"
+                    android:layout_width="30.0dip"
+                    android:layout_height="28dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/fb_icon"/>
+        </LinearLayout>
     </RelativeLayout>
     <View android:layout_width="fill_parent" android:layout_height="2dp"
           android:fadingEdge="horizontal" android:background="#d3d3d3"/>

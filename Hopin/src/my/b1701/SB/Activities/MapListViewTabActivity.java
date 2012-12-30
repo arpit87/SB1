@@ -1,18 +1,5 @@
 package my.b1701.SB.Activities;
 
-import my.b1701.SB.R;
-import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
-import my.b1701.SB.CustomViewsAndListeners.SBMapView;
-import my.b1701.SB.FacebookHelpers.FacebookConnector;
-import my.b1701.SB.Fragments.SBListFragment;
-import my.b1701.SB.Fragments.SBMapFragment;
-import my.b1701.SB.HelperClasses.SBImageLoader;
-import my.b1701.SB.HelperClasses.ThisUserConfig;
-import my.b1701.SB.HelperClasses.ToastTracker;
-import my.b1701.SB.LocationHelpers.SBLocationManager;
-import my.b1701.SB.Platform.Platform;
-import my.b1701.SB.TabHelpers.SherlockActionBarTab;
-import my.b1701.SB.Users.ThisUser;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -21,18 +8,28 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TabHost;
-import android.widget.ToggleButton;
-
+import android.widget.*;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
+import my.b1701.SB.CustomViewsAndListeners.SBMapView;
+import my.b1701.SB.FacebookHelpers.FacebookConnector;
+import my.b1701.SB.Fragments.SBListFragment;
+import my.b1701.SB.Fragments.SBMapFragment;
+import my.b1701.SB.Fragments.UserNameDialogFragment;
+import my.b1701.SB.HelperClasses.SBImageLoader;
+import my.b1701.SB.HelperClasses.ThisUserConfig;
+import my.b1701.SB.HelperClasses.ToastTracker;
+import my.b1701.SB.LocationHelpers.SBGeoPoint;
+import my.b1701.SB.LocationHelpers.SBLocationManager;
+import my.b1701.SB.Platform.Platform;
+import my.b1701.SB.R;
+import my.b1701.SB.TabHelpers.SherlockActionBarTab;
+import my.b1701.SB.Users.ThisUser;
+import my.b1701.SB.Util.StringUtils;
 
 
 public class MapListViewTabActivity extends SherlockFragmentActivity {
@@ -59,8 +56,10 @@ public class MapListViewTabActivity extends SherlockFragmentActivity {
 	private FacebookConnector fbconnect;
 	FragmentManager fm = getSupportFragmentManager();
 	private boolean isMapShowing = true;
-	
-	public Fragment getListFrag() {
+    private TextView mDestination;
+    private TextView mUserName;
+
+    public Fragment getListFrag() {
 		return listFrag;		
 	}
 	
@@ -114,6 +113,7 @@ public class MapListViewTabActivity extends SherlockFragmentActivity {
     	MapListActivityHandler.getInstance().setUpdateMapRealTime(true);
     	if(MapListActivityHandler.getInstance().isMapInitialized())
     		MapListActivityHandler.getInstance().updateThisUserMapOverlay();
+        updateDestinationInListView();
     }
 
     //test
@@ -294,9 +294,11 @@ if (fm != null) {
     	if(mListViewContainer == null)
     	{
     		mListViewContainer = (ViewGroup) getLayoutInflater().inflate(R.layout.nearbyuserlistview,null,false);
-    		mListImageView = (ImageView)mListViewContainer.findViewById(R.id.list_user_image);    		
+    		mListImageView = (ImageView)mListViewContainer.findViewById(R.id.list_user_image); 
+            mUserName = (TextView) mListViewContainer.findViewById(R.id.UserNameInList);
+            mDestination = (TextView) mListViewContainer.findViewById(R.id.DestinationInList);
     		String fbPicURL = ThisUserConfig.getInstance().getString(ThisUserConfig.FBPICURL);
-			if(fbPicURL != "")
+			if(!StringUtils.isEmpty(fbPicURL))
 			{
 				SBImageLoader.getInstance().displayImageElseStub(fbPicURL, mListImageView, R.drawable.userpicicon);
 			}
@@ -304,14 +306,35 @@ if (fm != null) {
 			{
 				mListImageView.setImageDrawable( Platform.getInstance().getContext().getResources().getDrawable(R.drawable.userpicicon));
 			}
-			
-    		mListView = (ListView) mListViewContainer.findViewById(R.id.list);    		
+
+            String name = ThisUserConfig.getInstance().getString(ThisUserConfig.USERNAME);
+            if (!StringUtils.isEmpty(name)) {
+                mUserName.setText(name);
+            }
+            mUserName.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    UserNameDialogFragment userNameDialogFragment = new UserNameDialogFragment(mUserName);
+                    userNameDialogFragment.show(getListFrag().getFragmentManager(), "UserName");
+                }
+            });
+
+    		mListView = (ListView) mListViewContainer.findViewById(R.id.list);
     		//mMapViewContainer.removeView(mMapView);
-    	}  	
-    	
+    	}
+
+        updateDestinationInListView();
+
     	return mListViewContainer;
     }
 
-    
+    private void updateDestinationInListView() {
+        if (mDestination != null) {
+            SBGeoPoint destinationGeoPoint = ThisUser.getInstance().getDestinationGeoPoint();
+            if (destinationGeoPoint != null) {
+                mDestination.setText(destinationGeoPoint.getAddress());
+            }
+        }
+    }
 
 }

@@ -69,6 +69,9 @@ public class UserFBInfo {
         }
     }
 
+    public String getName() {
+        return firstName + " " + lastName;
+    }
 
     public String getFirstName() {    	
         return firstName;

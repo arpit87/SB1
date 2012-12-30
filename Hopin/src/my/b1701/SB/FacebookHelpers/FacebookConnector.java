@@ -1,10 +1,15 @@
 package my.b1701.SB.FacebookHelpers;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.MalformedURLException;
-
-import my.b1701.SB.HelperClasses.JSONHandler;
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import com.facebook.android.AsyncFacebookRunner;
+import com.facebook.android.AsyncFacebookRunner.RequestListener;
+import com.facebook.android.DialogError;
+import com.facebook.android.Facebook;
+import com.facebook.android.Facebook.DialogListener;
+import com.facebook.android.FacebookError;
 import my.b1701.SB.HelperClasses.ProgressHandler;
 import my.b1701.SB.HelperClasses.Store;
 import my.b1701.SB.HelperClasses.ThisUserConfig;
@@ -13,23 +18,13 @@ import my.b1701.SB.HttpClient.ChatServiceCreateUser;
 import my.b1701.SB.HttpClient.SBHttpClient;
 import my.b1701.SB.HttpClient.SBHttpRequest;
 import my.b1701.SB.HttpClient.SaveFBInfoRequest;
-
+import my.b1701.SB.Util.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.os.Bundle;
-import android.util.Log;
-
-import com.facebook.android.AsyncFacebookRunner;
-import com.facebook.android.AsyncFacebookRunner.RequestListener;
-import com.facebook.android.DialogError;
-import com.facebook.android.Facebook;
-import com.facebook.android.Facebook.DialogListener;
-import com.facebook.android.FacebookError;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.MalformedURLException;
 
 public class FacebookConnector {
 	
@@ -153,6 +148,9 @@ public class FacebookConnector {
 	            picurl = "http://graph.facebook.com/" + id + "/picture?type=small";
 	            ThisUserConfig.getInstance().putString(ThisUserConfig.FBPICURL, picurl);
 	            ThisUserConfig.getInstance().putString(ThisUserConfig.FBNAME, name);
+                if (StringUtils.isEmpty(ThisUserConfig.getInstance().getString(ThisUserConfig.USERNAME))) {
+                    ThisUserConfig.getInstance().putString(ThisUserConfig.USERNAME, name);
+                }
 	            ThisUserConfig.getInstance().putString(ThisUserConfig.FBUID,id );	           
 	            sendAddFBAndChatInfoToServer();
 	            Log.i(TAG,"fbpicurl:"+jsonObject.getString("picture"));

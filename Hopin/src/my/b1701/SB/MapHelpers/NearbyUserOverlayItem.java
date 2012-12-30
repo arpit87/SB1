@@ -113,7 +113,7 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 		hometown = (TextView)viewOnMarkerExpanded.findViewById(R.id.expanded_from);
 		gender = (TextView)viewOnMarkerExpanded.findViewById(R.id.expanded_gender);
 		
-		name_str = mNearbyUser.getUserFBInfo().getFirstName() + " " + mNearbyUser.getUserFBInfo().getLastName();
+		name_str = mNearbyUser.getUserFBInfo().getName();
 		worksat_str = mNearbyUser.getUserFBInfo().getWorksAt();
 		studiedat_str = mNearbyUser.getUserFBInfo().getStudiedAt();
 		hometown_str = mNearbyUser.getUserFBInfo().getHometown();
