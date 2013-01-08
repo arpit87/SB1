@@ -1,7 +1,6 @@
 package my.b1701.SB.LocationHelpers;
 
 import java.util.List;
-
 import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
 import my.b1701.SB.HelperClasses.Constants;
 import my.b1701.SB.Platform.Platform;
