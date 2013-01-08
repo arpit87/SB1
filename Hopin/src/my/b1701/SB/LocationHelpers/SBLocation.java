@@ -4,7 +4,6 @@ import android.location.Address;
 import android.location.Location;
 import my.b1701.SB.provider.GeoAddress;
 import my.b1701.SB.provider.GeoAddressProvider;
-
 import java.io.IOException;
 import java.util.List;
 

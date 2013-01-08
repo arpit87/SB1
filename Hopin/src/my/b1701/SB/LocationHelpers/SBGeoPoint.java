@@ -2,6 +2,7 @@ package my.b1701.SB.LocationHelpers;
 
 import com.google.android.maps.GeoPoint;
 
+
 public class SBGeoPoint extends GeoPoint{
 
 	int lati;
