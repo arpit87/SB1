@@ -83,7 +83,7 @@ public class MapListViewTabActivity extends SherlockFragmentActivity {
         super.onCreate(savedInstanceState);
        // requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
        // requestWindowFeature((int) Window.FEATURE_ACTION_BAR & ~Window.FEATURE_ACTION_BAR_OVERLAY);
-        setContentView(R.layout.tab_navigation_trial);        
+        setContentView(R.layout.maplistview);        
         showMapView();
         ab= getSupportActionBar();
         
@@ -94,14 +94,7 @@ public class MapListViewTabActivity extends SherlockFragmentActivity {
         ab.setDisplayShowTitleEnabled(true);
         //ab.setIcon(R.drawable.hoponlogoforactionbar);
         //ab.setDisplayUseLogoEnabled(true);
-       /* mapTab = new SherlockActionBarTab(this, "MapFragment");
-        mapTab.setText(R.string.mapviewstr).setTabListener(new SherLockActionBarTabListener(this, SBMapFragment.class));
-        ab.addTab((ActionBar.Tab)mapTab.getTab());       
-
-        listTab = new SherlockActionBarTab(this, "ListFragment");
-        listTab.setText(R.string.listviewstr).setTabListener(new SherLockActionBarTabListener(this, SBListFragment.class));
-        ab.addTab((ActionBar.Tab)listTab.getTab());*/
-        
+      
         fbconnect = new FacebookConnector(this);
         
     }

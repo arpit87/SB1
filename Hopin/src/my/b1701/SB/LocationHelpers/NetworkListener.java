@@ -2,6 +2,7 @@ package my.b1701.SB.LocationHelpers;
 
 import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
 import my.b1701.SB.HelperClasses.ToastTracker;
+import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.Users.ThisUser;
 import android.location.Location;
 import android.location.LocationListener;
@@ -30,7 +31,7 @@ public class NetworkListener implements LocationListener{
 		ToastTracker.showToast("strted listning to network");
 		//thisWindowBestLocation = null;
 		
-		SBLocationManager.getInstance().locManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0L, 0F, this);
+		SBLocationManager.getInstance().locManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0L, 0F, this,Platform.getInstance().getContext().getMainLooper());
 	}
 	
 	public void start(long minTime,float minDistance)
@@ -39,7 +40,7 @@ public class NetworkListener implements LocationListener{
 		this.minTime=minTime;
 		this.minDistnce=minDistance;
 		
-		SBLocationManager.getInstance().locManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, minTime, minDistnce, this);
+		SBLocationManager.getInstance().locManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, minTime, minDistnce, this,Platform.getInstance().getContext().getMainLooper());
 	}
 	
 	public void stop()

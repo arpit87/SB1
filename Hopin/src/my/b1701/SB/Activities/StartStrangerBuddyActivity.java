@@ -17,6 +17,7 @@ import my.b1701.SB.LocationHelpers.SBLocation;
 import my.b1701.SB.LocationHelpers.SBLocationManager;
 import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.Users.ThisUser;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -38,6 +39,7 @@ public class StartStrangerBuddyActivity extends Activity {
 	
     /** Called when the activity is first created. */
    
+	@SuppressLint("ParserError")
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,11 +52,11 @@ public class StartStrangerBuddyActivity extends Activity {
         ThisAppConfig.getInstance().putLong(ThisAppConfig.USERPOSCHECKFREQ,2*60*1000);  //2min*/
         SBLocationManager.getInstance().StartListeningtoNetwork(500,10);      
         
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.FROYO)
+        /*if (Build.VERSION.SDK_INT > Build.VERSION_CODES.FROYO)
         {
         	Log.d(TAG, "requested for single loc intent");
         	SBLocationManager.getInstance().requestSingleLocationUpdate();
-        }
+        }*/
         //SBLocationManager.getInstance().StartListeningtoGPS(ThisAppConfig.getInstance().getLong("gpsfreq"),100);
         Log.i(TAG,"started network listening "); 
         platformContext = Platform.getInstance().getContext();
@@ -69,9 +71,7 @@ public class StartStrangerBuddyActivity extends Activity {
         showSBMapViewActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         
         startMapActivity = new Runnable() {
-	          public void run() {    	
-	        	  
-	        	  if(!mapActivityStarted.getAndSet(true))
+	          public void run() {	        		  
 	        		  startActivity(showSBMapViewActivity);
 	          }};
         
@@ -80,7 +80,10 @@ public class StartStrangerBuddyActivity extends Activity {
 			firstRun();		
 		else	
 		{
-			ThisUser.getInstance().setUserID(ThisUserConfig.getInstance().getString(ThisUserConfig.USERID));	
+			ThisUser.getInstance().setUserID(ThisUserConfig.getInstance().getString(ThisUserConfig.USERID));
+			//showSBMapViewActivity = new Intent(this, MapListViewTabActivity.class);
+	        //showSBMapViewActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			//startActivity(showSBMapViewActivity);			
 			timer = new Timer();
 			timer.scheduleAtFixedRate(new GetNetworkLocationFixTask(), 500, 500);		
 	        
@@ -136,13 +139,15 @@ public class StartStrangerBuddyActivity extends Activity {
         		 currLoc = SBLocationManager.getInstance().getLastXSecBestLocation(10*60);
         	 
         	 if(currLoc != null || counter>5)
-        	 {
+        	 {       
         		 timer.cancel();
-	        	 timer.purge();
+       		  	 timer.purge();
         		 ToastTracker.showToast("starting activity in counter:"+counter);  
-        		 ThisUser.getInstance().setLocation(currLoc);
-        		 Platform.getInstance().getHandler().removeCallbacks(startMapActivity);
-        		 Platform.getInstance().getHandler().post(startMapActivity);
+        		 ThisUser.getInstance().setLocation(currLoc);        		 
+        		 if(!mapActivityStarted.getAndSet(true))
+	        	  {
+        			 Platform.getInstance().getHandler().post(startMapActivity);
+	        	  }
         	 }
           }
      }

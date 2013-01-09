@@ -1,6 +1,7 @@
 package my.b1701.SB.LocationHelpers;
 
 import java.util.List;
+
 import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
 import my.b1701.SB.HelperClasses.Constants;
 import my.b1701.SB.Platform.Platform;
@@ -20,18 +21,22 @@ public class SBLocationManager {
 	
 	
 	GPSListener gpsListener = null;
-	NetworkListener networkListener = null;
+	NetworkListener networkListener = new NetworkListener();
 	PassiveListener passiveListener = null;
 	LocationUpdaterFromIntent locationUpdater = new LocationUpdaterFromIntent();
+	ILastLocationFinder lastLocationFinder ;
+	int MIN_ACCURACY = 2000; //2km this is to be passed to lastbestlocation,is accuracy less than this =>call new loc update
 	
 	private static  SBLocationManager instance = new SBLocationManager();
 	public LocationManager locManager = (LocationManager) Platform.getInstance().getContext().getSystemService(Context.LOCATION_SERVICE);
 	
 	private SBLocationManager() {
+		lastLocationFinder = Platform.getInstance().SUPPORTS_NEWAPI ? new NewAPILastLocationFinder(Platform.getInstance().getContext()) : new LegacyLastLocationFinder(Platform.getInstance().getContext());
+		lastLocationFinder.setChangedLocationListener(networkListener);
 	}
 	
 	public static SBLocationManager getInstance()
-	{
+	{		
 		return instance;
 	}
 	
@@ -77,54 +82,9 @@ public class SBLocationManager {
 		gpsListener.start(minTime,minDistance);		
 	}
 	
-	public void requestPassiveLocationUpdates() {
-		
-		Intent updateIntent = new Intent(Constants.PASSIVE_LOCATION_UPDATE);  
-        PendingIntent passiveUpatePI = PendingIntent.getBroadcast(Platform.getInstance().getContext(), 0, updateIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        IntentFilter locIntentFilter = new IntentFilter(Constants.PASSIVE_LOCATION_UPDATE);
-        Platform.getInstance().getContext().registerReceiver((BroadcastReceiver)locationUpdater, locIntentFilter);
-		locManager.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER,
-				0, 0, passiveUpatePI);    
-		}
-	
-	@SuppressLint("NewApi")
-	public void requestSingleLocationUpdate()
-	{
-		Criteria criteria = new Criteria();
-		criteria.setAccuracy(Criteria.ACCURACY_LOW);
-		Intent updateIntent = new Intent(Constants.SINGLE_LOCATION_UPDATE);  
-        PendingIntent singleUpatePI = PendingIntent.getBroadcast(Platform.getInstance().getContext(), 0, updateIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        IntentFilter locIntentFilter = new IntentFilter(Constants.SINGLE_LOCATION_UPDATE);
-        Platform.getInstance().getContext().registerReceiver((BroadcastReceiver)locationUpdater, locIntentFilter);
-        //cant call this for old API
-        locManager.requestSingleUpdate(criteria, singleUpatePI);		
-	}
-
-	//need to start listening first
+			
 	public SBLocation getLastXSecBestLocation(long xSec ) {
-	    Location bestResult = null;
-	    float bestAccuracy = Float.MAX_VALUE;
-	    long bestTime = Long.MIN_VALUE;	    
-	    long minTime = System.currentTimeMillis() - xSec*1000;
-	    List<String> matchingProviders = locManager.getAllProviders();
-	    for (String provider: matchingProviders) {
-	      Location location = locManager.getLastKnownLocation(provider);
-	      if (location != null) {
-	          float accuracy = location.getAccuracy();
-	          long time = location.getTime();
-	          
-	          if ((time > minTime && accuracy < bestAccuracy)) {
-	            bestResult = location;
-	            bestAccuracy = accuracy;
-	            bestTime = time;
-	          }
-	          /*else if (time < minTime && bestAccuracy == Float.MAX_VALUE && time > bestTime) {
-	            bestResult = location;
-	            bestTime = time;
-	          }*/
-	        
-	        }
-	      }
+	    Location bestResult = lastLocationFinder.getLastBestLocation(MIN_ACCURACY, System.currentTimeMillis()-xSec*1000);    
 	        
 	    if(bestResult!=null)
 	      return new SBLocation(bestResult);

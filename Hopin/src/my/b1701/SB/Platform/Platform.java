@@ -16,8 +16,9 @@ public class Platform {
 	private SBLocationManager locManager;
 	private SBHttpClient httpClient;
 	private Handler handler;
+	public boolean SUPPORTS_NEWAPI = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.GINGERBREAD;
 	
-	
+		
 	private Platform() {
 	}
 	
