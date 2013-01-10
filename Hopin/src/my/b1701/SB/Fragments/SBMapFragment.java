@@ -2,6 +2,7 @@ package my.b1701.SB.Fragments;
 
 import my.b1701.SB.R;
 import my.b1701.SB.Activities.MapListViewTabActivity;
+import android.media.AudioRecord.OnRecordPositionUpdateListener;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -35,7 +36,8 @@ public class SBMapFragment extends Fragment implements View.OnClickListener, Vie
 			mMapView = (MapView) mMapViewContainer.findViewById(R.id.map_view);
 		//mMapViewContainer = inflater.inflate(R.layout.map,null,false);
 		return mMapViewContainer;		
-	}
+	}	
+
 	
 	@Override
     public void onDestroyView() {

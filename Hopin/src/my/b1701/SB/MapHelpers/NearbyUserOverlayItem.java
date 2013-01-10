@@ -12,7 +12,6 @@ import my.b1701.SB.Users.UserFBInfo;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.location.GpsStatus.NmeaListener;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -20,6 +19,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -40,6 +40,7 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 	ImageView picViewExpanded = null;
 	ImageView chatIcon = null;
 	ImageView facebookIcon = null;
+	ImageView buttonClose = null;
 	GeoPoint mGeoPoint = null;
 	String mImageURL= null;
 	String mUserFBID= null;
@@ -154,6 +155,14 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 			
 			chatIcon = (ImageView)viewOnMarkerExpanded.findViewById(R.id.chat_icon_view);
 			facebookIcon = (ImageView)viewOnMarkerExpanded.findViewById(R.id.fb_icon_view);
+			buttonClose = (ImageView)viewOnMarkerExpanded.findViewById(R.id.button_close_balloon_expandedview);
+			
+			buttonClose.setOnClickListener(new OnClickListener() {				
+				@Override
+				public void onClick(View buttonClose) {
+					showSmallIfExpanded();
+				}
+				});
 			//SBImageLoader.getInstance().displayImageElseStub(mImageURL, picView, R.drawable.userpicicon);
 			
 			//set balloon info
@@ -173,9 +182,9 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 					{
 						
 						final Dialog dialog = new Dialog(context);
+						dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 						dialog.setContentView(R.layout.fblogin_dialog);
-						dialog.setTitle("One time FB login..");
-						
+												
 						Button dialogCloseButton = (Button) dialog.findViewById(R.id.button_close_fb_login_dialog);
 						// if button is clicked, close the custom dialog
 						dialogCloseButton.setOnClickListener(new OnClickListener() {

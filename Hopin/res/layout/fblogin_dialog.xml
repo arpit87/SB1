@@ -2,30 +2,41 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/black_75" >
-    <Button
-        android:id="@+id/button_close_fb_login_dialog"
-        android:background="@drawable/button_close_blue"
+    android:background="@color/black" > 
+    <TextView
+        android:id="@+id/onetimefblogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingLeft="10dip"
+        android:text="One time facebook login.."
+        android:textColor="@color/white"
+        android:textSize="20dip" />
+    
+        <Button
+        android:id="@+id/button_close_fb_login_dialog"
+        android:layout_width="20dip"
+        android:layout_height="20dip"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        />
-    
-    <TableLayout
+        android:layout_toRightOf="@id/onetimefblogin"
+        android:scaleType="centerCrop"
+        android:background="@drawable/button_close_white"        
+        android:paddingLeft="30dip" />
+        
+        
+        <TableLayout
         android:id="@+id/tableLayout1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_below="@id/button_close_fb_login_dialog"
         android:layout_centerHorizontal="true"
         android:padding="10dip" >
         <TableRow
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="50dp"
+            android:layout_gravity="center_horizontal"            
             android:paddingBottom="5dp" >
             <ImageView
                 android:paddingRight="10dip"
-                android:paddingLeft="70dip"
+                android:paddingLeft="30dip"
                 android:layout_gravity="right|center_vertical"
                 android:src="@drawable/bluelinemarker" />
 
@@ -41,7 +52,7 @@
 
              <ImageView
                 android:paddingRight="10dip"
-                android:paddingLeft="70dip"
+                android:paddingLeft="30dip"
                 android:layout_gravity="right|center_vertical"
                 android:src="@drawable/bluelinemarker" />
 
@@ -56,7 +67,7 @@
 
              <ImageView
                 android:paddingRight="10dip"
-                android:paddingLeft="70dip"
+                android:paddingLeft="30dip"
                 android:layout_gravity="right|center_vertical"
                 android:src="@drawable/bluelinemarker" />
 
