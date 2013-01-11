@@ -308,7 +308,7 @@ if (fm != null) {
                 @Override
                 public void onClick(View view) {
                     UserNameDialogFragment userNameDialogFragment = new UserNameDialogFragment(mUserName);
-                    userNameDialogFragment.show(getListFrag().getFragmentManager(), "UserName");
+                    userNameDialogFragment.show(getSupportFragmentManager(), "UserName");
                 }
             });
 

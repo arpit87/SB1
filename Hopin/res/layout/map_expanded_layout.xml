@@ -27,14 +27,13 @@
             android:layout_marginRight="1.0dip"            
              />
             
-        <Button
+        <ImageView
             android:id="@+id/button_close_balloon_expandedview"
             android:layout_width="15dip"
             android:layout_height="15dip"            
-            android:background="@drawable/button_close_white"
+            android:src="@drawable/button_close_white"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true" 
-                   
+            android:layout_centerVertical="true"                    
             android:scaleType="centerCrop" />
             
      </RelativeLayout>       

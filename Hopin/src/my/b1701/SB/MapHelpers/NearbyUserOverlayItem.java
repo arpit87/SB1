@@ -4,6 +4,7 @@ import my.b1701.SB.R;
 import my.b1701.SB.Activities.MapListViewTabActivity;
 import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
 import my.b1701.SB.ChatClient.ChatWindow;
+import my.b1701.SB.Fragments.FBLoginDialogFragment;
 import my.b1701.SB.HelperClasses.SBImageLoader;
 import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.Platform.Platform;
@@ -181,30 +182,8 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 					if(thiUserChatUserName == "" || thisUserChatPassword == "")
 					{
 						
-						final Dialog dialog = new Dialog(context);
-						dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-						dialog.setContentView(R.layout.fblogin_dialog);
-												
-						Button dialogCloseButton = (Button) dialog.findViewById(R.id.button_close_fb_login_dialog);
-						// if button is clicked, close the custom dialog
-						dialogCloseButton.setOnClickListener(new OnClickListener() {
-							@Override
-							public void onClick(View v) {
-								dialog.dismiss();
-							}
-						});
-						
-						Button fbLoginButton = (Button) dialog.findViewById(R.id.signInViaFacebook);
-						// if button is clicked, close the custom dialog
-						fbLoginButton.setOnClickListener(new OnClickListener() {
-							@Override
-							public void onClick(View v) {
-								dialog.dismiss();
-								((MapListViewTabActivity)context).buttonOnMapClick(v);
-							}
-						});
-			 
-						dialog.show();
+						FBLoginDialogFragment fblogin_dialog = new FBLoginDialogFragment();
+						fblogin_dialog.show(MapListActivityHandler.getInstance().getUnderlyingActivity().getSupportFragmentManager(), "fblogin_dialog");
 						//Intent fbLoginIntent = new Intent(context,LoginActivity.class);			
 						//MapListActivityHandler.getInstance().getUnderlyingActivity().startActivity(fbLoginIntent);
 					}	
