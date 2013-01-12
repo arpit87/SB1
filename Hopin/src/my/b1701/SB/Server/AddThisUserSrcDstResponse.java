@@ -13,7 +13,7 @@ public class AddThisUserSrcDstResponse extends ServerResponseBase{
 
 	String user_id;
 		
-	private static final String TAG = "AddUserResponse";
+	private static final String TAG = "my.b1701.SB.Server.AddUserResponse";
 	public AddThisUserSrcDstResponse(HttpResponse response,String jobjStr) {
 		super(response,jobjStr);
 		

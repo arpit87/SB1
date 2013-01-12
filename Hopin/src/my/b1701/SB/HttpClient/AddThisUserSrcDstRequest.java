@@ -21,7 +21,7 @@ import java.io.UnsupportedEncodingException;
 
 public class AddThisUserSrcDstRequest extends SBHttpRequest{
 	
-	private final String TAG = "AddThisUserSrcDstRequest";
+	private final String TAG = "my.b1701.SB.HttpClient.AddThisUserSrcDstRequest";
 	HttpPost httpQueryAddRequest;	
 	JSONObject jsonobjAddRequest;
 	HttpClient httpclient = new DefaultHttpClient();

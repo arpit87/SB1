@@ -9,7 +9,7 @@ import android.widget.Toast;
 
 public class PostUserReqDataResponse extends ServerResponseBase {
 
-	private static final String TAG = "PostUserReqDataResponse";
+	private static final String TAG = "my.b1701.SB.Server.PostUserReqDataResponse";
 	
 	public PostUserReqDataResponse(HttpResponse response,String jobjStr) {
 		super(response,jobjStr);

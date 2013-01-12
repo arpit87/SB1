@@ -14,7 +14,7 @@ public class ChatServiceCreateUserResponse extends ServerResponseBase{
 
 		String user_id;
 			
-		private static final String TAG = "ChatServiceCreateUserResponse";
+		private static final String TAG = "my.b1701.SB.Server.ChatServiceCreateUserResponse";
 		public ChatServiceCreateUserResponse(HttpResponse response,String jobjStr) {
 			super(response,jobjStr);			
 					

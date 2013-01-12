@@ -15,7 +15,7 @@ import android.widget.ImageButton;
 import com.google.android.maps.MapView;
 
 public class SBMapFragment extends Fragment implements View.OnClickListener, View.OnTouchListener {				
-	private static final String TAG = "SBMapFragment";	
+	private static final String TAG = "my.b1701.SB.Fragments.SBMapFragment";
 	private ViewGroup mMapViewContainer;	
 	private MapView mMapView;
 	private ImageButton selfLocationButton;

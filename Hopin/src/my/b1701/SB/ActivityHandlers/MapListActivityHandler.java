@@ -26,7 +26,7 @@ import com.google.android.maps.MapView;
 public class MapListActivityHandler  {
 	
 	SBMapView mapView;	
-	private static final String TAG = "MapActivityHandler";
+	private static final String TAG = "my.b1701.SB.ActivityHandlers.MapActivityHandler";
 	private static MapListActivityHandler instance=new MapListActivityHandler();
 	private MapListViewTabActivity underlyingActivity;
 	private NearbyUsersItemizedOverlayFactory nearbyUsersItemizedOverlayFactory = new NearbyUsersItemizedOverlayFactory();

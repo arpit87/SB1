@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 public class LocationUpdaterFromIntent extends BroadcastReceiver{
 	
-	private final String TAG = "LocationUpdaterFromIntent";  
+	private final String TAG = "my.b1701.SB.LocationHelpers.LocationUpdaterFromIntent";
 	//not yet used	
 	public void UpdateToBestCurrentLocation(SBLocation newLocation)
 	{

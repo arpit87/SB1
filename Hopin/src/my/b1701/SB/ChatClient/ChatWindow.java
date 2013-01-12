@@ -38,7 +38,7 @@ import android.widget.Toast;
 @SuppressLint("ParserError")
 public class ChatWindow extends Activity{
 	
-	private static String TAG = "ChatWindow";	
+	private static String TAG = "my.b1701.SB.ChatClient.ChatWindow";
 	private IXMPPAPIs xmppApis = null;
 	private TextView mContactNameTextView;
     private TextView mContactStatusMsgTextView;	 

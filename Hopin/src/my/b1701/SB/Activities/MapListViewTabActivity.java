@@ -1,10 +1,22 @@
 package my.b1701.SB.Activities;
 
-import my.b1701.SB.R;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.*;
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
 import my.b1701.SB.CustomViewsAndListeners.SBMapView;
 import my.b1701.SB.FacebookHelpers.FacebookConnector;
-import my.b1701.SB.Fragments.FBLoginDialogFragment;
 import my.b1701.SB.Fragments.SBListFragment;
 import my.b1701.SB.Fragments.SBMapFragment;
 import my.b1701.SB.Fragments.UserNameDialogFragment;
@@ -14,53 +26,39 @@ import my.b1701.SB.HelperClasses.ToastTracker;
 import my.b1701.SB.LocationHelpers.SBGeoPoint;
 import my.b1701.SB.LocationHelpers.SBLocationManager;
 import my.b1701.SB.Platform.Platform;
+import my.b1701.SB.R;
+import my.b1701.SB.TabHelpers.SherlockActionBarTab;
 import my.b1701.SB.Users.ThisUser;
 import my.b1701.SB.Util.StringUtils;
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.ToggleButton;
-
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 
 
-public class MapListViewTabActivity extends SherlockFragmentActivity {
+public class MapListViewTabActivity extends SherlockFragmentActivity implements UserNameDialogFragment.UserNameDialogListener {
 	//public View mMapViewContainer;
 	ActionBar bar;
-	private static final String TAG = "MapListViewTabActivity";
-	
+	private static final String TAG = "my.b1701.SB.Activities.MapListViewTabActivity";
+	private MapListActivityHandler mapListActivityHandler;
+	private boolean mapInitialized = false;
 	private ViewGroup mMapViewContainer;
 	private ViewGroup mListViewContainer;
 	private SBMapView mMapView;
 	private ListView mListView;
 	ImageView mListImageView;
-	
+	private SherlockActionBarTab mapTab;
+	private SherlockActionBarTab listTab;
+	private TabHost tabHost;
 	private ImageButton selfLocationButton = null;
 	private ToggleButton offerRideButton = null;
 	private SBMapFragment mapFrag;
 	private SBListFragment listFrag;
 	ActionBar ab;
 	private boolean currentIsOfferMode;
-	
+	private Button fbloginbutton;
 	private FacebookConnector fbconnect;
 	FragmentManager fm = getSupportFragmentManager();
 	private boolean isMapShowing = true;
     private TextView mDestination;
     private TextView mUserName;
+    private ImageView mFbLogin;
 
     public Fragment getListFrag() {
 		return listFrag;		
@@ -78,13 +76,6 @@ public class MapListViewTabActivity extends SherlockFragmentActivity {
 	public void setMapFrag(SBMapFragment mapFrag) {
 		this.mapFrag = mapFrag;
 	}
-	
-	public FacebookConnector getFbConnector()
-	{
-		return fbconnect;
-	}
-	
-	
 
 	/** Called when the activity is first created. */
 
@@ -150,15 +141,6 @@ public class MapListViewTabActivity extends SherlockFragmentActivity {
         case R.id.menu_search:
         	onSearchRequested();
         	break;
-        case R.id.fb_login_menuitem:
-        	if(ThisUserConfig.getInstance().getBool(ThisUserConfig.FBLOGGEDIN))
-        	{
-        		Toast.makeText(this, "Already logged in", Toast.LENGTH_SHORT);
-        		break;
-        	}
-        	FBLoginDialogFragment fblogin_dialog = new FBLoginDialogFragment();
-			fblogin_dialog.show(getSupportFragmentManager(), "fblogin_dialog");
-			break;
         case R.id.fb_logout_menuitem:
         	//logout from chat server?
 			FacebookConnector fbconnect = new FacebookConnector(MapListViewTabActivity.this);
@@ -207,7 +189,13 @@ public class MapListViewTabActivity extends SherlockFragmentActivity {
     	
     	case R.id.offerride_button:
     		offerRideClick();
-    		break;    	   	
+    		break;
+    	case R.id.signInViaFacebook:
+    		fbconnect.loginToFB();
+    		break;
+        case R.id.FbLogin:
+            fbconnect.loginToFB();
+            break;
     	
     	}
     }
@@ -296,47 +284,63 @@ if (fm != null) {
     	}
     	return mMapViewContainer;
     }
-    
-    public ViewGroup getThisListContainerWithListView()
-    {
-    	if(mListViewContainer == null)
-    	{
-    		mListViewContainer = (ViewGroup) getLayoutInflater().inflate(R.layout.nearbyuserlistview,null,false);
-    		mListImageView = (ImageView)mListViewContainer.findViewById(R.id.list_user_image); 
+
+    public ViewGroup getThisListContainerWithListView() {
+        if (mListViewContainer == null) {
+            mListViewContainer = (ViewGroup) getLayoutInflater().inflate(R.layout.nearbyuserlistview, null, false);
+            mListImageView = (ImageView) mListViewContainer.findViewById(R.id.list_user_image);
             mUserName = (TextView) mListViewContainer.findViewById(R.id.UserNameInList);
             mDestination = (TextView) mListViewContainer.findViewById(R.id.DestinationInList);
-    		String fbPicURL = ThisUserConfig.getInstance().getString(ThisUserConfig.FBPICURL);
-			if(!StringUtils.isEmpty(fbPicURL))
-			{
-				SBImageLoader.getInstance().displayImageElseStub(fbPicURL, mListImageView, R.drawable.userpicicon);
-			}
-			else
-			{
-				mListImageView.setImageDrawable( Platform.getInstance().getContext().getResources().getDrawable(R.drawable.userpicicon));
-			}
+            mFbLogin = (ImageView) mListViewContainer.findViewById(R.id.FbLogin);
 
-            String name = ThisUserConfig.getInstance().getString(ThisUserConfig.USERNAME);
-            if (!StringUtils.isEmpty(name)) {
-                mUserName.setText(name);
-            }
             mUserName.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    UserNameDialogFragment userNameDialogFragment = new UserNameDialogFragment(mUserName);
+                    UserNameDialogFragment userNameDialogFragment = new UserNameDialogFragment();
                     userNameDialogFragment.show(getSupportFragmentManager(), "UserName");
                 }
             });
 
-    		mListView = (ListView) mListViewContainer.findViewById(R.id.list);
-    		//mMapViewContainer.removeView(mMapView);
-    	}
+            mFbLogin.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    MapListActivityHandler.getInstance().getUnderlyingActivity().buttonOnMapClick(v);
+                }
+            });
 
+            mListView = (ListView) mListViewContainer.findViewById(R.id.list);
+            //mMapViewContainer.removeView(mMapView);
+        }
+
+        updateUserNameInListView();
+        updateUserPicInListView();
         updateDestinationInListView();
 
-    	return mListViewContainer;
+        return mListViewContainer;
     }
 
-    private void updateDestinationInListView() {
+    public void updateUserPicInListView() {
+        if (mListImageView != null) {
+            String fbPicURL = ThisUserConfig.getInstance().getString(ThisUserConfig.FBPICURL);
+            if (!StringUtils.isEmpty(fbPicURL)) {
+                SBImageLoader.getInstance().displayImageElseStub(fbPicURL, mListImageView, R.drawable.userpicicon);
+            } else {
+                mListImageView.setImageDrawable(Platform.getInstance().getContext().getResources().getDrawable(R.drawable.userpicicon));
+            }
+        }
+    }
+
+    public void updateUserNameInListView() {
+        if (mUserName != null) {
+            String userName = ThisUserConfig.getInstance().getString(ThisUserConfig.USERNAME);
+            if (StringUtils.isBlank(userName)) {
+                return;
+            }
+            mUserName.setText(userName);
+        }
+    }
+
+    public void updateDestinationInListView() {
         if (mDestination != null) {
             SBGeoPoint destinationGeoPoint = ThisUser.getInstance().getDestinationGeoPoint();
             if (destinationGeoPoint != null) {
@@ -345,4 +349,9 @@ if (fm != null) {
         }
     }
 
+    @Override
+    public void onSetUserNameClick(String userName) {
+        ThisUserConfig.getInstance().putString(ThisUserConfig.USERNAME, userName);
+        updateUserNameInListView();
+    }
 }

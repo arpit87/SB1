@@ -31,7 +31,7 @@ import android.widget.Toast;
 public class StartStrangerBuddyActivity extends Activity {
 	
 	private ProgressBar mProgress;
-	private static final String TAG = "StartStrangerBuddyActivity";
+	private static final String TAG = "my.b1701.SB.Activities.StartStrangerBuddyActivity";
 	Runnable startMapActivity;
 	Intent showSBMapViewActivity;
 	Timer timer;

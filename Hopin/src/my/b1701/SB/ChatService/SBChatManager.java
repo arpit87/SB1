@@ -24,7 +24,7 @@ public class SBChatManager extends IChatManager.Stub {
 	private ChatManager mChatManager;	
 	private XMPPConnection mXMPPConnection = null;
 	private Roster mRoster;	
-	private static final String TAG = "SBChatManager";   
+	private static final String TAG = "my.b1701.SB.ChatService.SBChatManager";
     private final Map<String, ChatAdapter> mAllChats = new HashMap<String, ChatAdapter>();
     private final SBChatManagerAndInitialMsgListener mChatAndInitialMsgListener = new SBChatManagerAndInitialMsgListener();
     private final RemoteCallbackList<IChatManagerListener> mRemoteChatCreationListeners = new RemoteCallbackList<IChatManagerListener>();	
