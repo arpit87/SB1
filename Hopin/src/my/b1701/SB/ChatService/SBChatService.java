@@ -93,7 +93,7 @@ public class SBChatService extends Service {
 	isRunning = false;
 	mNotificationManager.cancelAll();
 	unregisterReceiver(mReceiver);
-	if (mConnectionAdapter.isAuthenticated() && SBConnectivity.isConnected(this))
+	if (mConnectionAdapter.isAuthenticated() && SBConnectivity.isConnected())
 		mConnectionAdapter.disconnect();
 	Log.i(TAG, "Stopping the service");
 	Log.i(TAG, "Stopping the service");

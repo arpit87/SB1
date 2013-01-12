@@ -6,6 +6,7 @@ import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import my.b1701.SB.R;
+import my.b1701.SB.HelperClasses.SBConnectivity;
 import my.b1701.SB.HelperClasses.ThisAppConfig;
 import my.b1701.SB.HelperClasses.ThisAppInstallation;
 import my.b1701.SB.HelperClasses.ThisUserConfig;
@@ -25,6 +26,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 public class StartStrangerBuddyActivity extends Activity {
 	
@@ -39,7 +41,6 @@ public class StartStrangerBuddyActivity extends Activity {
 	
     /** Called when the activity is first created. */
    
-	@SuppressLint("ParserError")
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +61,13 @@ public class StartStrangerBuddyActivity extends Activity {
         //SBLocationManager.getInstance().StartListeningtoGPS(ThisAppConfig.getInstance().getLong("gpsfreq"),100);
         Log.i(TAG,"started network listening "); 
         platformContext = Platform.getInstance().getContext();
+        
+        if(!SBConnectivity.isConnected())
+        {
+			Toast.makeText(platformContext, "No inmternet", Toast.LENGTH_SHORT);
+			finish();
+			return;
+        }
         
       //this might only connect to xmpp server and not login if new user and not yet fb login
         startChatService();
@@ -154,14 +162,10 @@ public class StartStrangerBuddyActivity extends Activity {
     
     public void startChatService(){
      
-          Intent i = new Intent("my.b1701.SB.ChatService.SBChatService");
-         // i.setClassName("my.b1701.SB.ChatService", "my.b1701.SB.ChatService.SBChatService");
-          ToastTracker.showToast("service starting ");
+          Intent i = new Intent("my.b1701.SB.ChatService.SBChatService");                  
           Log.d( TAG, "Service starting" );
           platformContext.startService(i);
          
-          //ToastTracker.showToast("service started ");
-          //Log.d( TAG, "Service started" );
          }
                     
 }

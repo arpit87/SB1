@@ -7,7 +7,8 @@ public class ThisUserConfig extends ConfigBase{
 	private static ThisUserConfig instance = null;
 	
 	
-	public static final String FBCHECK = "fbcheck";
+	public static final String FBLOGGEDIN = "fbloggedin";
+	public static final String FBINFOSENTTOSERVER = "fbinfosent";
 	public static final String FBACCESSTOKEN = "fb_access_token";
 	public static final String FBACCESSEXPIRES = "fb_excess_expires";
 	public static final String USERID = "user_id";

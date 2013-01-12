@@ -1,5 +1,6 @@
 package my.b1701.SB.Activities;
 
+import my.b1701.SB.HelperClasses.SBConnectivity;
 import my.b1701.SB.Platform.Platform;
 import static org.acra.ReportField.*;
 
@@ -37,9 +38,9 @@ public class StrangerBuddy extends Application{
 		context = getApplicationContext();
 		platform=Platform.getInstance();
 		platform.initialize(this);
+		
 		//we check on userid which we wipe out on fb logout. User may login as another user
-		//for which we will provide different userid
-		Toast.makeText(context, "Platfoem init", Toast.LENGTH_SHORT);
+		//for which we will provide different userid		
 		Log.i(TAG,"Platform initialized");
 		
 	}

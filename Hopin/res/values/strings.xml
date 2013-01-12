@@ -55,7 +55,7 @@
         <item quantity="one">%1$d result for \"%2$s\": </item>
         <item quantity="other">%1$d results for \"%2$s\": </item>
     </plurals>
-    <string name="chatserver">hopin.co.in</string>
+    <string name="chatserver">54.243.171.212</string>
     <string name="NetworkConnectivityLost">Sorry, no network</string>
     <string name="chatservice">chatservice</string>
     <string name="sbchatservicedescription">chat service</string>

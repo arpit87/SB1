@@ -1,5 +1,6 @@
 package my.b1701.SB.Server;
 
+import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.HelperClasses.ToastTracker;
 
 import org.apache.http.HttpResponse;
@@ -26,7 +27,7 @@ public class SaveFBInfoResponse extends ServerResponseBase{
 		try {
 			body = jobj.getJSONObject("body");
 			status = body.getString("Status");
-			
+			ThisUserConfig.getInstance().putBool(ThisUserConfig.FBINFOSENTTOSERVER, true);
 			ToastTracker.showToast("fb save:"+status);
 				
 			 

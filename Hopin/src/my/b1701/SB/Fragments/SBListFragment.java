@@ -23,7 +23,8 @@ public class SBListFragment extends ListFragment {
 	private static final String TAG = "SBListFragment";
 	private ViewGroup mListViewContainer;
 	private List<NearbyUser> nearbyUserlist = null;
-		
+	
+	
 	@Override
 	public void onCreate(Bundle savedState) {
         super.onCreate(savedState);

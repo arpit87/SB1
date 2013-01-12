@@ -2,42 +2,32 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/black" > 
+    android:background="@drawable/balloon_overlay_bg_selector" > 
     <TextView
         android:id="@+id/onetimefblogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingTop="20dip"
         android:paddingLeft="10dip"
-        android:text="One time facebook login.."
-        android:textColor="@color/white"
-        android:textSize="20dip" />
-    
-        <ImageView
-        android:id="@+id/button_close_fb_login_dialog"
-        android:layout_width="15dip"
-        android:layout_height="15dip"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@id/onetimefblogin"
-        android:scaleType="centerCrop"
-        android:layout_centerVertical="true"
-        android:src="@drawable/button_close_white"        
-        android:paddingLeft="30dip" />
-        
+        android:text="One time facebook login to:"
+        android:textColor="@color/black"
+        android:textSize="20dip" />    
+     
         
         <TableLayout
         android:id="@+id/tableLayout1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/button_close_fb_login_dialog"
+        android:layout_below="@id/onetimefblogin"
         android:layout_centerHorizontal="true"
-        android:padding="10dip" >
+        android:paddingTop="30dip"
+        android:paddingBottom="10dip" >
         <TableRow
             android:layout_gravity="center_horizontal"            
             android:paddingBottom="5dp" >
             <ImageView
                 android:paddingRight="10dip"
-                android:paddingLeft="30dip"
+                android:paddingLeft="50dip"
                 android:layout_gravity="right|center_vertical"
                 android:src="@drawable/bluelinemarker" />
 
@@ -53,7 +43,7 @@
 
              <ImageView
                 android:paddingRight="10dip"
-                android:paddingLeft="30dip"
+                android:paddingLeft="50dip"
                 android:layout_gravity="right|center_vertical"
                 android:src="@drawable/bluelinemarker" />
 
@@ -68,7 +58,7 @@
 
              <ImageView
                 android:paddingRight="10dip"
-                android:paddingLeft="30dip"
+                android:paddingLeft="50dip"
                 android:layout_gravity="right|center_vertical"
                 android:src="@drawable/bluelinemarker" />
 
@@ -81,17 +71,6 @@
 
            </TableLayout>
 
-    
-    <Button
-        android:id="@+id/signInViaFacebook"
-        android:layout_width="wrap_content"
-        android:layout_height="30dip"        
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/tableLayout1"
-        android:paddingTop="50dp"
-        android:paddingBottom="50dp"
-        android:background="@drawable/button_sign_in_with_facebook"
-         />
-  
+      
 
 </RelativeLayout>

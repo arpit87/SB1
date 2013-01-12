@@ -28,6 +28,7 @@ public class ChatServiceCreateUserResponse extends ServerResponseBase{
 			//jobj = JSONHandler.getInstance().GetJSONObjectFromHttp(serverResponse);
 			
 			try {
+				Log.i(TAG, "json:"+jobj.toString());
 				body = jobj.getJSONObject("body");
 				String username = body.getString("username");
 				String password = body.getString("password");

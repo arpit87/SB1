@@ -7,6 +7,10 @@ import my.b1701.SB.ChatClient.ChatWindow;
 import my.b1701.SB.Fragments.FBLoginDialogFragment;
 import my.b1701.SB.HelperClasses.SBImageLoader;
 import my.b1701.SB.HelperClasses.ThisUserConfig;
+import my.b1701.SB.HttpClient.ChatServiceCreateUser;
+import my.b1701.SB.HttpClient.SBHttpClient;
+import my.b1701.SB.HttpClient.SBHttpRequest;
+import my.b1701.SB.HttpClient.SaveFBInfoRequest;
 import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.Users.NearbyUser;
 import my.b1701.SB.Users.UserFBInfo;
@@ -181,9 +185,25 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 					
 					if(thiUserChatUserName == "" || thisUserChatPassword == "")
 					{
-						
-						FBLoginDialogFragment fblogin_dialog = new FBLoginDialogFragment();
-						fblogin_dialog.show(MapListActivityHandler.getInstance().getUnderlyingActivity().getSupportFragmentManager(), "fblogin_dialog");
+						if(!ThisUserConfig.getInstance().getBool(ThisUserConfig.FBLOGGEDIN))
+						{
+							FBLoginDialogFragment fblogin_dialog = new FBLoginDialogFragment();
+							fblogin_dialog.show(MapListActivityHandler.getInstance().getUnderlyingActivity().getSupportFragmentManager(), "fblogin_dialog");
+						}
+						else 
+						{
+							Log.d(TAG,"FBLogged in but not chat!!Server working properly for chat req?sending again");
+							//sending fbinfo n chatreq again
+							if(!ThisUserConfig.getInstance().getBool(ThisUserConfig.FBINFOSENTTOSERVER))
+							{
+								//server couldnt receive fbinfo
+								SBHttpRequest sendFBInfoRequest = new SaveFBInfoRequest(ThisUserConfig.getInstance().getString(ThisUserConfig.USERID), ThisUserConfig.getInstance().getString(ThisUserConfig.FBUID), ThisUserConfig.getInstance().getString(ThisUserConfig.FBACCESSTOKEN));
+								SBHttpClient.getInstance().executeRequest(sendFBInfoRequest);
+							}
+							
+							SBHttpRequest chatServiceAddUserRequest = new ChatServiceCreateUser();
+					     	SBHttpClient.getInstance().executeRequest(chatServiceAddUserRequest);							
+						}
 						//Intent fbLoginIntent = new Intent(context,LoginActivity.class);			
 						//MapListActivityHandler.getInstance().getUnderlyingActivity().startActivity(fbLoginIntent);
 					}	

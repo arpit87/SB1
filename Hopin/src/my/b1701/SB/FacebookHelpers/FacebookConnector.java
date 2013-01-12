@@ -96,7 +96,7 @@ public class FacebookConnector {
 	    public void onComplete(Bundle values) {
 	    	ThisUserConfig.getInstance().putString(ThisUserConfig.FBACCESSTOKEN, facebook.getAccessToken());
         	ThisUserConfig.getInstance().putLong(ThisUserConfig.FBACCESSEXPIRES, facebook.getAccessExpires()); 
-        	ThisUserConfig.getInstance().putBool(ThisUserConfig.FBCHECK, true);
+        	ThisUserConfig.getInstance().putBool(ThisUserConfig.FBLOGGEDIN, true);
         	ToastTracker.showToast("Authentication successsful");  
         	
         	requestUserData();        	
@@ -170,7 +170,7 @@ public class FacebookConnector {
 			  
 			  ThisUserConfig.getInstance().putString(ThisUserConfig.FBACCESSTOKEN, "");
 			  ThisUserConfig.getInstance().putLong(ThisUserConfig.FBACCESSEXPIRES,-1);
-			  ThisUserConfig.getInstance().putBool(ThisUserConfig.FBCHECK,false);
+			  ThisUserConfig.getInstance().putBool(ThisUserConfig.FBLOGGEDIN,false);
 			  ThisUserConfig.getInstance().putString(ThisUserConfig.FBPICURL, "");
 			  ThisUserConfig.getInstance().putString(ThisUserConfig.FBNAME, "");
 			  ThisUserConfig.getInstance().putString(ThisUserConfig.FBUID, "");

@@ -40,7 +40,7 @@ public class UserNameDialogFragment extends DialogFragment {
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        UserNameDialogFragment.this.getDialog().cancel();
+                        dismiss();
                     }
                 });
         return builder.create();
