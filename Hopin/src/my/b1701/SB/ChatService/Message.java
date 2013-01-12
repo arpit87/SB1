@@ -16,7 +16,7 @@ import android.util.Log;
 //getParticipant gives name widout ip
 public class Message implements Parcelable {
 
-	private static String TAG = "Message";
+	private static String TAG = "my.b1701.SB.ChatService.Message";
 /** Normal message type. Theese messages are like an email, with subject. */
 public static final int MSG_TYPE_NORMAL = 100;
 

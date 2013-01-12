@@ -27,7 +27,7 @@ public class StrangerBuddy extends Application{
 	
 	private Context context;
 	private Platform platform;	
-	private static final String TAG = "StrangerBuddy";
+	private static final String TAG = "my.b1701.SB.Activities.StrangerBuddy";
 		
 	@Override
 	public void onCreate()

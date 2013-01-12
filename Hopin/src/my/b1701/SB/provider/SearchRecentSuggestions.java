@@ -14,7 +14,7 @@ import java.util.concurrent.Semaphore;
 
 public class SearchRecentSuggestions {
     // debugging support
-    private static final String LOG_TAG = "SearchSuggestions";
+    private static final String LOG_TAG = "my.b1701.SB.provider.SearchSuggestions";
 
     // This is a superset of all possible column names (need not all be in table)
     private static class SuggestionColumns implements BaseColumns {

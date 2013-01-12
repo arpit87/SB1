@@ -18,7 +18,7 @@ import com.google.android.maps.MapView;
 
 public class ThisUserOverlayItem extends BaseOverlayItem{
 
-	private static String TAG = "ThisUserOverlayItem";
+	private static String TAG = "my.b1701.SB.MapHelpers.ThisUserOverlayItem";
 	
 	protected SBMapView mMapView = null;
 	protected static LayoutInflater mInflater;

@@ -38,10 +38,10 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
 
-public class MapListViewTabActivity extends SherlockFragmentActivity {
+public class MapListViewTabActivity extends SherlockFragmentActivity implements UserNameDialogFragment.UserNameDialogListener {
 	//public View mMapViewContainer;
 	ActionBar bar;
-	private static final String TAG = "MapListViewTabActivity";
+	private static final String TAG = "my.b1701.SB.Activities.MapListViewTabActivity";
 	
 	private ViewGroup mMapViewContainer;
 	private ViewGroup mListViewContainer;
@@ -61,6 +61,7 @@ public class MapListViewTabActivity extends SherlockFragmentActivity {
 	private boolean isMapShowing = true;
     private TextView mDestination;
     private TextView mUserName;
+    private ImageView mFbLogin;
 
     public Fragment getListFrag() {
 		return listFrag;		
@@ -296,47 +297,64 @@ if (fm != null) {
     	}
     	return mMapViewContainer;
     }
-    
-    public ViewGroup getThisListContainerWithListView()
-    {
-    	if(mListViewContainer == null)
-    	{
-    		mListViewContainer = (ViewGroup) getLayoutInflater().inflate(R.layout.nearbyuserlistview,null,false);
-    		mListImageView = (ImageView)mListViewContainer.findViewById(R.id.list_user_image); 
+
+    public ViewGroup getThisListContainerWithListView() {
+        if (mListViewContainer == null) {
+            mListViewContainer = (ViewGroup) getLayoutInflater().inflate(R.layout.nearbyuserlistview, null, false);
+            mListImageView = (ImageView) mListViewContainer.findViewById(R.id.list_user_image);
             mUserName = (TextView) mListViewContainer.findViewById(R.id.UserNameInList);
             mDestination = (TextView) mListViewContainer.findViewById(R.id.DestinationInList);
-    		String fbPicURL = ThisUserConfig.getInstance().getString(ThisUserConfig.FBPICURL);
-			if(!StringUtils.isEmpty(fbPicURL))
-			{
-				SBImageLoader.getInstance().displayImageElseStub(fbPicURL, mListImageView, R.drawable.userpicicon);
-			}
-			else
-			{
-				mListImageView.setImageDrawable( Platform.getInstance().getContext().getResources().getDrawable(R.drawable.userpicicon));
-			}
+            mFbLogin = (ImageView) mListViewContainer.findViewById(R.id.FbLogin);
 
-            String name = ThisUserConfig.getInstance().getString(ThisUserConfig.USERNAME);
-            if (!StringUtils.isEmpty(name)) {
-                mUserName.setText(name);
-            }
             mUserName.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    UserNameDialogFragment userNameDialogFragment = new UserNameDialogFragment(mUserName);
+                    UserNameDialogFragment userNameDialogFragment = new UserNameDialogFragment();
                     userNameDialogFragment.show(getSupportFragmentManager(), "UserName");
                 }
             });
 
-    		mListView = (ListView) mListViewContainer.findViewById(R.id.list);
-    		//mMapViewContainer.removeView(mMapView);
-    	}
+            mFbLogin.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FBLoginDialogFragment fbLoginDialogFragment = new FBLoginDialogFragment();
+                    fbLoginDialogFragment.show(getSupportFragmentManager(), "fblogin_dialog");
+                }
+            });
 
+            mListView = (ListView) mListViewContainer.findViewById(R.id.list);
+            //mMapViewContainer.removeView(mMapView);
+        }
+
+        updateUserNameInListView();
+        updateUserPicInListView();
         updateDestinationInListView();
 
     	return mListViewContainer;
     }
 
-    private void updateDestinationInListView() {
+    public void updateUserPicInListView() {
+        if (mListImageView != null) {
+            String fbPicURL = ThisUserConfig.getInstance().getString(ThisUserConfig.FBPICURL);
+            if (!StringUtils.isEmpty(fbPicURL)) {
+                SBImageLoader.getInstance().displayImageElseStub(fbPicURL, mListImageView, R.drawable.userpicicon);
+            } else {
+                mListImageView.setImageDrawable(Platform.getInstance().getContext().getResources().getDrawable(R.drawable.userpicicon));
+            }
+        }
+    }
+
+    public void updateUserNameInListView() {
+        if (mUserName != null) {
+            String userName = ThisUserConfig.getInstance().getString(ThisUserConfig.USERNAME);
+            if (StringUtils.isBlank(userName)) {
+                return;
+            }
+            mUserName.setText(userName);
+        }
+    }
+
+    public void updateDestinationInListView() {
         if (mDestination != null) {
             SBGeoPoint destinationGeoPoint = ThisUser.getInstance().getDestinationGeoPoint();
             if (destinationGeoPoint != null) {
@@ -345,4 +363,9 @@ if (fm != null) {
         }
     }
 
+    @Override
+    public void onSetUserNameClick(String userName) {
+        ThisUserConfig.getInstance().putString(ThisUserConfig.USERNAME, userName);
+        updateUserNameInListView();
+    }
 }

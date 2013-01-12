@@ -23,7 +23,7 @@ import android.util.Log;
 
 public class ChatServiceCreateUser extends SBHttpRequest{
 		
-		private final String TAG = "ChatServiceCreateUser";
+		private final String TAG = "my.b1701.SB.HttpClient.ChatServiceCreateUser";
 		HttpPost httpQueryAddRequest;	
 		JSONObject jsonobjAddRequest = new JSONObject();
 		HttpClient httpclient = new DefaultHttpClient();

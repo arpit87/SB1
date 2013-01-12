@@ -34,7 +34,7 @@ import com.google.android.maps.MapView;
 
 public class NearbyUserOverlayItem extends BaseOverlayItem{
 
-	private static String TAG = "NearbyUserOverlayItem";
+	private static String TAG = "my.b1701.SB.MapHelpers.NearbyUserOverlayItem";
 
 	protected MapView mMapView = null;
 	private static Context context =MapListActivityHandler.getInstance().getUnderlyingActivity();

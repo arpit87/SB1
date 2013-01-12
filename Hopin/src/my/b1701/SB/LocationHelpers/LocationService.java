@@ -25,7 +25,7 @@ import android.util.Log;
 
 public class LocationService extends Service{
 	
-	private static final String TAG ="LocationService";
+	private static final String TAG ="my.b1701.SB.LocationHelpers.LocationService";
 
 	private NotificationManager mNM;
     private Timer timer;

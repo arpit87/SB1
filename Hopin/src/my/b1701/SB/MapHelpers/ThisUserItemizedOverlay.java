@@ -12,7 +12,7 @@ public class ThisUserItemizedOverlay extends BaseItemizedOverlay{
 
 	ArrayList<ThisUserOverlayItem> userList=new ArrayList<ThisUserOverlayItem>();
 	ThisUserOverlayItem overlay;
-	private static final String TAG = "ThisUserItemizedOverlay";
+	private static final String TAG = "my.b1701.SB.MapHelpers.ThisUserItemizedOverlay";
 	private SBMapView mMapView = null;
 	
 	

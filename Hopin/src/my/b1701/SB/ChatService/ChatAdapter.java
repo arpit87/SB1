@@ -19,7 +19,7 @@ import android.util.Log;
 public class ChatAdapter extends IChatAdapter.Stub{
 
 	private static final int HISTORY_MAX_SIZE = 50;
-    private static final String TAG = "ChatAdapter";
+    private static final String TAG = "my.b1701.SB.ChatService.ChatAdapter";
     private boolean mIsOpen = false;
     private final Chat mSmackChat;
     private final String mParticipant;    
