@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SearchableActivity extends Activity {
-    public static final String TAG = "my.b1701.SB.Activities.SearchableActivity";
+    public static final String TAG = "SearchableActivity";
 
     private TextView textView;
     private ListView listView;

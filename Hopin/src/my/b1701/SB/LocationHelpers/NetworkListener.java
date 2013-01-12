@@ -16,7 +16,7 @@ public class NetworkListener implements LocationListener{
 	float minDistnce=0F;
 	private int locChangeCount = 0;
 	private int LOC_CHANGE_PER_WINDOW = 5;
-	private static final String TAG = "my.b1701.SB.LocationHelpers.NetworkListener";
+	private static final String TAG = "NetworkListener";
 	
 	private Location thisWindowBestLocation = null;	
 	private Location lastWindowBestLocation = null;

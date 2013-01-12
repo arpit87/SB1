@@ -16,7 +16,7 @@ import android.util.Log;
 
 public class CheckAndDeleteUserOutOfReqArea extends TimerTask{
 
-	private static final String TAG = "my.b1701.SB.LocationHelpers.CheckUserOutOfReqArea";
+	private static final String TAG = "CheckUserOutOfReqArea";
 	SBGeoPoint currGeoPoint = null;
 	SBGeoPoint shareReqGeoPoint = null;
 		

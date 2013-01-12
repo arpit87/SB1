@@ -18,7 +18,7 @@ public class AddUserResponse extends ServerResponseBase{
 	
 	String user_id;	
 	
-	private static final String TAG = "my.b1701.SB.Server.AddUserResponse";
+	private static final String TAG = "AddUserResponse";
 	public AddUserResponse(HttpResponse response,String jobjStr) {
 		super(response,jobjStr);
 	}

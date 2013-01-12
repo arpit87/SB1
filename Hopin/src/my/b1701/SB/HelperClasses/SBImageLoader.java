@@ -9,7 +9,7 @@ import my.b1701.SB.R;
 
 public class SBImageLoader {
 	
-	private final String TAG = "my.b1701.SB.HelperClasses.SBImageLoader";
+	private final String TAG = "SBImageLoader";	
 	private static  ImageLoader imageLoader;	
 	private static SBImageLoader instance = null;
 

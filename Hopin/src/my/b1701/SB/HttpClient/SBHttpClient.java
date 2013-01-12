@@ -11,7 +11,7 @@ import android.widget.ProgressBar;
 //??if we want a synced job then we can customize the request ???
 public class SBHttpClient {
 	
-	private static final String TAG = "my.b1701.SB.HttpClient.SBHttpClient";
+	private static final String TAG = "SBHttpClient";
 	private static SBHttpClient uniqueClient;
 	private SBHttpClient(){};
 	private ServerResponseBase response;

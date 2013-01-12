@@ -1,6 +1,5 @@
 package my.b1701.SB.Fragments;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -8,26 +7,17 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.widget.EditText;
+import android.widget.TextView;
+import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.R;
 import my.b1701.SB.Util.StringUtils;
 
 public class UserNameDialogFragment extends DialogFragment {
 
-    public interface UserNameDialogListener {
-        public void onSetUserNameClick(String userName);
-    }
+    private TextView mUserName;
 
-    UserNameDialogListener mListener;
-
-    @Override
-    public void onAttach(Activity activity){
-        super.onAttach(activity);
-        try {
-            mListener = (UserNameDialogListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement UserNameDialogListener");
-        }
+    public UserNameDialogFragment(TextView mUserName){
+        this.mUserName = mUserName;
     }
 
     @Override
@@ -44,8 +34,8 @@ public class UserNameDialogFragment extends DialogFragment {
                             return;
                         }
 
-                        mListener.onSetUserNameClick(userNameText);
-                        UserNameDialogFragment.this.getDialog().cancel();
+                        mUserName.setText(userNameText);
+                        ThisUserConfig.getInstance().putString(ThisUserConfig.USERNAME, userNameText);
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

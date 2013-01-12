@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class GeoAddress {
-	private final String TAG = "my.b1701.SB.provider.GeoAddress";
+	private final String TAG = "GeoAddress";
     private String addressLine;
     private double latitude;
     private double longitude;

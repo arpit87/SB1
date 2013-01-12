@@ -19,7 +19,7 @@ import java.util.Set;
 public class CustomSuggestionProvider extends ContentProvider {
 
     // debugging support
-    private static final String TAG = "my.b1701.SB.provider.SuggestionsProvider";
+    private static final String TAG = "SuggestionsProvider";
 
     // client-provided configuration values
     private String mAuthority;

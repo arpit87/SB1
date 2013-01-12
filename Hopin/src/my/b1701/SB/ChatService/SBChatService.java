@@ -28,7 +28,7 @@ import android.widget.Toast;
 
 public class SBChatService extends Service {
 
-	private static String TAG = "my.b1701.SB.ChatService.SBChatService";
+	private static String TAG = "SBChatService";
 	private XMPPConnection mXMPPConnection = null;
 	NotificationManager mNotificationManager = null;
 	private ConnectionConfiguration mConnectionConfiguration = null;

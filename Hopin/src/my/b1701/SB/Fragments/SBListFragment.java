@@ -20,7 +20,7 @@ import android.widget.ListView;
 
 public class SBListFragment extends ListFragment {
 	
-	private static final String TAG = "my.b1701.SB.Fragments.SBListFragment";
+	private static final String TAG = "SBListFragment";
 	private ViewGroup mListViewContainer;
 	private List<NearbyUser> nearbyUserlist = null;
 	

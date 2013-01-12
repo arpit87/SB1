@@ -23,7 +23,7 @@ import android.widget.Toast;
 
 public class ChatLoginActivity extends Activity{
 	
-	private String TAG = "my.b1701.SB.test.ChatTestActivity";
+	private String TAG = "ChatTestActivity";
 	private Button chatbutton;
 	private Button loginbutton;
 	EditText usernameTextView;

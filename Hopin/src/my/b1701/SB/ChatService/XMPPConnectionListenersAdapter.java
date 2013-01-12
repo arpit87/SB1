@@ -20,7 +20,7 @@ import android.widget.Toast;
 public class XMPPConnectionListenersAdapter {
 	
 	private final XMPPConnection mXMPPConnection;
-	private String TAG = "my.b1701.SB.ChatService.XMPPConnectionListenersAdapter";
+	private String TAG = "XMPPConnectionListenersAdapter";
 	SBChatService mService = null;
 	private String mLogin;
     private String mPassword;

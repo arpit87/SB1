@@ -20,7 +20,7 @@ public class ThisUser {
 	 * Singleton
 	 */
 	
-	private static final String TAG = "my.b1701.SB.Users.ThisUser";
+	private static final String TAG = "ThisUser";  
 	private static ThisUser instance=new ThisUser();
 	public static ThisUser getInstance() {
 		 return instance;

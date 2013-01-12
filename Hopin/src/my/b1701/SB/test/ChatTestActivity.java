@@ -18,7 +18,7 @@ import android.widget.Toast;
 @SuppressLint({ "ParserError", "ShowToast" })
 public class ChatTestActivity extends Activity{
 	
-	private String TAG = "my.b1701.SB.test.ChatTestActivity";
+	private String TAG = "ChatTestActivity";
 	private Button chatbutton;
 	private Button logoutbutton;
 		

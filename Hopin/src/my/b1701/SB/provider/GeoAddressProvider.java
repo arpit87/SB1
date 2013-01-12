@@ -18,7 +18,7 @@ import java.util.List;
 
 
 public class GeoAddressProvider extends ContentProvider {
-    private static final String TAG = "my.b1701.SB.provider.GeoAddressProvider";
+    private static final String TAG = "GeoAddressProvider";
     private static final int MAX_RESULT = 5;
     public static final String AUTHORITY = "my.b1701.SB.provider.GeoAddressProvider";
     private static final String BASE_PATH = "addresses";

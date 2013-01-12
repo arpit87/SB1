@@ -10,7 +10,6 @@ import com.facebook.android.DialogError;
 import com.facebook.android.Facebook;
 import com.facebook.android.Facebook.DialogListener;
 import com.facebook.android.FacebookError;
-import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
 import my.b1701.SB.HelperClasses.ProgressHandler;
 import my.b1701.SB.HelperClasses.Store;
 import my.b1701.SB.HelperClasses.ThisUserConfig;
@@ -19,7 +18,6 @@ import my.b1701.SB.HttpClient.ChatServiceCreateUser;
 import my.b1701.SB.HttpClient.SBHttpClient;
 import my.b1701.SB.HttpClient.SBHttpRequest;
 import my.b1701.SB.HttpClient.SaveFBInfoRequest;
-import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.Util.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,7 +28,7 @@ import java.net.MalformedURLException;
 
 public class FacebookConnector {
 	
-	private static final String TAG = "my.b1701.SB.FacebookHelpers.FacebookConnector";
+	private static final String TAG = "FacebookConnector";
 	
 	public static String [] FB_PERMISSIONS = {"user_about_me","user_education_history","user_hometown","user_work_history"};
 	public static String FB_APP_ID = "486912421326659";
@@ -159,14 +157,6 @@ public class FacebookConnector {
 	            ToastTracker.showToast("fbpicurl:"+jsonObject.getString("picture"));
 	            //Bitmap bmp = FBUtility.getBitmap(ThisUserConfig.getInstance().getString(ThisUserConfig.FBPICURL));
 	            //Store.getInstance().saveBitmapToFile(bmp,ThisUserConfig.FBPICFILENAME);
-                Platform.getInstance().getHandler().post(new Runnable() {
-                    @Override
-                    public void run() {
-                        MapListActivityHandler.getInstance().getUnderlyingActivity().updateUserNameInListView();
-                        MapListActivityHandler.getInstance().getUnderlyingActivity().updateUserPicInListView();
-                        MapListActivityHandler.getInstance().updateThisUserMapOverlay();
-                    }
-                });
 	        } catch (JSONException e) {
 	            // TODO Auto-generated catch block
 	            e.printStackTrace();

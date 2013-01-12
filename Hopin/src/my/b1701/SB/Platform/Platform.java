@@ -10,7 +10,7 @@ import android.util.Log;
 
 public class Platform {
 	
-	private final String TAG = "my.b1701.SB.Platform.Platform";
+	private final String TAG = "Platform"; 
 	private static Platform instance = new Platform();
 	private Context context;
 	private SBLocationManager locManager;

@@ -12,7 +12,7 @@ public class GPSListener implements LocationListener{
 
 	long minTime=0L;
 	float minDistance=0F;
-	private static final String TAG = "my.b1701.SB.LocationHelpers.GPSListener";
+	private static final String TAG = "GPSListener";
 	private Location prevLocation = null;
 	private Location thisWindowBestLocation = null;	
 	private boolean newWindow = false;

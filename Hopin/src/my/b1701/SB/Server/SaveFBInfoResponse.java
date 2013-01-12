@@ -1,15 +1,19 @@
 package my.b1701.SB.Server;
 
-import android.util.Log;
+import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.HelperClasses.ToastTracker;
+
 import org.apache.http.HttpResponse;
 import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.util.Log;
 
 public class SaveFBInfoResponse extends ServerResponseBase{
 
 	String status;
 	
-	private static final String TAG = "my.b1701.SB.Server.SaveFBInfoResponse";
+	private static final String TAG = "SaveFBInfoResponse";
 	public SaveFBInfoResponse(HttpResponse response,String jobjStr) {
 		super(response,jobjStr);
 	}
@@ -23,7 +27,7 @@ public class SaveFBInfoResponse extends ServerResponseBase{
 		try {
 			body = jobj.getJSONObject("body");
 			status = body.getString("Status");
-			
+			ThisUserConfig.getInstance().putBool(ThisUserConfig.FBINFOSENTTOSERVER, true);
 			ToastTracker.showToast("fb save:"+status);
 				
 			 

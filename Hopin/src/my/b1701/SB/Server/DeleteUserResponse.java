@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 public class DeleteUserResponse extends ServerResponseBase{
 	
-	private static final String TAG = "my.b1701.SB.Server.DeleteUserResponse";
+	private static final String TAG = "DeleteUserResponse";
 
 	public DeleteUserResponse(HttpResponse response,String jobjStr) {
 		super(response,jobjStr);

@@ -16,7 +16,7 @@ import android.util.Log;
 public class GetNearbyUsersResponse extends ServerResponseBase{
 
 
-	private static final String TAG = "my.b1701.SB.Server.GetUsersResponse";
+	private static final String TAG = "GetUsersResponse";
 	
 	public GetNearbyUsersResponse(HttpResponse response,String jobjStr) {
 		super(response,jobjStr);
