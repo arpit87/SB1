@@ -37,7 +37,7 @@ public class SBChatService extends Service {
 	private int DEFAULT_XMPP_PORT = 5222;	
 	int mPort;
 	private SBChatBroadcastReceiver mReceiver = new SBChatBroadcastReceiver();
-	private String mHost = "hopin.co.in";
+	private String mHost = "54.243.171.212";
 	String mErrorMsg = "";
 	private Roster mRoster = null;
 	private ConnectionListener connectionListener = null;

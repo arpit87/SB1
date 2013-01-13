@@ -1,27 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-              android:orientation="vertical">
-    <TextView
-            android:id="@+id/enterusername"
+    android:layout_width="260dip"
+    android:layout_height="wrap_content"
+    android:background="@drawable/dialoge_background"
+    android:orientation="vertical"
+    android:paddingBottom="5dip"
+    android:paddingLeft="5dip"
+    android:paddingRight="5dip"
+    android:paddingTop="5dip" >
+
+    <RelativeLayout
+        android:id="@+id/expanded_balloon_header"
+        android:layout_width="250dip"
+        android:layout_height="wrap_content"
+        android:paddingLeft="5dip"
+        android:paddingRight="3dip" >
+
+        <TextView
+            android:id="@+id/enter_username_header_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2.0dip"
+            android:layout_marginRight="1.0dip"
+            android:paddingBottom="2.0dip"
+            android:paddingTop="2.0dip"
+            android:text="Enter your name"
+            android:textStyle="bold"
+            android:textColor="@color/black"            
+            android:textSize="20dip" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="2dip"
+            android:layout_below="@+id/enter_username_header_text"
+            android:background="@color/dialog_grey"
+            android:visibility="visible" />
+    </RelativeLayout>
+
+    <EditText        
+         android:id="@+id/listviewusername"         
+        android:layout_width="fill_parent"
+        android:layout_height="38dip"        
+        android:layout_marginTop="7dip"
+        android:layout_marginBottom="5dip"
+        android:layout_marginLeft="5dip"
+          android:layout_marginRight="5dip"          
+          android:textColor="@color/black"
+        android:background="@drawable/textfield" 
+        android:focusable="true"
+        android:textCursorDrawable="@null"
+        android:cursorVisible="true"        
+        > <requestFocus></requestFocus> </EditText>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"                
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/cancelenterusernamebutton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginLeft="4dp"
-            android:layout_marginRight="4dp"
-            android:layout_marginBottom="4dp"
-            android:text="Enter your name" />
-    <EditText
-            android:id="@+id/username"
-            android:inputType="text"
+            android:layout_gravity="center"
+            android:layout_margin="5dip"
+            android:layout_weight="1"
+            android:background="@drawable/custom_button_grey"
+            android:text="Not now"
+            android:textColor="@color/black" />
+
+        <Button
+            android:id="@+id/enterusernamebutton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:layout_marginLeft="4dp"
-            android:layout_marginRight="4dp"
-            android:layout_marginBottom="16dp"
-            android:fontFamily="sans-serif" />
+            android:layout_gravity="center"
+            android:layout_margin="5dip"
+            android:layout_weight="1"
+            android:background="@drawable/custom_button_grey"
+            android:text="Enter"
+            android:textColor="@color/black" />
+
+    </LinearLayout>
 
 </LinearLayout>

@@ -8,6 +8,6 @@
 
     android:gradientRadius="326"
 
-    android:type="linear"/>
+    android:type="radial"/>
 
 </shape>
