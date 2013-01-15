@@ -30,7 +30,14 @@
 				<action android:name="my.b1701.SB.ChatService.SBChatService"></action>
 			</intent-filter>
 		</service>
-         
+
+       <service android:name=".Service.GetNearByUsersService"
+                 android:label="GetNearbyUsers Service" >
+       </service>
+
+       <service android:name=".Service.CheckAndDeleteUserRequestService"
+                android:label="CheckAndDelUserReqService" />
+
        <activity android:name=".test.ChatTestActivity" 
             android:theme="@android:style/Theme.NoTitleBar" 
             android:screenOrientation="portrait" >  
@@ -111,7 +118,8 @@
           <receiver android:name=".BroadcastReceivers.KillLocationServiceReceiver" 
               		android:exported="false">           
         </receiver>
-			         
+
+
                    
          <uses-library android:name="com.google.android.maps" />
          
