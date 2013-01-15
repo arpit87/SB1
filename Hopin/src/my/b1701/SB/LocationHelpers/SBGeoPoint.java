@@ -1,6 +1,7 @@
 package my.b1701.SB.LocationHelpers;
 
 import com.google.android.maps.GeoPoint;
+import my.b1701.SB.HelperClasses.Constants;
 
 
 public class SBGeoPoint extends GeoPoint{
@@ -42,5 +43,15 @@ public class SBGeoPoint extends GeoPoint{
 
     public String getAddress(){
         return address;
+    }
+    
+    public double distanceFromSBGeoPoint(SBGeoPoint other) {
+        if (other == null) {
+            throw new RuntimeException("Got other location as null");
+        }
+
+        double x = ((this.getLongitudeE6() - other.getLongitudeE6())/1e6) * Math.cos((this.getLatitudeE6() + other.getLatitudeE6()) / (2*1e6));
+        double y = (this.getLatitudeE6() - other.getLatitudeE6())/1e6;
+        return Math.sqrt(x * x + y * y) * Constants.EARTHRADIUS;
     }
 }
