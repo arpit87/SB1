@@ -13,10 +13,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import my.b1701.SB.HttpClient.AddThisUserSrcDstRequest;
-import my.b1701.SB.HttpClient.GetNearbyUsersRequest;
 import my.b1701.SB.HttpClient.SBHttpClient;
 import my.b1701.SB.HttpClient.SBHttpRequest;
-import my.b1701.SB.LocationHelpers.LocationService;
 import my.b1701.SB.LocationHelpers.SBGeoPoint;
 import my.b1701.SB.R;
 import my.b1701.SB.Users.ThisUser;
@@ -59,12 +57,7 @@ public class SearchableActivity extends Activity {
         ThisUser.getInstance().setDestinationGeoPoint(new SBGeoPoint(lat, lon, subLocality, address));
         Log.i(TAG, "user destination set... querying server");
         SBHttpRequest addThisUserSrcDstRequest = new AddThisUserSrcDstRequest();
-        SBHttpRequest getNearbyUsersRequest = new GetNearbyUsersRequest();
-        SBHttpClient.getInstance().executeRequest(addThisUserSrcDstRequest,getNearbyUsersRequest);
-        Log.i(TAG, "got response, processing");
-        Log.i(TAG, "processed response, finish activity n starting service");
-        Intent startLocService = new Intent(SearchableActivity.this, LocationService.class);
-        startService(startLocService);
+        SBHttpClient.getInstance().executeRequest(addThisUserSrcDstRequest);
         finish();
     }
 
