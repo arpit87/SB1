@@ -19,6 +19,7 @@
     <item android:id="@+id/settings_menuitem" android:title="Settings" android:showAsAction="never"></item> 
     <item android:id="@+id/fb_login_menuitem" android:title="Login" android:showAsAction="never"></item>
     <item android:id="@+id/fb_logout_menuitem" android:title="Logout" android:showAsAction="never"></item>
+    <item android:id="@+id/test_app_menuitem" android:title="Test" android:showAsAction="never" ></item>
     <item android:id="@+id/exit_app_menuitem" android:title="Exit" android:showAsAction="never" ></item>
       
 </menu>

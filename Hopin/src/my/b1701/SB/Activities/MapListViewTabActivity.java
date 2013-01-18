@@ -5,6 +5,8 @@ import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
 import my.b1701.SB.CustomViewsAndListeners.SBMapView;
 import my.b1701.SB.FacebookHelpers.FacebookConnector;
 import my.b1701.SB.Fragments.FBLoginDialogFragment;
+import my.b1701.SB.Fragments.GetNearbyUserDialogFragment;
+import my.b1701.SB.Fragments.GetNearbyUserFragment;
 import my.b1701.SB.Fragments.SBListFragment;
 import my.b1701.SB.Fragments.SBMapFragment;
 import my.b1701.SB.Fragments.UserNameDialogFragment;
@@ -175,7 +177,16 @@ public class MapListViewTabActivity extends SherlockFragmentActivity implements 
    	 case R.id.btn_listview:   		
       	toggleMapListView(menuItem);
       	break; 	
-        
+   	 case R.id.test_app_menuitem:
+   		//GetNearbyUserDialogFragment test_dialog = new GetNearbyUserDialogFragment();
+   		//test_dialog.show(getSupportFragmentManager(), "test_dialog");
+   		//FragmentTransaction ft = fm.beginTransaction();
+        //ft.replace(R.id.tabcontent, new GetNearbyUserFragment());
+        //ft.commit();
+   		 Intent searchInputIntent = new Intent(this,SearchInputActivity.class);
+   		 searchInputIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+   		 startActivity(searchInputIntent);
+   		 break;
         } 
         return super.onOptionsItemSelected(menuItem);
     }

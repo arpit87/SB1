@@ -86,7 +86,7 @@
             android:screenOrientation="portrait" 
             android:launchMode="singleTask" >            
         </activity>
-           <activity android:name=".Activities.AddressListViewActivity" 
+           <activity android:name=".Activities.SearchInputActivity" 
             android:theme="@android:style/Theme.NoTitleBar" 
             android:screenOrientation="portrait" >
             
