@@ -51,7 +51,7 @@
             android:scaleType="centerCrop" />
 
         <ImageView
-            android:id="@+id/imageView1"
+            android:id="@+id/expanded_pic_frame"
             android:layout_width="72.0dip"
             android:layout_height="72.0dip"
             android:layout_margin="9.0dip"

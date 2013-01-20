@@ -13,6 +13,7 @@ import my.b1701.SB.R;
 import my.b1701.SB.Users.NearbyUser;
 import my.b1701.SB.Users.UserFBInfo;
 import my.b1701.SB.Users.UserLocInfo;
+import my.b1701.SB.Users.UserOtherInfo;
 
 import java.util.List;
 
@@ -54,22 +55,22 @@ public class NearbyUsersListViewAdapter extends BaseAdapter{
         	thisUserView = inflater.inflate(R.layout.nearbyuser_list_row, null);
         ImageView userImageView = (ImageView)thisUserView.findViewById(R.id.nearbyuser_list_image); 
         TextView userName = (TextView)thisUserView.findViewById(R.id.nearbyusername);
-        TextView userGender = (TextView)thisUserView.findViewById(R.id.nearbyusergender);
+        TextView userSource = (TextView)thisUserView.findViewById(R.id.nearbyusersource);
         TextView userDestination = (TextView)thisUserView.findViewById(R.id.nearbyuserdestination);
-        TextView userDistance = (TextView)thisUserView.findViewById(R.id.nearbyuserdistance);
+        TextView userTime = (TextView)thisUserView.findViewById(R.id.nearbyusertime);
 
         SBImageLoader.getInstance().displayImageElseStub(thisUser.getUserFBInfo().getImageURL(), userImageView, R.id.userpic);
         UserFBInfo thisUserFBInfo = thisUser.getUserFBInfo();
         UserLocInfo thisUserLocInfo = thisUser.getUserLocInfo();
+        UserOtherInfo thisUserOtherInfo = thisUser.getUserOtherInfo();
         String name = thisUserFBInfo.getName();
-        String gender = thisUserFBInfo.getGender();
+        String source = thisUserLocInfo.getUserSrcAddress();
         String destination = thisUserLocInfo.getUserDstLocality();
-        String distance = "100m";
+        String time = thisUserOtherInfo.getTime();
         userName.setText(name);
-        userGender.setText(gender);
+        userSource.setText(source);
         userDestination.setText(destination);
-        userDistance.setText(distance);
-
+        userTime.setText(time);
 		return thisUserView;
 	}
 

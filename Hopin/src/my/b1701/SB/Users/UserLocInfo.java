@@ -98,6 +98,16 @@ public class UserLocInfo {
 	}	
 
 
+	public String getUserSrcLocality()
+	{		
+		return srclocality;
+	}
+	
+	public String getUserSrcAddress()
+	{		
+		return srcaddress;
+	}
+	
 	public String getUserDstLocality()
 	{		
 		return dstlocality;

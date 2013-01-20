@@ -5,8 +5,6 @@ import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
 import my.b1701.SB.CustomViewsAndListeners.SBMapView;
 import my.b1701.SB.FacebookHelpers.FacebookConnector;
 import my.b1701.SB.Fragments.FBLoginDialogFragment;
-import my.b1701.SB.Fragments.GetNearbyUserDialogFragment;
-import my.b1701.SB.Fragments.GetNearbyUserFragment;
 import my.b1701.SB.Fragments.SBListFragment;
 import my.b1701.SB.Fragments.SBMapFragment;
 import my.b1701.SB.Fragments.UserNameDialogFragment;
@@ -312,10 +310,10 @@ if (fm != null) {
     public ViewGroup getThisListContainerWithListView() {
         if (mListViewContainer == null) {
             mListViewContainer = (ViewGroup) getLayoutInflater().inflate(R.layout.nearbyuserlistview, null, false);
-            mListImageView = (ImageView) mListViewContainer.findViewById(R.id.list_user_image);
+            mListImageView = (ImageView) mListViewContainer.findViewById(R.id.self_list_image);
             mUserName = (TextView) mListViewContainer.findViewById(R.id.UserNameInList);
             mDestination = (TextView) mListViewContainer.findViewById(R.id.DestinationInList);
-            mFbLogin = (ImageView) mListViewContainer.findViewById(R.id.FbLogin);
+            
 
             mUserName.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -325,14 +323,7 @@ if (fm != null) {
                 }
             });
 
-            mFbLogin.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    FBLoginDialogFragment fbLoginDialogFragment = new FBLoginDialogFragment();
-                    fbLoginDialogFragment.show(getSupportFragmentManager(), "fblogin_dialog");
-                }
-            });
-
+          
             mListView = (ListView) mListViewContainer.findViewById(R.id.list);
             //mMapViewContainer.removeView(mMapView);
         }

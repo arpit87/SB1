@@ -13,7 +13,7 @@ public class UserOtherInfo {
 	JSONObject allInfo = null;
 	private String type = "0";
 	private String percent_match = "0";
-	
+	private String time ="";
 	
 		
 	public UserOtherInfo(JSONObject jsonObject) {
@@ -27,6 +27,9 @@ public class UserOtherInfo {
 			percent_match = allInfo.getString(UserAttributes.PERCENTMATCH);			
 		} catch (JSONException e) {	}
 		
+		try {
+			time = allInfo.getString(UserAttributes.TIME);			
+		} catch (JSONException e) {	}
 		
 	}
 	
@@ -41,6 +44,11 @@ public class UserOtherInfo {
 	public int getPercentMatch()
 	{		
 		return Integer.parseInt(percent_match);
+	}
+	
+	public String getTime()
+	{
+		return time;
 	}
 	
 }

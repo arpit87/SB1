@@ -3,65 +3,103 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              android:background="#ffffffff"
               >
-              <View android:id="@+id/listpadding"
-			        android:layout_width="fill_parent"
-                    android:layout_height="50dip"                    
-                    android:background="#ffffffff"/>
-    <RelativeLayout android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"                    
-                    android:background="#ffffffff">
+              
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_rectangle_background" 
+        android:padding="2dip"
+        android:layout_marginTop="50dip"
+       >
 			
-        <LinearLayout android:id="@+id/thumbnail"            		
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:padding="3dip"
-                      android:layout_alignParentLeft="true"
-                      android:layout_marginRight="5dip">
-            <ImageView
-                    android:id="@+id/list_user_image"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    />
-        </LinearLayout>
-        <TextView
-                android:id="@+id/UserNameInList"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/thumbnail"
-                android:layout_toLeftOf="@+id/Login"
-                android:paddingLeft="15dp"
-                android:text="Tap to set Name"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="#040404"/>
+   <ImageView
+        android:id="@+id/selfthumbnail"
+        android:layout_width="82dip"
+        android:layout_height="82dip"
+        android:background="@drawable/list_dp_frame_red"       
+        android:layout_margin="3dip"
+        android:layout_centerVertical="true" 
+         />
+    
+  <ImageView
+        android:id="@+id/self_list_image"
+        android:layout_width="74dip"
+        android:layout_height="74dip"             
+        android:layout_margin="8dip"
+        android:layout_centerVertical="true" 
+        android:scaleType="centerCrop"
+         />
+  
+  <TextView
+        android:id="@+id/milestone_list_image"
+        android:layout_width="70dp"
+        android:layout_height="80dp"             
+        android:layout_margin="8dip"
+        android:layout_centerVertical="true" 
+        android:background="@drawable/milestone"
+        android:layout_alignParentRight="true" 
+        android:text="20 KM"     
+        android:textColor="@color/black"
+        android:paddingTop="40dip"
+        android:textSize="20dip"
+        android:paddingLeft="4dip"
+        
+         />
+  <LinearLayout
+      android:id="@+id/selfInfoLayout"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"      
+      android:layout_toLeftOf="@id/milestone_list_image"
+      android:layout_toRightOf="@+id/selfthumbnail"
+      android:orientation="vertical"
+      android:layout_marginLeft="5dip"
+      android:layout_marginTop="5dip" >
 
-        <TextView
-                android:id="@+id/DestinationInList"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/UserNameInList"
-                android:layout_toRightOf="@+id/thumbnail"
-                android:layout_toLeftOf="@+id/Login"
-                android:paddingLeft="15dp"
-                android:text="Destination not set"
-                android:textSize="16sp"
-                android:textColor="#040404"
-                android:maxLines="2"
-                android:ellipsize="marquee" />
+      <TextView
+          android:id="@+id/UserNameInList"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"          
+          android:text="Arpit Mishra"
+          android:ellipsize="marquee"
+          android:maxLines="1"
+          android:textColor="#040404"
+          android:textSize="18sp"
+          android:textStyle="bold" />
 
-        <LinearLayout android:id="@+id/Login"
-                      android:layout_width="40dp"
-                      android:layout_height="wrap_content"
-                      android:layout_alignParentRight="true"
-                      android:padding="5dip">
-            <ImageView
-                    android:id="@+id/FbLogin"
-                    android:layout_width="30.0dip"
-                    android:layout_height="28dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/fb_icon"/>
-        </LinearLayout>
+      <TextView
+          android:id="@+id/SourceInList"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:ellipsize="marquee"
+          android:maxLines="1"          
+          android:text="From: Powai Vihar"
+          android:textColor="#040404"
+          android:textSize="13sp" />
+      
+       <TextView
+          android:id="@+id/DestinationInList"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:ellipsize="marquee"
+          android:maxLines="1"          
+          android:text="To: Andheri East"
+          android:textColor="#040404"
+          android:textSize="13sp" />
+       
+       <TextView
+          android:id="@+id/TimeInList"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:ellipsize="marquee"
+          android:maxLines="2"          
+          android:text="Time: 8:00 am"
+          android:textColor="#040404"
+          android:textSize="13sp" />
+       
+  </LinearLayout>
+  
     </RelativeLayout>
     <View android:layout_width="fill_parent" android:layout_height="2dp"
           android:fadingEdge="horizontal" android:background="#d3d3d3"/>

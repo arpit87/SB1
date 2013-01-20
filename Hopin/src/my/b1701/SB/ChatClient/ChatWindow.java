@@ -35,7 +35,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-@SuppressLint("ParserError")
+
 public class ChatWindow extends Activity{
 	
 	private static String TAG = "my.b1701.SB.ChatClient.ChatWindow";
@@ -74,7 +74,7 @@ public class ChatWindow extends Activity{
 	    mContactNameTextView = (TextView) findViewById(R.id.chat_contact_name);
 	    mContactStatusMsgTextView = (TextView) findViewById(R.id.chat_contact_status_msg);
 	    mContactDestination = (TextView) findViewById(R.id.chat_contact_destination);	    
-	    mContactPic = (ImageView) findViewById(R.id.chat_contact_pic);
+	   // mContactPic = (ImageView) findViewById(R.id.chat_contact_pic);
 	    mMessagesListView = (ListView) findViewById(R.id.chat_messages);
 	    mMessagesListView.setAdapter(mMessagesListAdapter);
 	    mInputField = (EditText) findViewById(R.id.chat_input);		
