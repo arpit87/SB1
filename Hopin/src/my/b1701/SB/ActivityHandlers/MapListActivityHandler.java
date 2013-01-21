@@ -153,13 +153,13 @@ public class MapListActivityHandler  {
 					progressDialog.dismiss();
 					ThisUser.getInstance().setLocation(thisCurrLoc);
 					updateThisUserMapOverlay();
-					centreMapTo(ThisUser.getInstance().getCurrentGeoPoint());
+					centreMapTo(ThisUser.getInstance().getSourceGeoPoint());
 					return;
 				}
 			}
 			progressDialog.dismiss();
 	}
-		centreMapTo(ThisUser.getInstance().getCurrentGeoPoint());
+		centreMapTo(ThisUser.getInstance().getSourceGeoPoint());
 	}
 		
 public void centreMapTo(SBGeoPoint centrePoint)
@@ -183,7 +183,7 @@ public void centreMapTo(SBGeoPoint centrePoint)
 	    thisUserOverlay.addThisUser();	    
 	    mapView.getOverlays().add(thisUserOverlay);
 	    mapView.postInvalidate();	       
-	    mapcontroller.animateTo(ThisUser.getInstance().getCurrentGeoPoint());
+	    mapcontroller.animateTo(ThisUser.getInstance().getSourceGeoPoint());
 	    //onResume of mapactivity doesnt update user till its once initialized
 	    mapInitialized = true;
 	    
@@ -238,7 +238,7 @@ public void centreMapTo(SBGeoPoint centrePoint)
 		    Log.i(TAG,"this user map overlay updated");	    
 		    mapView.getOverlays().add(thisUserOverlay);
 		    mapView.postInvalidate();	       
-		    mapcontroller.animateTo(ThisUser.getInstance().getCurrentGeoPoint());
+		    mapcontroller.animateTo(ThisUser.getInstance().getSourceGeoPoint());
 		}
 		else
 			Log.i(TAG,"but thisUSeroverlay empty!how?shldnt be..we initialixed it in init");

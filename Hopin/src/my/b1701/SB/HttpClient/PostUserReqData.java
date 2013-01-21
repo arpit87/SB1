@@ -37,10 +37,10 @@ public class PostUserReqData extends SBHttpRequest{
 		httpQuery =  new HttpPost(url1);
 		try {
 			jsonobj.put(UserAttributes.USERID, ThisUser.getInstance().getUserID());
-			jsonobj.put(UserAttributes.SRCLATITUDE, ThisUser.getInstance().getCurrentGeoPoint().getLatitudeE6());
-			jsonobj.put(UserAttributes.SRCLONGITUDE, ThisUser.getInstance().getCurrentGeoPoint().getLongitudeE6());
-			jsonobj.put(UserAttributes.DSTLATITUDE, ThisUser.getInstance().getCurrentGeoPoint().getLatitudeE6());
-			jsonobj.put(UserAttributes.DSTLONGITUDE, ThisUser.getInstance().getCurrentGeoPoint().getLongitudeE6());			
+			jsonobj.put(UserAttributes.SRCLATITUDE, ThisUser.getInstance().getSourceGeoPoint().getLatitudeE6());
+			jsonobj.put(UserAttributes.SRCLONGITUDE, ThisUser.getInstance().getSourceGeoPoint().getLongitudeE6());
+			jsonobj.put(UserAttributes.DSTLATITUDE, ThisUser.getInstance().getSourceGeoPoint().getLatitudeE6());
+			jsonobj.put(UserAttributes.DSTLONGITUDE, ThisUser.getInstance().getSourceGeoPoint().getLongitudeE6());			
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

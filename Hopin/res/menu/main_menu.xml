@@ -2,19 +2,19 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
   
-    <item
-            android:id="@+id/menu_search"
-            android:title="@string/menu_search"
-            android:icon="@drawable/ic_menu_search"            
-            android:showAsAction="always"
-            />
-    
+       
     <item
             android:id="@+id/btn_listview"
             android:title="@string/listviewstr"
             android:icon="@drawable/maptolist"            
             android:showAsAction="always"
             /> 
+     <item
+            android:id="@+id/menu_search"
+            android:title="@string/menu_search"
+            android:icon="@drawable/ic_menu_search"            
+            android:showAsAction="always"
+            />        
              
     <item android:id="@+id/settings_menuitem" android:title="Settings" android:showAsAction="never"></item> 
     <item android:id="@+id/fb_login_menuitem" android:title="Login" android:showAsAction="never"></item>

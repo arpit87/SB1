@@ -22,7 +22,7 @@
             android:layout_marginRight="1.0dip"
             android:paddingBottom="2.0dip"
             android:paddingTop="2.0dip"
-            android:text="Find users?"
+            android:text="Find users"
             android:textStyle="bold"
             android:textColor="@color/black"            
             android:textSize="20dip" />        
@@ -63,6 +63,7 @@
         android:gravity="center_vertical"  
         android:paddingLeft="10dip"
         android:singleLine="true"
+        android:hint="Enter source"
         />   
       
  
@@ -86,7 +87,7 @@
         android:gravity="center_vertical"
         android:paddingLeft="10dip"
         android:singleLine="true"
-
+		android:hint="Enter destination"
         />
 
 
@@ -245,25 +246,25 @@
         android:layout_marginTop="15dip">
 
         <Button
-            android:id="@+id/cancelenterusernamebutton"
+            android:id="@+id/btn_cancelfindusers"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="5dip"
             android:layout_weight="1"
             android:background="@drawable/custom_button_grey"
-            android:text="No"
+            android:text="Cancel"
             android:textColor="@color/black" />
 
         <Button
-            android:id="@+id/enterusernamebutton"
+            android:id="@+id/btn_findusers"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="5dip"
             android:layout_weight="1"
             android:background="@drawable/custom_button_grey"
-            android:text="Yes"
+            android:text="Find"
             android:textColor="@color/black" />
 
     </LinearLayout>

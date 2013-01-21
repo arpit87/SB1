@@ -23,7 +23,7 @@ public class CheckAndDeleteUserRequestService extends IntentService{
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        SBGeoPoint currGeoPoint = ThisUser.getInstance().getCurrentGeoPoint();
+        SBGeoPoint currGeoPoint = ThisUser.getInstance().getSourceGeoPoint();
         SBGeoPoint shareReqGeoPoint = ThisUser.getInstance().getShareReqGeoPoint();
 
         Log.i(TAG, "Checking if user out of request area");

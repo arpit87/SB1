@@ -41,14 +41,15 @@ public class AddThisUserSrcDstRequest extends SBHttpRequest{
 		try {
 			jsonobjAddRequest.put(UserAttributes.USERID, ThisUser.getInstance().getUserID());	
 			jsonobjAddRequest.put(UserAttributes.SHAREOFFERTYPE, ThisUser.getInstance().getrequestType());
-			jsonobjAddRequest.put(UserAttributes.SRCLATITUDE, ThisUser.getInstance().getCurrentGeoPoint().getLatitude());
-			jsonobjAddRequest.put(UserAttributes.SRCLONGITUDE, ThisUser.getInstance().getCurrentGeoPoint().getLongitude());
-            jsonobjAddRequest.put(UserAttributes.SRCLOCALITY, ThisUser.getInstance().getCurrentGeoPoint().getSubLocality());
-            jsonobjAddRequest.put(UserAttributes.SRCADDRESS, ThisUser.getInstance().getCurrentGeoPoint().getAddress());
+			jsonobjAddRequest.put(UserAttributes.SRCLATITUDE, ThisUser.getInstance().getSourceGeoPoint().getLatitude());
+			jsonobjAddRequest.put(UserAttributes.SRCLONGITUDE, ThisUser.getInstance().getSourceGeoPoint().getLongitude());
+            jsonobjAddRequest.put(UserAttributes.SRCLOCALITY, ThisUser.getInstance().getSourceGeoPoint().getSubLocality());
+            jsonobjAddRequest.put(UserAttributes.SRCADDRESS, ThisUser.getInstance().getSourceGeoPoint().getAddress());
 			jsonobjAddRequest.put(UserAttributes.DSTLATITUDE, ThisUser.getInstance().getDestinationGeoPoint().getLatitude());
 			jsonobjAddRequest.put(UserAttributes.DSTLONGITUDE, ThisUser.getInstance().getDestinationGeoPoint().getLongitude());
             jsonobjAddRequest.put(UserAttributes.DSTLOCALITY,ThisUser.getInstance().getDestinationGeoPoint().getSubLocality());
             jsonobjAddRequest.put(UserAttributes.DSTADDRESS, ThisUser.getInstance().getDestinationGeoPoint().getAddress());
+            jsonobjAddRequest.put(UserAttributes.TIME, ThisUser.getInstance().getTimeOfRequest());
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -2,9 +2,16 @@ package my.b1701.SB.Activities;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.*;
 import my.b1701.SB.Adapter.AddressAdapter;
+import my.b1701.SB.HttpClient.AddThisUserSrcDstRequest;
+import my.b1701.SB.HttpClient.SBHttpClient;
+import my.b1701.SB.HttpClient.SBHttpRequest;
+import my.b1701.SB.LocationHelpers.SBGeoPoint;
+import my.b1701.SB.Users.ThisUser;
 import my.b1701.SB.R;
 import my.b1701.SB.provider.CustomSuggestionProvider;
 import my.b1701.SB.provider.GeoAddress;
@@ -24,6 +31,17 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
 	SeekBar timeSeekbar;
     GeoAddress sourceAddress;
     GeoAddress destinationAddress;
+    Button cancelFindUsers;
+    Button findUsers;
+    CheckBox offerRide;
+    CheckBox dailyCarPool;
+    
+    //these change as user chooses time
+    String hourStr = "";
+	String minstr = "";
+	int hour;
+	int minutes;
+    
 
 	public void saveSuggestion(GeoAddress geoAddress) {
         geoAddress.resetLocalityIfNull();
@@ -36,7 +54,43 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
         setContentView(R.layout.getuser_request_dialog);
         source = (AutoCompleteTextView) findViewById(R.id.getuserpopupsource);
         destination = (AutoCompleteTextView) findViewById(R.id.getuserpopupdestination);
-
+        findUsers = (Button)findViewById(R.id.btn_findusers);
+        cancelFindUsers = (Button)findViewById(R.id.btn_cancelfindusers);
+        offerRide = (CheckBox)findViewById(R.id.checkbox_rideoffer);
+        dailyCarPool = (CheckBox)findViewById(R.id.checkbox_dailycarpool);
+        am_pm_toggle = (ToggleButton) findViewById(R.id.btn_am_pm_toggle);
+        timeView = (TextView) findViewById(R.id.time);
+      
+        //set source to our found location, if not found user can enter himself
+        String foundAddress = ThisUser.getInstance().getSourceGeoPoint().getAddress();
+        if(foundAddress != "")
+        	source.setText(foundAddress);
+        
+        findUsers.setOnClickListener(new OnClickListener() {
+        	@Override
+			public void onClick(View v) {       
+        		String time24HrFormat ;
+        		if(am_pm_toggle.isChecked())
+        			time24HrFormat = Integer.toString(hour) +":" + Integer.toString(minutes);
+        		else 
+        			time24HrFormat = Integer.toString(hour+12) + ":" + Integer.toString(minutes);
+        		
+        		ThisUser.getInstance().setTimeOfRequest(time24HrFormat);
+        		
+        		Log.i(TAG, "user destination set... querying server");
+                SBHttpRequest addThisUserSrcDstRequest = new AddThisUserSrcDstRequest();
+                SBHttpClient.getInstance().executeRequest(addThisUserSrcDstRequest);
+                finish();				
+			}
+		});
+        
+        cancelFindUsers.setOnClickListener(new OnClickListener() {			
+			@Override
+			public void onClick(View arg0) {
+				finish();				
+			}
+		});
+        
         source.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -45,6 +99,7 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
                 if (!address.isSaved()) {
                     saveSuggestion(sourceAddress);
                 }
+                setSource(sourceAddress);
             }
         });
         source.setAdapter(new AddressAdapter(this, android.R.layout.select_dialog_item));
@@ -57,17 +112,17 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
                 if (!address.isSaved()) {
                     saveSuggestion(destinationAddress);
                 }
+                setDestination(destinationAddress);
             }
         });
         destination.setAdapter(new AddressAdapter(this, android.R.layout.select_dialog_item));
 
-        am_pm_toggle = (ToggleButton) findViewById(R.id.btn_am_pm_toggle);
-        timeView = (TextView) findViewById(R.id.time);
+       
         timeSeekbar = (SeekBar) findViewById(R.id.timeseekBar);
         timeSeekbar.setMax(48);
         timeSeekbar.setOnSeekBarChangeListener(this);
         
-        //find current time and set seekbar to half hour after current
+        //find current time and set seekbar to just after current
         Calendar now = Calendar.getInstance();
         int hour = now.get(Calendar.HOUR);        
         int min = now.get(Calendar.MINUTE);        
@@ -79,17 +134,16 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
         else
         	am_pm_toggle.setChecked(false);
         
-        timeSeekbar.setProgress(progress+1);        
+        timeSeekbar.setProgress((progress+1)%48);        
         
 	}
 
 	@Override
     public void onProgressChanged(SeekBar seekBar, int progress,
     		boolean fromUser) {		
-		int hour = progress/4;
-		int minutes = (progress%4)*15;
-		String hourStr = "";
-		String minstr = "";
+		hour = progress/4;
+		minutes = (progress%4)*15;
+		
 		
 		if(hour == 0)
 			hourStr = "12";
@@ -117,5 +171,31 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
 		// TODO Auto-generated method stub
 		
 	}
+	
+	
+	public void setSource(GeoAddress geoAddress) {
+		//track user only if real time req
+		if(!dailyCarPool.isChecked())
+			ThisUser.getInstance().setShareReqGeoPoint();
+		
+        int lat = (int) (geoAddress.getLatitude() * 1e6);
+        int lon = (int) (geoAddress.getLongitude() * 1e6);
+        String subLocality = geoAddress.getSubLocality();
+        String address = geoAddress.getAddressLine();
+
+        ThisUser.getInstance().setSourceGeoPoint(new SBGeoPoint(lat, lon, subLocality, address));
+       
+    }
+	
+	public void setDestination(GeoAddress geoAddress) {
+        
+        int lat = (int) (geoAddress.getLatitude() * 1e6);
+        int lon = (int) (geoAddress.getLongitude() * 1e6);
+        String subLocality = geoAddress.getSubLocality();
+        String address = geoAddress.getAddressLine();
+
+        ThisUser.getInstance().setDestinationGeoPoint(new SBGeoPoint(lat, lon, subLocality, address));
+        
+    }
 	
 }

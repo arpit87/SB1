@@ -8,8 +8,8 @@ public class SBGeoPoint extends GeoPoint{
 
 	int lati;
 	int longi;
-    String subLocality;
-    String address;
+    String subLocality = "";
+    String address = "";
 
 	public SBGeoPoint(int lati, int longi, String subLocality, String address) {
 		super(lati, longi);

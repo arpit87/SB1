@@ -3,7 +3,7 @@ package my.b1701.SB.Users;
 import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.LocationHelpers.SBGeoPoint;
 import my.b1701.SB.LocationHelpers.SBLocation;
-import android.location.Location;
+import my.b1701.SB.provider.GeoAddress;
 import android.util.Log;
 
 
@@ -16,6 +16,10 @@ public class ThisUser {
 	private SBGeoPoint currentGeoPoint=null;
 	private SBGeoPoint shareReqGeoPoint=null;
 	private SBGeoPoint destinationGeoPoint=null;
+	private GeoAddress currentGeoAddress=null;
+	private GeoAddress shareReqGeoAddress=null;
+	private GeoAddress destinationGeoAddress=null;
+	private String timeOfRequest;
 	/*
 	 * Singleton
 	 */
@@ -93,14 +97,14 @@ public class ThisUser {
 		this.destinationGeoPoint = sbGeoPoint;
 	}
 
-	public SBGeoPoint getCurrentGeoPoint() {
+	public SBGeoPoint getSourceGeoPoint() {
 		Log.i(TAG,"get curr loc");
 		
 			return currentGeoPoint;
 		
 			
 	}
-	public void setCurrentGeoPoint(SBGeoPoint currentGeoPoint) {
+	public void setSourceGeoPoint(SBGeoPoint currentGeoPoint) {
 		if(currentGeoPoint != null){
 			Log.i(TAG, "Set!");
 		}
@@ -116,6 +120,14 @@ public class ThisUser {
 			this.shareReqGeoPoint = this.currentGeoPoint;
 		else
 			Log.i(TAG,"current share loc found to be null");
+	}
+
+	public String getTimeOfRequest() {
+		return timeOfRequest;
+	}
+
+	public void setTimeOfRequest(String timeOfRequest) {
+		this.timeOfRequest = timeOfRequest;
 	}	
 	
 	

@@ -149,7 +149,10 @@ public class MapListViewTabActivity extends SherlockFragmentActivity implements 
         switch (menuItem.getItemId())
         {
         case R.id.menu_search:
-        	onSearchRequested();
+        	//onSearchRequested();
+	    	 Intent searchInputIntent = new Intent(this,SearchInputActivity.class);
+	   		 searchInputIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+	   		 startActivity(searchInputIntent);
         	break;
         case R.id.fb_login_menuitem:
         	if(ThisUserConfig.getInstance().getBool(ThisUserConfig.FBLOGGEDIN))
@@ -181,10 +184,10 @@ public class MapListViewTabActivity extends SherlockFragmentActivity implements 
    		//FragmentTransaction ft = fm.beginTransaction();
         //ft.replace(R.id.tabcontent, new GetNearbyUserFragment());
         //ft.commit();
-   		 Intent searchInputIntent = new Intent(this,SearchInputActivity.class);
-   		 searchInputIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-   		 startActivity(searchInputIntent);
-   		 break;
+   		// Intent searchInputIntent = new Intent(this,SearchInputActivity.class);
+   		// searchInputIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+   		// startActivity(searchInputIntent);
+   		// break;
         } 
         return super.onOptionsItemSelected(menuItem);
     }
