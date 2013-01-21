@@ -1,26 +1,66 @@
 package my.b1701.SB.Activities;
 
-import java.util.Calendar;
-
-import my.b1701.SB.R;
 import android.app.Activity;
 import android.os.Bundle;
-import android.text.format.Time;
-import android.widget.SeekBar;
-import android.widget.TextView;
-import android.widget.ToggleButton;
+import android.view.View;
+import android.widget.*;
+import my.b1701.SB.Adapter.AddressAdapter;
+import my.b1701.SB.R;
+import my.b1701.SB.provider.CustomSuggestionProvider;
+import my.b1701.SB.provider.GeoAddress;
+import my.b1701.SB.provider.SearchRecentSuggestions;
+
+import java.util.Calendar;
 
 public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarChangeListener{
-	
+    private static final String TAG = "my.b1701.SB.Activities.SearchInputActivity";
+
+    SearchRecentSuggestions searchRecentSuggestions = new SearchRecentSuggestions(this, CustomSuggestionProvider.AUTHORITY, CustomSuggestionProvider.MODE);
+
+    AutoCompleteTextView source;
+    AutoCompleteTextView destination;
 	ToggleButton am_pm_toggle;
 	TextView timeView;
 	SeekBar timeSeekbar;
-	
-	
+    GeoAddress sourceAddress;
+    GeoAddress destinationAddress;
+
+	public void saveSuggestion(GeoAddress geoAddress) {
+        geoAddress.resetLocalityIfNull();
+        searchRecentSuggestions.saveRecentQuery(geoAddress.getAddressLine(), geoAddress.getJson());
+    }
+
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.getuser_request_dialog);
+        source = (AutoCompleteTextView) findViewById(R.id.getuserpopupsource);
+        destination = (AutoCompleteTextView) findViewById(R.id.getuserpopupdestination);
+
+        source.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                AddressAdapter.Address address = ((AddressAdapter) source.getAdapter()).getAddress(i);
+                sourceAddress = address.getGeoAddress();
+                if (!address.isSaved()) {
+                    saveSuggestion(sourceAddress);
+                }
+            }
+        });
+        source.setAdapter(new AddressAdapter(this, android.R.layout.select_dialog_item));
+
+        destination.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                AddressAdapter.Address address= ((AddressAdapter) destination.getAdapter()).getAddress(i);
+                destinationAddress = address.getGeoAddress();
+                if (!address.isSaved()) {
+                    saveSuggestion(destinationAddress);
+                }
+            }
+        });
+        destination.setAdapter(new AddressAdapter(this, android.R.layout.select_dialog_item));
+
         am_pm_toggle = (ToggleButton) findViewById(R.id.btn_am_pm_toggle);
         timeView = (TextView) findViewById(R.id.time);
         timeSeekbar = (SeekBar) findViewById(R.id.timeseekBar);

@@ -61,9 +61,8 @@
         android:textColor="@color/gray"
         android:background="@drawable/rounded_rectangle_background" 
         android:gravity="center_vertical"  
-        android:paddingLeft="10dip"     
-          
-          android:text="Powai,maharashtra"      
+        android:paddingLeft="10dip"
+        android:singleLine="true"
         />   
       
  
@@ -83,20 +82,24 @@
         android:layout_height="38dip"        
         android:layout_margin="5dip"          
         android:textColor="@color/gray"
-        android:background="@drawable/rounded_rectangle_background" 
-        android:text="Andheri east,maharashtra"      
+        android:background="@drawable/rounded_rectangle_background"
         android:gravity="center_vertical"
         android:paddingLeft="10dip"
-                
-        />   
-      
+        android:singleLine="true"
+
+        />
+
+
+
+
 <RelativeLayout
     android:id="@+id/entertimeLayout"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="8dip"
     android:padding="15dip" >
-  
+
+
 <TextView
     android:id="@+id/entertimeheader"
     android:layout_width="wrap_content"
@@ -105,7 +108,17 @@
     android:text="Enter time"
     android:textColor="@color/fb_blue"
     android:textSize="15dip" />
-
+
+
+
+
+
+
+
+
+
+
+
 <TextView
     android:id="@+id/time"
     android:layout_width="wrap_content"
@@ -117,7 +130,8 @@
     android:textColor="@color/black"
     android:textSize="30dip" />
 
-<ToggleButton
+
+<ToggleButton
     android:id="@+id/btn_am_pm_toggle"
     android:layout_width="30dip"
     android:layout_height="50dip"
@@ -131,7 +145,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_below="@id/btn_am_pm_toggle"
-    android:layout_centerInParent="true" />
+    android:layout_centerInParent="true" />
+
+
 <RelativeLayout
     android:id="@+id/timescalelayout"
     android:layout_width="fill_parent"
@@ -141,7 +157,8 @@
     android:layout_centerInParent="true"
     android:layout_marginTop="5dip"
     android:gravity="fill_horizontal" >
-
+
+
     <TextView
         android:id="@+id/textView12left"
         android:layout_width="wrap_content"
@@ -203,7 +220,8 @@
      android:layout_width="wrap_content"
      android:text="Daily car pool"
      android:textSize="15dip"
-    android:textColor="@color/black"/>    
+    android:textColor="@color/black"/>    
+
      <CheckBox
          android:id="@+id/checkbox_rideoffer"
          android:layout_width="wrap_content"
