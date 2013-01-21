@@ -310,7 +310,7 @@ if (fm != null) {
     public ViewGroup getThisListContainerWithListView() {
         if (mListViewContainer == null) {
             mListViewContainer = (ViewGroup) getLayoutInflater().inflate(R.layout.nearbyuserlistview, null, false);
-            mListImageView = (ImageView) mListViewContainer.findViewById(R.id.self_list_image);
+            mListImageView = (ImageView) mListViewContainer.findViewById(R.id.selfthumbnail);
             mUserName = (TextView) mListViewContainer.findViewById(R.id.UserNameInList);
             mDestination = (TextView) mListViewContainer.findViewById(R.id.DestinationInList);
             

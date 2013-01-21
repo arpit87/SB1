@@ -37,7 +37,7 @@ public class GetNearbyUsersRequest extends SBHttpRequest{
 		queryMethod = QueryMethod.Post;
 				
 		//prepare getnearby request		
-		url1 = ServerConstants.SERVER_ADDRESS + ServerConstants.REQUESTSERVICE + "/getNearbyRequests/";
+		url1 = ServerConstants.SERVER_ADDRESS + ServerConstants.REQUESTSERVICE + "/getMatches/";
 		httpQueryGetNearbyUsers = new HttpPost(url1);
 		jsonobjGetNearbyUsers = GetServerAuthenticatedJSON();;
 		try {

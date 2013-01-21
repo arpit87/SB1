@@ -9,7 +9,7 @@
         android:id="@+id/thumbnail"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:background="@drawable/list_dp_frame_blue"       
+        android:background="@drawable/list_frame_blue_new"       
         android:layout_margin="3dip"
         android:layout_centerVertical="true" 
          />
