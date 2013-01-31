@@ -28,7 +28,8 @@ public class CheckAndDeleteUserRequestService extends IntentService{
 
         Log.i(TAG, "Checking if user out of request area");
         ToastTracker.showToast("checking if user out of req area");
-        double deleteReqDist = ThisAppConfig.getInstance().getLong(ThisAppConfig.USERCUTOFFDIST);
+        //double deleteReqDist = ThisAppConfig.getInstance().getLong(ThisAppConfig.USERCUTOFFDIST);
+        double deleteReqDist = 1000;
         try {
             if (shareReqGeoPoint.distanceFromSBGeoPoint(currGeoPoint) > deleteReqDist) {
                 Log.i(TAG,"user out of req area sending delete req to server");

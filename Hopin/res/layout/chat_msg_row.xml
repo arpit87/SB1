@@ -1,20 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:orientation="vertical" android:layout_width="fill_parent"
-	android:layout_height="wrap_content">
+	android:layout_height="wrap_content"
+	android:background="@drawable/chat_msg_frame_transblue"
+	android:paddingLeft="10dip"
+	android:paddingRight="10dip"
+	android:paddingBottom="3dip"
+	android:paddingTop="3dip">
 
 	<TextView android:id="@+id/chatmessagename"
-		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
 		android:layout_alignParentLeft="true" android:layout_alignParentTop="true"
-		android:textSize="16sp" android:textColor="#FFFFFF" android:textStyle="bold"
-		android:paddingBottom="1dp" />
+		android:textSize="16sp" android:textColor="@color/black" android:textStyle="bold"
+		android:paddingBottom="1dp" 
+		android:text="chat name"
+		/>
 	<TextView android:id="@+id/chatmessagedate"
 		android:layout_width="wrap_content" android:layout_height="wrap_content"
 		android:layout_alignParentTop="true" android:layout_alignParentRight="true"
-		android:autoLink="none" />
+		android:autoLink="none"
+		android:text="chat date time"
+		android:textColor="@color/gray" />
 	<TextView android:id="@+id/chatmessagetext"
 		android:layout_width="wrap_content" android:layout_height="wrap_content"
 		android:layout_alignParentLeft="true" android:layout_below="@id/chatmessagename"
-		android:autoLink="all" />
+		android:autoLink="all"
+		android:text="chat message is this" 
+		android:textColor="@color/black"/>
 </RelativeLayout>
 

@@ -12,8 +12,16 @@ import my.b1701.SB.ChatService.Message;
 import my.b1701.SB.ChatService.SBChatService;
 import my.b1701.SB.FacebookHelpers.FacebookConnector;
 import my.b1701.SB.HelperClasses.AlertDialogBuilder;
+import my.b1701.SB.HelperClasses.ProgressHandler;
+import my.b1701.SB.HelperClasses.SBImageLoader;
 import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.HelperClasses.ToastTracker;
+import my.b1701.SB.HttpClient.GetMatchingNearbyUsersRequest;
+import my.b1701.SB.HttpClient.SBHttpClient;
+import my.b1701.SB.HttpClient.SBHttpRequest;
+import my.b1701.SB.Server.GetMatchingNearbyUsersResponse;
+import my.b1701.SB.Users.CurrentNearbyUsers;
+import my.b1701.SB.Users.NearbyUser;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -43,7 +51,8 @@ public class ChatWindow extends Activity{
 	private TextView mContactNameTextView;
     private TextView mContactStatusMsgTextView;	 
     private TextView mContactDestination;	
-    private ImageView mContactPic;    
+    private ImageView mContactPic;   
+    private boolean mParticipantIsRideOfferer = false;
     private ListView mMessagesListView;
     private EditText mInputField;
     private Button mSendButton;
@@ -53,8 +62,7 @@ public class ChatWindow extends Activity{
     private IMessageListener mMessageListener = new SBOnChatMessageListener();
     private ISBChatConnAndMiscListener mCharServiceConnMiscListener = new SBChatServiceConnAndMiscListener();
     private final ChatServiceConnection mChatServiceConnection = new ChatServiceConnection();
-    private String mReceiver = "";    
-    private boolean selfInitiated = true;   
+    private String mParticipantFBID = "";    
     private SBBroadcastReceiver mSBBroadcastReceiver = new SBBroadcastReceiver();
     Handler mHandler = new Handler();
     private SBChatListViewAdapter mMessagesListAdapter = new SBChatListViewAdapter();
@@ -62,7 +70,6 @@ public class ChatWindow extends Activity{
     private String mThiUserChatUserName = "";
     private String mThisUserChatPassword = "";
 	private ProgressDialog progressDialog;
-	private boolean onProgress = false; //used to track if progress dialog being shown
 	private FacebookConnector fbconnect; // required if user not logged in
     
 		    
@@ -70,11 +77,11 @@ public class ChatWindow extends Activity{
 		public void onCreate(Bundle savedInstanceState) {	    	
 		super.onCreate(savedInstanceState);			
 		setContentView(R.layout.chatwindow);
-		this.registerReceiver(mSBBroadcastReceiver, new IntentFilter(SBBroadcastReceiver.SBCHAT_CONNECTION_CLOSED));
+		//this.registerReceiver(mSBBroadcastReceiver, new IntentFilter(SBBroadcastReceiver.SBCHAT_CONNECTION_CLOSED));
 	    mContactNameTextView = (TextView) findViewById(R.id.chat_contact_name);
 	    mContactStatusMsgTextView = (TextView) findViewById(R.id.chat_contact_status_msg);
 	    mContactDestination = (TextView) findViewById(R.id.chat_contact_destination);	    
-	   // mContactPic = (ImageView) findViewById(R.id.chat_contact_pic);
+	    mContactPic = (ImageView) findViewById(R.id.chat_contact_pic);
 	    mMessagesListView = (ListView) findViewById(R.id.chat_messages);
 	    mMessagesListView.setAdapter(mMessagesListAdapter);
 	    mInputField = (EditText) findViewById(R.id.chat_input);		
@@ -96,16 +103,17 @@ public class ChatWindow extends Activity{
 public void onResume() {
 	super.onResume();
 	//set participant before binding
-	String oldParticipant = mReceiver;
-	mReceiver = getIntent().getStringExtra("participant");
-	if(mReceiver == "")
-		mReceiver = oldParticipant;	
-	mContactNameTextView.setText(mReceiver);
+	String oldParticipant = mParticipantFBID;
+	mParticipantFBID = getIntent().getStringExtra("participant");
+	if(mParticipantFBID == "")
+		mParticipantFBID = oldParticipant;	
+	//mContactNameTextView.setText(mReceiver);
+	getParticipantInfoFromFBID(mParticipantFBID);
 	if (!mBinded) 
 		bindToService();
 	else
 		try {
-			changeCurrentChat(mReceiver);
+			changeCurrentChat(mParticipantFBID);
 		} catch (RemoteException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -181,11 +189,36 @@ public void onResume() {
     		}
 	    }
 	    
-	    private void sendMessage() {
+	    public void getParticipantInfoFromFBID(String fbid)
+	    {
+	    	NearbyUser thisNearbyUser = CurrentNearbyUsers.getInstance().getNearbyUserWithFBID(fbid);
+	    	if(thisNearbyUser != null)
+	    	{
+		    	mContactNameTextView.setText(thisNearbyUser.getUserFBInfo().getName());
+		    	SBImageLoader.getInstance().displayImageElseStub(thisNearbyUser.getUserFBInfo().getImageURL(), mContactPic,R.drawable.userpicicon);
+		    	mContactDestination.setText(thisNearbyUser.getUserLocInfo().getUserDstLocality());
+		    	mContactStatusMsgTextView.setText("Status message if any");		    	
+	    	}
+	    	else
+	    	{
+	    		//some new user not yet visible to this user has initiated chat
+	    		//so we call server to get nearby user which should have this user
+	    		ProgressHandler.showInfiniteProgressDialoge(this, "Please wait..", "");
+	    		this.registerReceiver(mSBBroadcastReceiver, new IntentFilter(GetMatchingNearbyUsersResponse.NEARBY_USER_UPDATED));
+	    		SBHttpRequest getNearbyUsersRequest = new GetMatchingNearbyUsersRequest();
+	    	    SBHttpClient.getInstance().executeRequest(getNearbyUsersRequest);	    		
+	    	}
+	    }
+	    
+	    public String getParticipantFBID() {
+			return mParticipantFBID;
+		}
+
+		private void sendMessage() {
 		final String inputContent = mInputField.getText().toString();		
 		if(!"".equals(inputContent))
 		{
-			Message newMessage = new Message(mReceiver,Message.MSG_TYPE_CHAT);
+			Message newMessage = new Message(mParticipantFBID,Message.MSG_TYPE_CHAT);
 			newMessage.setBody(inputContent);
 			newMessage.setFrom(mThiUserChatUserName+"@54.243.171.212");
 			
@@ -193,7 +226,7 @@ public void onResume() {
 			 try {
 					if (chatAdapter == null) {
 											
-						chatAdapter = mChatManager.createChat(mReceiver, mMessageListener);
+						chatAdapter = mChatManager.createChat(mParticipantFBID, mMessageListener);
 						chatAdapter.setOpen(true);
 					}
 					chatAdapter.sendMessage(newMessage);
@@ -212,8 +245,8 @@ public void onResume() {
 				lastMessage.setTimestamp(new Date().toString());
 				mMessagesListAdapter.setMessage(mMessagesListAdapter.getCount() - 1, lastMessage);
 			    } else{
-			    mMessagesListAdapter.addMessage(new SBChatMessage(mThiUserChatUserName, mReceiver, inputContent, false, new Date().toString()));
-			    }
+			    mMessagesListAdapter.addMessage(new SBChatMessage(mThiUserChatUserName, mParticipantFBID, inputContent, false, new Date().toString()));
+			    }			    
 			    mMessagesListAdapter.notifyDataSetChanged();
 		   
 		}			   
@@ -227,8 +260,7 @@ public void onResume() {
 				if(mThiUserChatUserName != "" && mThisUserChatPassword != "")
 				{
 					progressDialog = ProgressDialog.show(ChatWindow.this, "Logging in", "Please wait..", true);
-			    	onProgress = true;
-					Log.d(TAG,"logging in chat window  with username,pass:" + mThiUserChatUserName + ","+mThisUserChatPassword);
+			    	Log.d(TAG,"logging in chat window  with username,pass:" + mThiUserChatUserName + ","+mThisUserChatPassword);
 					xmppApis.loginWithCallBack(mThiUserChatUserName, mThisUserChatPassword,mCharServiceConnMiscListener);
 				}
 				else
@@ -252,7 +284,7 @@ public void onResume() {
 	    		chatAdapter.addMessageListener(mMessageListener);
 	    	    
 	    	}
-	    	mContactNameTextView.setText(participant);
+	    	//mContactNameTextView.setText(participant);
 	    	fetchPastMsgsIfAny();
 	        }
 	    
@@ -314,7 +346,7 @@ public void onResume() {
 					mChatManager = xmppApis.getChatManager();
     			if (mChatManager != null) {
     				Log.d(TAG, "Chat manager got");
-    				chatAdapter = mChatManager.createChat(mReceiver, mMessageListener);
+    				chatAdapter = mChatManager.createChat(mParticipantFBID, mMessageListener);
     				if(chatAdapter!=null)
     				{
 						chatAdapter.setOpen(true);
@@ -407,7 +439,7 @@ private class ChatManagerListener extends IChatManagerListener.Stub {
 	    if (locally)
 		return;
 	    try {
-	    	mReceiver = chat.getParticipant();
+	    	mParticipantFBID = chat.getParticipant();
 	    	//changeCurrentChat(mParticipant);
 		//String chatJid = chat.getParticipant().getJIDWithRes();
 		

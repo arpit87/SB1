@@ -20,6 +20,8 @@ public class ThisUser {
 	private GeoAddress shareReqGeoAddress=null;
 	private GeoAddress destinationGeoAddress=null;
 	private String timeOfRequest;
+	private int take_offer_type = 0; //0=>offer 1=>share
+	private int daily_instant_type = 0;//pool 0.instant 1
 	/*
 	 * Singleton
 	 */
@@ -46,17 +48,31 @@ public class ThisUser {
 	
 	/**
 	 * if offering => 1
-	 * seeking => 0
+	 * take => 0
 	 * @return
 	 */
-	public int getrequestType() {
-		Log.i(TAG,"get req type"+this.userID);
-		if(ThisUserConfig.getInstance().getBool(ThisUserConfig.IsOfferMode))
-			return 1;
-		else
-			return 0;
+	public int get_Take_Offer_Type() {
+		return take_offer_type;
+	}
+	
+	public void set_Take_Offer_Type(int i)
+	{
+		take_offer_type = i;
+	}
+	/**
+	 * if instant => 1
+	 * pool => 0
+	 * @return
+	 */
+	public int get_Daily_Instant_Type() {
+		Log.i(TAG,"get getCarPoolInstantShareType type"+this.userID);
+			return daily_instant_type;
 	}
 
+	public void set_Daily_Instant_Type(int i)
+	{
+		daily_instant_type = i;
+	}
 
 	
 	public SBLocation getLocation() {

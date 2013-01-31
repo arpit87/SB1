@@ -31,14 +31,14 @@ public class SBImageLoader {
 		  imageLoader.displayImage(paramString, paramImageView);
 	  }
 	  
-	  public void displayImageElseStub(String paramString, ImageView paramImageView, int stubResource)
+	  public void displayImageElseStub(String imageURL, ImageView imageView, int stubResource)
 	  {		  
 		  DisplayImageOptions options = new DisplayImageOptions.Builder()
 		    .showStubImage(stubResource)
             .showImageForEmptyUri(R.drawable.nearbyusericon)
 		    .cacheInMemory()
 		    .build();
-		  imageLoader.displayImage(paramString, paramImageView,options);
+		  imageLoader.displayImage(imageURL, imageView,options);
 	  }
 	  
 	  public void displayImage(String url, ImageView view, DisplayImageOptions options)

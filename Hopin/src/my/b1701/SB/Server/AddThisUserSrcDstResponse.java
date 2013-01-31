@@ -9,6 +9,8 @@ import my.b1701.SB.HelperClasses.ToastTracker;
 import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.Service.CheckAndDeleteUserRequestService;
 import my.b1701.SB.Service.GetNearByUsersService;
+import my.b1701.SB.Users.ThisUser;
+
 import org.apache.http.HttpResponse;
 import org.json.JSONException;
 
@@ -35,7 +37,7 @@ public class AddThisUserSrcDstResponse extends ServerResponseBase{
 		try {
 			body = jobj.getJSONObject("body");
 			ToastTracker.showToast("added this user src,dst");
-
+			ThisUser.getInstance().setShareReqGeoPoint();
             Context context = Platform.getInstance().getContext();
             Intent getNearByUsersIntent = new Intent(context, GetNearByUsersService.class);
             context.startService(getNearByUsersIntent);

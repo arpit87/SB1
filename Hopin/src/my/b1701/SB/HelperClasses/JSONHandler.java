@@ -83,7 +83,7 @@ public class JSONHandler {
 		
 	}*/
 	
-	public static List<NearbyUser> GetNearbyUsersInfoFromJSONObject(JSONObject jObj)
+	public List<NearbyUser> GetNearbyUsersInfoFromJSONObject(JSONObject jObj)
 	{
 		ArrayList<NearbyUser> nearbyUsers = new ArrayList<NearbyUser>();
 		try {			

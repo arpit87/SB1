@@ -1,23 +1,30 @@
 package my.b1701.SB.Activities;
 
-import android.app.Activity;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.*;
+import java.util.Calendar;
+
+import my.b1701.SB.R;
 import my.b1701.SB.Adapter.AddressAdapter;
+import my.b1701.SB.HttpClient.AddThisUserScrDstCarPoolRequest;
 import my.b1701.SB.HttpClient.AddThisUserSrcDstRequest;
 import my.b1701.SB.HttpClient.SBHttpClient;
 import my.b1701.SB.HttpClient.SBHttpRequest;
 import my.b1701.SB.LocationHelpers.SBGeoPoint;
 import my.b1701.SB.Users.ThisUser;
-import my.b1701.SB.R;
 import my.b1701.SB.provider.CustomSuggestionProvider;
 import my.b1701.SB.provider.GeoAddress;
 import my.b1701.SB.provider.SearchRecentSuggestions;
-
-import java.util.Calendar;
+import android.app.Activity;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.SeekBar;
+import android.widget.TextView;
+import android.widget.ToggleButton;
 
 public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarChangeListener{
     private static final String TAG = "my.b1701.SB.Activities.SearchInputActivity";
@@ -76,9 +83,16 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
         			time24HrFormat = Integer.toString(hour+12) + ":" + Integer.toString(minutes);
         		
         		ThisUser.getInstance().setTimeOfRequest(time24HrFormat);
+        		ThisUser.getInstance().set_Daily_Instant_Type(dailyCarPool.isChecked()?0:1);//0 daily pool,1 instant share
+        		ThisUser.getInstance().set_Take_Offer_Type(offerRide.isChecked()?1:0);//0 share ,1 offer
         		
         		Log.i(TAG, "user destination set... querying server");
-                SBHttpRequest addThisUserSrcDstRequest = new AddThisUserSrcDstRequest();
+        		SBHttpRequest addThisUserSrcDstRequest;
+        		if(dailyCarPool.isChecked())        		
+        			addThisUserSrcDstRequest = new AddThisUserScrDstCarPoolRequest();        		
+        		else
+        			addThisUserSrcDstRequest = new AddThisUserSrcDstRequest();        		
+                 
                 SBHttpClient.getInstance().executeRequest(addThisUserSrcDstRequest);
                 finish();				
 			}

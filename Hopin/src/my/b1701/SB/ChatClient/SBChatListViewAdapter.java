@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import my.b1701.SB.R;
+import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.Platform.Platform;
+import my.b1701.SB.Users.CurrentNearbyUsers;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +20,7 @@ import android.widget.TextView;
 public class SBChatListViewAdapter extends BaseAdapter {
 
 	List<SBChatMessage> mListMessages = new ArrayList<SBChatMessage>();
+	String selfFBId = ThisUserConfig.getInstance().getString(ThisUserConfig.FBUID);
 	/**
 	 * Returns the number of messages contained in the messages list.
 	 * @return The number of messages contained in the messages list.
@@ -82,16 +85,27 @@ public class SBChatListViewAdapter extends BaseAdapter {
 	    } else {
 	    chatRowView = convertView;
 	    }
+	    TextView msgName = (TextView) chatRowView.findViewById(R.id.chatmessagename);
+	    TextView msgText = (TextView) chatRowView.findViewById(R.id.chatmessagetext);
+	    TextView msgDate = (TextView) chatRowView.findViewById(R.id.chatmessagedate);
 	    
 	    SBChatMessage msg = mListMessages.get(position);
-	    TextView msgName = (TextView) chatRowView.findViewById(R.id.chatmessagename);
-	    msgName.setText(msg.getInitiator());
-	    msgName.setTextColor(Color.WHITE);
-	    msgName.setError(null);
-	    TextView msgText = (TextView) chatRowView.findViewById(R.id.chatmessagetext);
+	    if(msg.getInitiator().equalsIgnoreCase(selfFBId))
+	    {
+	    	chatRowView.setBackgroundResource(R.drawable.chat_msg_frame_transred);	    	
+	    }
+	    else
+	    {
+	    	if(CurrentNearbyUsers.getInstance().getNearbyUserWithFBID(msg.getInitiator()).getUserOtherInfo().isOfferingRide())
+	    		chatRowView.setBackgroundResource(R.drawable.chat_msg_frame_transgreen);
+	    	else
+	    		chatRowView.setBackgroundResource(R.drawable.chat_msg_frame_transblue);	    			
+	    }  
+	    msgName.setText(CurrentNearbyUsers.getInstance().getNearbyUserWithFBID(msg.getInitiator()).getUserFBInfo().getFirstName());
 	    msgText.setText(msg.getMessage());
+	   
 	    //registerForContextMenu(msgText);
-	    TextView msgDate = (TextView) chatRowView.findViewById(R.id.chatmessagedate);
+	   	    
 	    if (msg.getTimestamp() != null) {
 		String date = msg.getTimestamp();
 		msgDate.setText(date);

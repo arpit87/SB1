@@ -1,13 +1,14 @@
 package my.b1701.SB.HttpClient;
 
-import android.util.Log;
-import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
-import my.b1701.SB.HelperClasses.ProgressHandler;
-import my.b1701.SB.Server.AddThisUserSrcDstResponse;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+
+import my.b1701.SB.Server.AddThisUserSrcDstCarPoolResponse;
 import my.b1701.SB.Server.ServerConstants;
 import my.b1701.SB.Server.ServerResponseBase;
 import my.b1701.SB.Users.ThisUser;
 import my.b1701.SB.Users.UserAttributes;
+
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -18,21 +19,18 @@ import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.google.android.maps.MapActivity;
+import android.util.Log;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-
-public class AddThisUserSrcDstRequest extends SBHttpRequest{
+public class AddThisUserScrDstCarPoolRequest extends SBHttpRequest{
 	
 	private final String TAG = "my.b1701.SB.HttpClient.AddThisUserSrcDstRequest";
 	HttpPost httpQueryAddRequest;	
 	JSONObject jsonobjAddRequest;
 	HttpClient httpclient = new DefaultHttpClient();
-	AddThisUserSrcDstResponse addThisUserResponse;
+	AddThisUserSrcDstCarPoolResponse addThisUserResponse;
 	String jsonStr;
 	
-	public AddThisUserSrcDstRequest()
+	public AddThisUserScrDstCarPoolRequest()
 	{
 		//we will post 2 requests here
 		//1)addrequest to add source and destination
@@ -40,7 +38,7 @@ public class AddThisUserSrcDstRequest extends SBHttpRequest{
 		super();
 		//ProgressHandler.showInfiniteProgressDialoge(MapListActivityHandler.getInstance().getUnderlyingActivity(), "Fetching..", "Please wait");
 		queryMethod = QueryMethod.Post;
-		url1 = ServerConstants.SERVER_ADDRESS + ServerConstants.REQUESTSERVICE + "/addRequest/";		
+		url1 = ServerConstants.SERVER_ADDRESS + ServerConstants.REQUESTSERVICE + "/addCarpoolRequest/";		
 		jsonobjAddRequest=GetServerAuthenticatedJSON();
 		httpQueryAddRequest =  new HttpPost(url1);		
 		try {
@@ -95,7 +93,7 @@ public class AddThisUserSrcDstRequest extends SBHttpRequest{
 				e.printStackTrace();
 			}   
 						
-			addThisUserResponse = new AddThisUserSrcDstResponse(response,jsonStr);			
+			addThisUserResponse = new AddThisUserSrcDstCarPoolResponse(response,jsonStr);			
 			return addThisUserResponse;
 		
 	}

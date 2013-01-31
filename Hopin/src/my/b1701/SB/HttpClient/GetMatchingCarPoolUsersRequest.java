@@ -3,7 +3,7 @@ package my.b1701.SB.HttpClient;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-import my.b1701.SB.Server.GetNearbyUsersResponse;
+import my.b1701.SB.Server.GetMatchingCarPoolUsersResponse;
 import my.b1701.SB.Server.ServerConstants;
 import my.b1701.SB.Server.ServerResponseBase;
 import my.b1701.SB.Users.ThisUser;
@@ -19,29 +19,30 @@ import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.annotation.SuppressLint;
 import android.util.Log;
 
-public class GetNearbyUsersRequest extends SBHttpRequest{
+public class GetMatchingCarPoolUsersRequest  extends SBHttpRequest{
 	
 	
 	HttpPost httpQueryGetNearbyUsers;	
 	JSONObject jsonobjGetNearbyUsers;
 	HttpClient httpclient = new DefaultHttpClient();
-	GetNearbyUsersResponse getNearbyUsersResponse;
+	GetMatchingCarPoolUsersResponse getNearbyUsersResponse;
 	String jsonStr;
-	public GetNearbyUsersRequest()
+	public GetMatchingCarPoolUsersRequest()
 	{
 		
 		super();
 		queryMethod = QueryMethod.Post;
 				
 		//prepare getnearby request		
-		url1 = ServerConstants.SERVER_ADDRESS + ServerConstants.REQUESTSERVICE + "/getMatches/";
+		url1 = ServerConstants.SERVER_ADDRESS + ServerConstants.REQUESTSERVICE + "/getCarpoolMatches/";
 		httpQueryGetNearbyUsers = new HttpPost(url1);
 		jsonobjGetNearbyUsers = GetServerAuthenticatedJSON();;
 		try {
-			jsonobjGetNearbyUsers.put(UserAttributes.USERID, ThisUser.getInstance().getUserID());			
+			jsonobjGetNearbyUsers.put(UserAttributes.USERID, ThisUser.getInstance().getUserID());	
+			jsonobjGetNearbyUsers.put(UserAttributes.SRCADDRESS, ThisUser.getInstance().getSourceGeoPoint().getAddress());
+			jsonobjGetNearbyUsers.put(UserAttributes.DSTADDRESS, ThisUser.getInstance().getDestinationGeoPoint().getAddress());
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -81,7 +82,7 @@ public class GetNearbyUsersRequest extends SBHttpRequest{
 				e.printStackTrace();
 			} 		
 			
-			getNearbyUsersResponse =	new GetNearbyUsersResponse(response,jsonStr);
+			getNearbyUsersResponse =	new GetMatchingCarPoolUsersResponse(response,jsonStr);
 		return getNearbyUsersResponse;
 		
 	}
