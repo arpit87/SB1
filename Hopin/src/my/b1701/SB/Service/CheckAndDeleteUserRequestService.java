@@ -1,10 +1,11 @@
 package my.b1701.SB.Service;
 
+import android.app.AlarmManager;
 import android.app.IntentService;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-import my.b1701.SB.HelperClasses.ThisAppConfig;
 import my.b1701.SB.HelperClasses.ToastTracker;
 import my.b1701.SB.HttpClient.DeleteUserRequest;
 import my.b1701.SB.HttpClient.SBHttpClient;
@@ -36,6 +37,7 @@ public class CheckAndDeleteUserRequestService extends IntentService{
                 SBHttpRequest request = new DeleteUserRequest();
                 SBHttpClient.getInstance().executeRequest(request);
                 Log.i(TAG,"got delete user response ,processing");
+                stopAlarmManager();
             } else {
                 Context context = Platform.getInstance().getContext();
                 Intent getNearByUsersIntent = new Intent(context, GetNearByUsersService.class);
@@ -45,5 +47,14 @@ public class CheckAndDeleteUserRequestService extends IntentService{
             e.printStackTrace();
             //TODO cancel request?
         }
+    }
+
+    private void stopAlarmManager(){
+        Log.i(TAG, "Stopping alarmmanager");
+        Context context = Platform.getInstance().getContext();
+        Intent checkAndDelUserReqServiceStartIntent = new Intent(context, CheckAndDeleteUserRequestService.class);
+        PendingIntent pendingIntent = PendingIntent.getService(context, 0, checkAndDelUserReqServiceStartIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) (context.getSystemService(Context.ALARM_SERVICE));
+        alarmManager.cancel(pendingIntent);
     }
 }
