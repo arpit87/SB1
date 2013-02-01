@@ -84,6 +84,7 @@ public class AddressAdapter extends BaseAdapter implements Filterable {
                 list.add(address);
             } while (cursor.moveToNext());
         }
+        cursor.close();
         return list;
     }
 
