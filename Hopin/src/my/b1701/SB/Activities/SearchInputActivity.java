@@ -69,9 +69,12 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
         timeView = (TextView) findViewById(R.id.time);
       
         //set source to our found location, if not found user can enter himself
-        String foundAddress = ThisUser.getInstance().getSourceGeoPoint().getAddress();
-        if(foundAddress != "")
+        SBGeoPoint currGeopoint = ThisUser.getInstance().getSourceGeoPoint();
+        if(currGeopoint!=null)
+        {
+        	String foundAddress = currGeopoint.getAddress();        
         	source.setText(foundAddress);
+        }
         
         findUsers.setOnClickListener(new OnClickListener() {
         	@Override
