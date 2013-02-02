@@ -34,7 +34,7 @@ public class GetMatchingCarPoolUsersResponse extends ServerResponseBase{
 		}
 		
 		CurrentNearbyUsers.getInstance().updateNearbyUsersFromJSON(body);		
-		MapListActivityHandler.getInstance().updateNearbyUsers(CurrentNearbyUsers.getInstance().getAllNearbyUsers());		
+		MapListActivityHandler.getInstance().updateNearbyUsers();		
 		
 	}
 	

@@ -41,7 +41,7 @@ public class GetMatchingNearbyUsersResponse extends ServerResponseBase{
 		notifyUpdateintent.setAction(NEARBY_USER_UPDATED);		
 		
 		MapListActivityHandler.getInstance().getUnderlyingActivity().sendBroadcast(notifyUpdateintent); 
-		MapListActivityHandler.getInstance().updateNearbyUsers(CurrentNearbyUsers.getInstance().getAllNearbyUsers());		
+		MapListActivityHandler.getInstance().updateNearbyUsers();		
 		
 	}
 	
