@@ -82,7 +82,7 @@
             
         </activity>
         <activity android:name=".ChatClient.ChatWindow" 
-            android:theme="@android:style/Theme.NoTitleBar" 
+            android:theme="@style/Theme.Transparent" 
             android:screenOrientation="portrait" 
             android:launchMode="singleTask" >            
         </activity>
