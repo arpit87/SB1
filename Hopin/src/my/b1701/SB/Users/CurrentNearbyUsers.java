@@ -2,11 +2,12 @@ package my.b1701.SB.Users;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import my.b1701.SB.HelperClasses.JSONHandler;
 
 import org.json.JSONObject;
+
+import android.util.Log;
 
 /****
  * 
@@ -16,6 +17,7 @@ import org.json.JSONObject;
  */
 public class CurrentNearbyUsers {
 	
+	private static String TAG = "my.b1701.SB.Users.CurrentNearbyUsers" ;
 	private HashMap<String, NearbyUser> FBID_NearbyUserMap = new HashMap<String, NearbyUser>();
 	private List<NearbyUser> nearbyUserList = null;
 	private static CurrentNearbyUsers instance=new CurrentNearbyUsers();
@@ -25,6 +27,7 @@ public class CurrentNearbyUsers {
 	
 	public void updateNearbyUsersFromJSON(JSONObject body)
 	{		
+		Log.i(TAG,"updating enarby users");
 		nearbyUserList = JSONHandler.getInstance().GetNearbyUsersInfoFromJSONObject(body);	
 		FBID_NearbyUserMap.clear();
 		for(NearbyUser n : nearbyUserList)
@@ -42,6 +45,13 @@ public class CurrentNearbyUsers {
 	{
 		NearbyUser n;
 		n = FBID_NearbyUserMap.get(FBid);
+		return n;
+	}
+	
+	public NearbyUser getNearbyUserAtPosition(int id)
+	{
+		NearbyUser n;
+		n = nearbyUserList.get(id);
 		return n;
 	}
 	

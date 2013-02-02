@@ -2,6 +2,7 @@ package my.b1701.SB.MapHelpers;
 
 import my.b1701.SB.R;
 import my.b1701.SB.Activities.MapListViewTabActivity;
+import my.b1701.SB.ActivityHandlers.ChatHandler;
 import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
 import my.b1701.SB.ChatClient.ChatWindow;
 import my.b1701.SB.Fragments.FBLoginDialogFragment;
@@ -179,43 +180,7 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 			chatIcon.setOnClickListener(new OnClickListener() {				
 				@Override
 				public void onClick(View chatIconView) {
-					
-					String thiUserChatUserName = ThisUserConfig.getInstance().getString(ThisUserConfig.CHATUSERID);
-					String thisUserChatPassword = ThisUserConfig.getInstance().getString(ThisUserConfig.CHATPASSWORD);
-					
-					if(thiUserChatUserName == "" || thisUserChatPassword == "")
-					{
-						if(!ThisUserConfig.getInstance().getBool(ThisUserConfig.FBLOGGEDIN))
-						{
-							FBLoginDialogFragment fblogin_dialog = new FBLoginDialogFragment();
-							fblogin_dialog.show(MapListActivityHandler.getInstance().getUnderlyingActivity().getSupportFragmentManager(), "fblogin_dialog");
-						}
-						else 
-						{
-							Log.d(TAG,"FBLogged in but not chat!!Server working properly for chat req?sending again");
-							//sending fbinfo n chatreq again
-							if(!ThisUserConfig.getInstance().getBool(ThisUserConfig.FBINFOSENTTOSERVER))
-							{
-								//server couldnt receive fbinfo
-								SBHttpRequest sendFBInfoRequest = new SaveFBInfoRequest(ThisUserConfig.getInstance().getString(ThisUserConfig.USERID), ThisUserConfig.getInstance().getString(ThisUserConfig.FBUID), ThisUserConfig.getInstance().getString(ThisUserConfig.FBACCESSTOKEN));
-								SBHttpClient.getInstance().executeRequest(sendFBInfoRequest);
-							}
-							
-							SBHttpRequest chatServiceAddUserRequest = new ChatServiceCreateUser();
-					     	SBHttpClient.getInstance().executeRequest(chatServiceAddUserRequest);							
-						}
-						//Intent fbLoginIntent = new Intent(context,LoginActivity.class);			
-						//MapListActivityHandler.getInstance().getUnderlyingActivity().startActivity(fbLoginIntent);
-					}	
-					else
-					{
-						Intent startChatIntent = new Intent(Platform.getInstance().getContext(),ChatWindow.class);					
-						startChatIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP
-					 			| Intent.FLAG_ACTIVITY_NEW_TASK);
-						startChatIntent.putExtra("participant", mUserFBID);
-						context.startActivity(startChatIntent);
-					}
-					
+					ChatHandler.getInstance().onChatClickWithUser(mUserFBID);						
 				}
 			});
 			

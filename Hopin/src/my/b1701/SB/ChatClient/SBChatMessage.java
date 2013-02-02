@@ -4,12 +4,13 @@ import java.util.Date;
 
 public class SBChatMessage {
 
-		private String mName;
-	private String mMessage;
-	private boolean mIsError;
-	private String mTimestamp;
-	private String mFrom;
-	private String mTo;
+	private String mName = "";
+	private String mMessage = "";
+	private boolean mIsError = false;
+	private String mTimestamp = "";
+	private String mFrom = "";
+	private String mTo = "";
+	private String mTime= "";
 
 	
 	
@@ -64,7 +65,7 @@ public class SBChatMessage {
 	 * Name attribute mutator.
 	 * @param name A String containing the author's name of the message.
 	 */
-	@SuppressWarnings("unused")
+
 	public void setName(String name) {
 	    mName = name;
 	}
@@ -99,6 +100,15 @@ public class SBChatMessage {
 	 */
 	public String getTimestamp() {
 	    return mTimestamp;
+	}
+	
+	public String getTime() {
+	    if(mTimestamp!="")
+	    {
+	    	int colon_at= mTimestamp.indexOf(":", 0);
+	    	mTime = mTimestamp.substring(colon_at-2, colon_at+2);
+	    }
+	    return mTime;
 	}
 
    }

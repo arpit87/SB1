@@ -22,7 +22,6 @@ import my.b1701.SB.HttpClient.SBHttpRequest;
 import my.b1701.SB.Server.GetMatchingNearbyUsersResponse;
 import my.b1701.SB.Users.CurrentNearbyUsers;
 import my.b1701.SB.Users.NearbyUser;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ComponentName;
@@ -36,6 +35,7 @@ import android.os.RemoteException;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -49,10 +49,9 @@ public class ChatWindow extends Activity{
 	private static String TAG = "my.b1701.SB.ChatClient.ChatWindow";
 	private IXMPPAPIs xmppApis = null;
 	private TextView mContactNameTextView;
-    private TextView mContactStatusMsgTextView;	 
+    private ImageView mContactPicFrame;	 
     private TextView mContactDestination;	
     private ImageView mContactPic;   
-    private boolean mParticipantIsRideOfferer = false;
     private ListView mMessagesListView;
     private EditText mInputField;
     private Button mSendButton;
@@ -79,7 +78,7 @@ public class ChatWindow extends Activity{
 		setContentView(R.layout.chatwindow);
 		//this.registerReceiver(mSBBroadcastReceiver, new IntentFilter(SBBroadcastReceiver.SBCHAT_CONNECTION_CLOSED));
 	    mContactNameTextView = (TextView) findViewById(R.id.chat_contact_name);
-	    mContactStatusMsgTextView = (TextView) findViewById(R.id.chat_contact_status_msg);
+	    mContactPicFrame = (ImageView) findViewById(R.id.chat_contact_pic_frame);
 	    mContactDestination = (TextView) findViewById(R.id.chat_contact_destination);	    
 	    mContactPic = (ImageView) findViewById(R.id.chat_contact_pic);
 	    mMessagesListView = (ListView) findViewById(R.id.chat_messages);
@@ -197,7 +196,11 @@ public void onResume() {
 		    	mContactNameTextView.setText(thisNearbyUser.getUserFBInfo().getName());
 		    	SBImageLoader.getInstance().displayImageElseStub(thisNearbyUser.getUserFBInfo().getImageURL(), mContactPic,R.drawable.userpicicon);
 		    	mContactDestination.setText(thisNearbyUser.getUserLocInfo().getUserDstLocality());
-		    	mContactStatusMsgTextView.setText("Status message if any");		    	
+		    	if(thisNearbyUser.getUserOtherInfo().isOfferingRide())
+		    		mContactPicFrame.setImageResource(R.drawable.list_frame_green_new);
+		    	else
+		    		mContactPicFrame.setImageResource(R.drawable.list_frame_blue_new);
+		    	//mContactStatusMsgTextView.setText("Status message if any");		    	
 	    	}
 	    	else
 	    	{
@@ -284,6 +287,7 @@ public void onResume() {
 	    		chatAdapter.addMessageListener(mMessageListener);
 	    	    
 	    	}
+	    	getParticipantInfoFromFBID(participant);
 	    	//mContactNameTextView.setText(participant);
 	    	fetchPastMsgsIfAny();
 	        }

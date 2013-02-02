@@ -3,11 +3,13 @@ package my.b1701.SB.Fragments;
 import java.util.List;
 
 import my.b1701.SB.Activities.MapListViewTabActivity;
+import my.b1701.SB.ActivityHandlers.ChatHandler;
 import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
 import my.b1701.SB.ActivityHandlers.NearbyUsersListViewAdapter;
 import my.b1701.SB.ChatClient.ChatWindow;
 import my.b1701.SB.HelperClasses.ToastTracker;
 import my.b1701.SB.Platform.Platform;
+import my.b1701.SB.Users.CurrentNearbyUsers;
 import my.b1701.SB.Users.NearbyUser;
 import android.content.Intent;
 import android.os.Bundle;
@@ -30,7 +32,7 @@ public class SBListFragment extends ListFragment {
         super.onCreate(savedState);
 		//update listview
         Log.i(TAG,"on create list view");
-        nearbyUserlist = MapListActivityHandler.getInstance().getNearbyUserList();
+        nearbyUserlist = CurrentNearbyUsers.getInstance().getAllNearbyUsers();
         if(nearbyUserlist!=null)
         {
 			NearbyUsersListViewAdapter adapter = new NearbyUsersListViewAdapter(getActivity(), nearbyUserlist);
@@ -49,12 +51,12 @@ public class SBListFragment extends ListFragment {
 	
 	@Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-		/*Intent startChatIntent = new Intent(Platform.getInstance().getContext(),ChatWindow.class);					
-		startChatIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP
-	 			| Intent.FLAG_ACTIVITY_NEW_TASK);
-		startChatIntent.putExtra("participant", mUserFBID);
-		context.startActivity(startChatIntent);*/
-        ToastTracker.showToast("Item clicked: " + id);
+		NearbyUser userAtthisPosition = CurrentNearbyUsers.getInstance().getNearbyUserAtPosition(position);
+		if(userAtthisPosition != null)
+			ChatHandler.getInstance().onChatClickWithUser(userAtthisPosition.getUserFBInfo().getFbid());
+		else
+			ToastTracker.showToast("Unable to chat,user not in current list");
+        ToastTracker.showToast("Chat with user at: " + position);
     }
 	
 	@Override

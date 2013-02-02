@@ -1,6 +1,5 @@
 package my.b1701.SB.ChatClient;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,11 +7,16 @@ import my.b1701.SB.R;
 import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.Users.CurrentNearbyUsers;
+import my.b1701.SB.Users.NearbyUser;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
@@ -21,6 +25,7 @@ public class SBChatListViewAdapter extends BaseAdapter {
 
 	List<SBChatMessage> mListMessages = new ArrayList<SBChatMessage>();
 	String selfFBId = ThisUserConfig.getInstance().getString(ThisUserConfig.FBUID);
+	String selfFirstName = ThisUserConfig.getInstance().getString(ThisUserConfig.FB_FIRSTNAME);
 	/**
 	 * Returns the number of messages contained in the messages list.
 	 * @return The number of messages contained in the messages list.
@@ -79,42 +84,60 @@ public class SBChatListViewAdapter extends BaseAdapter {
 	 */
 	public View getView(int position, View convertView, ViewGroup parent) {
 	    View chatRowView;
+	    //here we are inflating everytime..inefficient?
 	    if (convertView == null) {
 		LayoutInflater inflater = (LayoutInflater) Platform.getInstance().getContext().getSystemService(Platform.getInstance().getContext().LAYOUT_INFLATER_SERVICE);
 		chatRowView = inflater.inflate(R.layout.chat_msg_row, null);
 	    } else {
 	    chatRowView = convertView;
-	    }
+	    }	       
+	    	    
 	    TextView msgName = (TextView) chatRowView.findViewById(R.id.chatmessagename);
 	    TextView msgText = (TextView) chatRowView.findViewById(R.id.chatmessagetext);
 	    TextView msgDate = (TextView) chatRowView.findViewById(R.id.chatmessagedate);
 	    
-	    SBChatMessage msg = mListMessages.get(position);
+	    SBChatMessage msg = mListMessages.get(position);	
 	    if(msg.getInitiator().equalsIgnoreCase(selfFBId))
 	    {
-	    	chatRowView.setBackgroundResource(R.drawable.chat_msg_frame_transred);	    	
+	    	chatRowView.setBackgroundResource(R.drawable.chat_msg_frame_transred);
+	    	msgName.setText(selfFirstName);
 	    }
 	    else
 	    {
-	    	if(CurrentNearbyUsers.getInstance().getNearbyUserWithFBID(msg.getInitiator()).getUserOtherInfo().isOfferingRide())
-	    		chatRowView.setBackgroundResource(R.drawable.chat_msg_frame_transgreen);
-	    	else
-	    		chatRowView.setBackgroundResource(R.drawable.chat_msg_frame_transblue);	    			
+	    	 NearbyUser n = CurrentNearbyUsers.getInstance().getNearbyUserWithFBID(msg.getInitiator());
+	 	    if(n!=null)
+	 	    {	 	    
+		    	if(n.getUserOtherInfo().isOfferingRide())
+		    		chatRowView.setBackgroundResource(R.drawable.chat_msg_frame_transgreen);
+		    	else
+		    		chatRowView.setBackgroundResource(R.drawable.chat_msg_frame_transblue);	
+		    	
+		    	msgName.setText(n.getUserFBInfo().getFirstName());
+	 	    }
+	 	   else
+		    {
+		    	String err = "#User not in current nearby user list!";
+		    	msgText.setText(err);
+		    	msgText.setTextColor(Color.RED);
+		    	msgText.setError(err);
+		    }
 	    }  
-	    msgName.setText(CurrentNearbyUsers.getInstance().getNearbyUserWithFBID(msg.getInitiator()).getUserFBInfo().getFirstName());
-	    msgText.setText(msg.getMessage());
-	   
-	    //registerForContextMenu(msgText);
-	   	    
-	    if (msg.getTimestamp() != null) {
-		String date = msg.getTimestamp();
-		msgDate.setText(date);
-	    }
+	    
+		    msgText.setText(msg.getMessage());
+		   
+		    //registerForContextMenu(msgText);
+		   	    
+		    if (msg.getTimestamp() != null) {
+			String time = msg.getTime();
+			msgDate.setText("@"+time);
+		    }
+	     
+	    
 	    if (msg.isError()) {
-		String err = "#some error!";
+		String err = "#some error occured!";
 		msgName.setText(err);
 		msgName.setTextColor(Color.RED);
-		msgName.setError(err);
+		msgDate.setError("");
 	    }
 	    return chatRowView;
 	}

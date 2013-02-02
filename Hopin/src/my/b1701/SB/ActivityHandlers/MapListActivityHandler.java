@@ -6,9 +6,6 @@ import my.b1701.SB.Activities.MapListViewTabActivity;
 import my.b1701.SB.CustomViewsAndListeners.SBMapView;
 import my.b1701.SB.Fragments.SBListFragment;
 import my.b1701.SB.Fragments.SBMapFragment;
-import my.b1701.SB.HttpClient.AddThisUserSrcDstRequest;
-import my.b1701.SB.HttpClient.SBHttpClient;
-import my.b1701.SB.HttpClient.SBHttpRequest;
 import my.b1701.SB.LocationHelpers.SBGeoPoint;
 import my.b1701.SB.LocationHelpers.SBLocation;
 import my.b1701.SB.LocationHelpers.SBLocationManager;
@@ -16,6 +13,7 @@ import my.b1701.SB.MapHelpers.BaseItemizedOverlay;
 import my.b1701.SB.MapHelpers.NearbyUsersItemizedOverlayFactory;
 import my.b1701.SB.MapHelpers.ThisUserItemizedOverlayFactory;
 import my.b1701.SB.Platform.Platform;
+import my.b1701.SB.Users.CurrentNearbyUsers;
 import my.b1701.SB.Users.NearbyUser;
 import my.b1701.SB.Users.ThisUser;
 import android.app.AlertDialog;
@@ -43,13 +41,8 @@ public class MapListActivityHandler  {
 	private boolean mapInitialized = false;
 	private SBMapFragment mapFrag;
 	private SBListFragment listFrag;
-	private List<NearbyUser> nearbyUserList = null;
 	
-	public List<NearbyUser> getNearbyUserList() {
-		return nearbyUserList;		
-	}
-
-		
+			
 	public BaseItemizedOverlay getNearbyUserItemizedOverlay() {
 		return nearbyUserItemizedOverlay;
 	}
@@ -190,18 +183,17 @@ public void centreMapTo(SBGeoPoint centrePoint)
 	    //onResume of mapactivity doesnt update user till its once initialized
 	    mapInitialized = true;
 	    
-	    if(nearbyUserList !=null)
-	    	updateNearbyUsers(nearbyUserList);
+	    if(CurrentNearbyUsers.getInstance().getAllNearbyUsers() !=null)
+	    	updateNearbyUsers();
 	}
 
 
 	
-	public void updateNearbyUsers(List<NearbyUser> nearbyUsers) {
+	public void updateNearbyUsers() {
 		
-		if(nearbyUsers.size()==0)
+		List<NearbyUser> nearbyUsers = CurrentNearbyUsers.getInstance().getAllNearbyUsers();
+		if(nearbyUsers == null)
 			return;
-		
-		this.nearbyUserList = nearbyUsers;
 		
 		//update map view
 		Log.i(TAG,"updating earby user");
