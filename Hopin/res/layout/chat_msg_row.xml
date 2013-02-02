@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:orientation="vertical" android:layout_width="fill_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"	
 	android:layout_height="wrap_content"
+	android:layout_width="fill_parent"
+	android:id="@+id/relativelayout_chatmsgrow"	
+    android:orientation="vertical" 
 	android:background="@drawable/chat_msg_frame_transblue"
-	android:paddingLeft="10dip"
-	android:paddingRight="10dip"
-	android:paddingBottom="3dip"
-	android:paddingTop="3dip">
+	android:paddingLeft="15dip"
+	android:paddingRight="15dip"
+	android:paddingTop="3dip"
+	android:paddingBottom="3dip"	
+	>
 
 	<TextView android:id="@+id/chatmessagename"
 		android:layout_width="wrap_content" android:layout_height="wrap_content"
