@@ -30,7 +30,7 @@ public class ChatServiceCreateUser extends SBHttpRequest{
 		ChatServiceCreateUserResponse chatServiceCreateUserResponse;
 		String jsonStr;
 		
-		public ChatServiceCreateUser()
+		public ChatServiceCreateUser(String fbid)
 		{
 			//we will post 2 requests here
 			//1)addrequest to add source and destination
@@ -40,8 +40,9 @@ public class ChatServiceCreateUser extends SBHttpRequest{
 			url1 = ServerConstants.SERVER_ADDRESS + ServerConstants.CHATSERVICE + "/createUser/";
 			httpQueryAddRequest =  new HttpPost(url1);		
 			try {
+				//sometime fb id not written to file yet bfr this call happens so passing in as argument!!
 				jsonobjAddRequest.put(UserAttributes.CHATUSERID, ThisUserConfig.getInstance().getString(ThisUserConfig.USERID));
-				jsonobjAddRequest.put(UserAttributes.CHATUSERNAME, ThisUserConfig.getInstance().getString(ThisUserConfig.FBUID));
+				jsonobjAddRequest.put(UserAttributes.CHATUSERNAME, fbid);
 					
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
