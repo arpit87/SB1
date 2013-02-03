@@ -114,15 +114,16 @@ public class SBChatService extends Service {
     }
 	
 
-	public void sendNotification(int id,String participant) {
+	public void sendNotification(int id,String participant,String participant_name) {
 
 		 Intent chatIntent = new Intent(this,ChatWindow.class);
 		 	chatIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-		   chatIntent.putExtra("participant", participant);	 
-			    
+		   chatIntent.putExtra("participant", participant);	
+		   chatIntent.putExtra("participant_name", participant_name);
+		   Log.i(TAG, "Sending notification") ;	    
 		 PendingIntent pintent = PendingIntent.getActivity(this, 0, chatIntent, PendingIntent.FLAG_ONE_SHOT);			
 		 
-		 Notification notif = new Notification(R.drawable.chat_horn,"New message from:"+participant,System.currentTimeMillis());
+		 Notification notif = new Notification(R.drawable.chat_horn,"New message from:"+participant_name,System.currentTimeMillis());
 		 notif.flags |= Notification.FLAG_AUTO_CANCEL;
 		 notif.setLatestEventInfo(this, "Tap to open chat", "new message", pintent);
 				 /*
@@ -137,6 +138,7 @@ public class SBChatService extends Service {
 			notif.ledOffMS = 1000;
 			notif.defaults |= Notification.DEFAULT_LIGHTS;			
 			mNotificationManager.notify(id, notif);
+			Log.i(TAG, "notification sent") ;
 		    }
 	 
 	 public void deleteNotification(int id) {

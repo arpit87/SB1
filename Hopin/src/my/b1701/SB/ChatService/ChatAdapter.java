@@ -45,7 +45,7 @@ public class ChatAdapter extends IChatAdapter.Stub{
 		String msgBody = msg.getBody();		
 		Log.w(TAG, "message sending to " + msg.getTo());
 		msgToSend.setBody(msgBody);
-		
+		msgToSend.setSubject(msg.getSubject());
 		try {
 			mSmackChat.sendMessage(msgToSend);
 			mMessages.add(msg);
@@ -87,7 +87,8 @@ public class ChatAdapter extends IChatAdapter.Stub{
 		@Override
 		public void processMessage(Chat chat, org.jivesoftware.smack.packet.Message message) {
 		    Message msg = new Message(message);		    
-		    Log.d(TAG, "new msg " + msg.getBody());	   
+		    Log.d(TAG, "new msg " + msg.getBody());	
+		    Log.d(TAG, "chat is open?"+mIsOpen) ;
 		   if(msg.getInitiator()=="" || msg.getBody() =="")
 			   return;
 		    if (mMessages.size() == HISTORY_MAX_SIZE)
@@ -95,6 +96,7 @@ public class ChatAdapter extends IChatAdapter.Stub{
 	    	mMessages.add(msg);
 		    if(mIsOpen)
 		    {
+		    	Log.i(TAG, "chat is open") ;
 			    int n = mRemoteListeners.beginBroadcast();
 			    for (int i = 0; i < n; i++) {
 				IMessageListener listener = mRemoteListeners.getBroadcastItem(i);
@@ -109,11 +111,11 @@ public class ChatAdapter extends IChatAdapter.Stub{
 		    }
 		    else
 		    {
+		    	Log.i(TAG, "chat not open,Sending notification") ;
 		    	String sub = msg.getSubject();
-		    	if(sub.isEmpty())
-		    		sub = "Unknown";
-		    		 
-		    		mChatManager.notifyChat(participantID,sub);
+		    	if(sub == "")
+		    		sub = "Unknown";		    		
+		    	mChatManager.notifyChat(participantID,msg.getInitiator(),sub);
 		    	
 		    }
 		    	
