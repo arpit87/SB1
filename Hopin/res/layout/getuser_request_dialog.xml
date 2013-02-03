@@ -207,15 +207,31 @@
 
 </RelativeLayout>
   
-<RelativeLayout 
+<LinearLayout
     android:id="@+id/extrashareinfolayout"
     android:layout_height="wrap_content"
      android:layout_width="fill_parent"      
-     android:padding="10dip"
-     
+     android:padding="10dip" 
+     android:orientation="horizontal"
+     android:gravity="center"  
+     android:layout_marginTop="10dip"  
      >  
+     
+    <ToggleButton android:id="@+id/btn_toggle_dailypool" android:background="@drawable/dailypool_toggle" 
+        android:textOn="" android:textOff=""  
+        android:layout_width="160dip" android:layout_height="wrap_content" 
+        android:layout_marginRight="8.0dip"  
+        android:contentDescription="@string/icon_offerride" 
+       />
     
-    <CheckBox 
+    <ToggleButton android:id="@+id/btn_toggle_offer" android:background="@drawable/offer_ride_toggle" 
+        android:textOn="" android:textOff=""
+        android:layout_width="120dip" android:layout_height="wrap_content" 
+        android:layout_marginRight="8.0dip"  
+        android:contentDescription="@string/icon_offerride" 
+        />
+    
+  <!--    <CheckBox 
         android:id="@+id/checkbox_dailycarpool"
         android:layout_height="wrap_content"
      android:layout_width="wrap_content"
@@ -233,9 +249,9 @@
          android:text="Offer ride"
          android:textColor="@color/black"
          android:textSize="15dip"
-         android:layout_marginLeft="20dip" />
+         android:layout_marginLeft="20dip" /> -->
     
-     </RelativeLayout>
+     </LinearLayout>
  </LinearLayout>      
       
    <LinearLayout

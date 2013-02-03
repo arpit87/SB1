@@ -4,10 +4,11 @@
 	android:orientation="vertical">
 	<RelativeLayout android:id="@+id/chat_header"
 		android:layout_width="fill_parent" android:layout_height="wrap_content"		
-		android:background="@color/white" 
+		android:background="@drawable/abs_transparent" 
 		android:padding="4dip"
 		>
-		 <ImageView
+				    
+		<!--   <ImageView
             android:id="@+id/chat_contact_pic"
             android:layout_width="30.0dip"
             android:layout_height="30.0dip"
@@ -21,39 +22,46 @@
             android:layout_height="34.0dip"
             android:layout_marginLeft="3dip"
             android:src="@drawable/icon_frame" 
-            android:layout_centerVertical="true"/>
+            android:layout_centerVertical="true"/> -->
         
 		<LinearLayout android:orientation="vertical"
 			android:layout_width="fill_parent" android:layout_height="wrap_content"
-			android:layout_marginLeft="10dip"
+			android:layout_marginLeft="2dip"
 			android:layout_marginTop="3dip"
 			android:layout_marginBottom="3dip"			
-			android:layout_toRightOf="@id/chat_contact_pic_frame">
+			>
 			<TextView android:id="@+id/chat_contact_name"
 				android:layout_width="fill_parent" android:layout_height="wrap_content"
 				android:lines="1" android:singleLine="true" android:textSize="16sp"
-				android:textStyle="bold" android:textColor="@color/black_75" />			
+				android:textStyle="bold" android:textColor="@color/white"
+				android:text="Arpit Mishra" />			
 			<TextView android:id="@+id/chat_contact_destination"
 				android:layout_width="fill_parent" android:layout_height="wrap_content"
 				android:lines="1" android:singleLine="true" android:textSize="12sp"
-				android:textStyle="bold" android:textColor="@color/black_75" />
+				android:textStyle="bold" android:textColor="@color/white"
+				android:text="Powai->Andheri" />
 		</LinearLayout>
 	</RelativeLayout>
 	<View android:layout_width="fill_parent" android:layout_height="1dp"
 		 android:background="@color/gray"
 		 android:padding="2dip"
 		 />
-	<ListView android:id="@+id/chat_messages"
-		android:layout_width="fill_parent" android:layout_height="0px"
-		android:layout_weight="1" android:transcriptMode="normal"
-		android:fastScrollEnabled="true" android:smoothScrollbar="false"
-		android:layout_marginBottom="20sp" android:padding="4px" 
-		android:divider="@null"
-		android:dividerHeight="0dp"		
-		android:cacheColorHint="@color/gray"
-		android:background="#00000000"
-		android:clickable="false"
-		android:focusable="false"/>
+
+	<ListView
+	    android:id="@+id/chat_messages"
+	    android:layout_width="fill_parent"
+	    android:layout_height="0px"	    
+	    android:layout_weight="1.00"
+	    android:background="#ffffffff"
+	    android:cacheColorHint="@color/black_75"
+	    android:clickable="false"
+	    android:divider="@null"
+	    android:dividerHeight="0dp"
+	    android:fastScrollEnabled="true"
+	    android:focusable="false"	    
+	    android:smoothScrollbar="false"
+	    android:transcriptMode="normal" />
+
 	<LinearLayout android:layout_width="fill_parent"
 		android:layout_height="wrap_content" android:orientation="horizontal"
 		android:background="#222222">

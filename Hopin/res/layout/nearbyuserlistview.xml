@@ -21,7 +21,7 @@
         android:layout_height="70dip"
         android:layout_margin="9dip"  
         android:layout_centerVertical="true" 
-        android:scaleType="fitCenter"        
+        android:scaleType="fitXY"        
          />
   
    <ImageView

@@ -12,14 +12,5 @@
         android:layout_marginTop="60dip" android:layout_marginRight="8.0dip" 
         android:paddingTop="5dip" 
         android:layout_alignParentRight="true" android:contentDescription="@string/icon_my_location" 
-        android:onClick="buttonOnMapClick"/>
-    
-    <ToggleButton android:id="@+id/offerride_button" android:background="@drawable/offer_ride_toggle" 
-        android:textOn="" android:textOff=""
-        android:layout_below="@id/my_location_button"
-        android:layout_marginTop="10dip"
-        android:layout_width="40.0dip" android:layout_height="40.0dip" 
-        android:layout_marginRight="8.0dip"  
-        android:layout_alignParentRight="true" android:contentDescription="@string/icon_offerride" 
         android:onClick="buttonOnMapClick"/>   
 </RelativeLayout>
