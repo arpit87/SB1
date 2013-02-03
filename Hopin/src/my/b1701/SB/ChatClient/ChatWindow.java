@@ -68,6 +68,7 @@ public class ChatWindow extends Activity{
     private boolean mBinded = false;
     private String mThiUserChatUserName = "";
     private String mThisUserChatPassword = "";
+    private String mThisUserChatFullName =  "";
 	private ProgressDialog progressDialog;
 	private FacebookConnector fbconnect; // required if user not logged in
     
@@ -95,6 +96,7 @@ public class ChatWindow extends Activity{
 		
 		mThiUserChatUserName = ThisUserConfig.getInstance().getString(ThisUserConfig.CHATUSERID);
 		mThisUserChatPassword = ThisUserConfig.getInstance().getString(ThisUserConfig.CHATPASSWORD);
+		mThisUserChatFullName = ThisUserConfig.getInstance().getString(ThisUserConfig.FB_FIRSTNAME);
 		
 }
 
@@ -224,6 +226,7 @@ public void onResume() {
 			Message newMessage = new Message(mParticipantFBID,Message.MSG_TYPE_CHAT);
 			newMessage.setBody(inputContent);
 			newMessage.setFrom(mThiUserChatUserName+"@54.243.171.212");
+			newMessage.setSubject(mThisUserChatFullName);
 			
 			//send msg to xmpp
 			 try {

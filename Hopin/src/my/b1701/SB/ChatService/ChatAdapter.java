@@ -15,7 +15,7 @@ import android.os.RemoteException;
 import android.util.Log;
 
 //there is a chat adapter which 
-@SuppressLint("ParserError")
+@SuppressLint({ "ParserError", "NewApi" })
 public class ChatAdapter extends IChatAdapter.Stub{
 
 	private static final int HISTORY_MAX_SIZE = 50;
@@ -109,8 +109,12 @@ public class ChatAdapter extends IChatAdapter.Stub{
 		    }
 		    else
 		    {
+		    	String sub = msg.getSubject();
+		    	if(sub.isEmpty())
+		    		sub = "Unknown";
+		    		 
+		    		mChatManager.notifyChat(participantID,sub);
 		    	
-		    	mChatManager.notifyChat(participantID,msg.getInitiator());
 		    }
 		    	
 		    }		
