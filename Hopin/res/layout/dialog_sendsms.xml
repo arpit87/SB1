@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_width="260dip"   
+    android:background="@drawable/rounded_rectangle_background"  >
+  
+      
+ 
+            <TextView
+            android:id="@+id/sms_header_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" 
+            android:text="Send sms"   
+            android:textColor="@color/white"
+            android:textSize="20dip"
+            android:padding="2.0dip"     
+            
+            android:layout_marginLeft="2.0dip"            
+            android:layout_marginRight="1.0dip"   
+            android:background="@color/black_75"         
+             />
+            
+      
+     
+    <EditText android:id="@+id/smsText"
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dip"
+        android:layout_height="100dip"
+        android:background="@drawable/dialoge_background_gradient"
+        android:maxLength="140"/>
+ <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"                
+        android:orientation="horizontal"        
+        android:layout_marginTop="10dip">
+
+        <Button
+            android:id="@+id/btn_cancelsms"
+            android:layout_width="wrap_content"
+            android:layout_height="40dip"
+            android:layout_gravity="center"
+            android:layout_marginRight="5dip"
+            android:layout_weight="1"
+            android:background="@drawable/custom_button_grey"
+            android:text="Cancel"
+            android:textColor="@color/black" />
+
+        <Button
+            android:id="@+id/btn_sendsms"
+            android:layout_width="wrap_content"
+            android:layout_height="40dip"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dip"
+            android:layout_weight="1"
+            android:background="@drawable/custom_button_grey"
+            android:text="Send"
+            android:textColor="@color/black" />
+
+    </LinearLayout>
+    
+ 
+ <TextView
+        android:id="@+id/disclaimersms"
+        android:textColor="@color/black"        
+        android:layout_marginTop="3dip"
+        android:textSize="10dip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        android:paddingLeft="7dip"           
+        android:text="*max 140 char" />
+</LinearLayout>
