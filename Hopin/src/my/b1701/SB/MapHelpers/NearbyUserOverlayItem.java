@@ -1,23 +1,16 @@
 package my.b1701.SB.MapHelpers;
 
 import my.b1701.SB.R;
-import my.b1701.SB.Activities.MapListViewTabActivity;
-import my.b1701.SB.ActivityHandlers.ChatHandler;
 import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
-import my.b1701.SB.ChatClient.ChatWindow;
-import my.b1701.SB.Fragments.FBLoginDialogFragment;
+import my.b1701.SB.FacebookHelpers.FacebookConnector;
+import my.b1701.SB.Fragments.SmsDialogFragment;
+import my.b1701.SB.HelperClasses.ChatHelper;
 import my.b1701.SB.HelperClasses.SBImageLoader;
-import my.b1701.SB.HelperClasses.ThisUserConfig;
-import my.b1701.SB.HttpClient.ChatServiceCreateUser;
-import my.b1701.SB.HttpClient.SBHttpClient;
-import my.b1701.SB.HttpClient.SBHttpRequest;
-import my.b1701.SB.HttpClient.SaveFBInfoRequest;
 import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.Users.NearbyUser;
 import my.b1701.SB.Users.UserFBInfo;
-import android.app.Dialog;
+import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -25,8 +18,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
-import android.view.Window;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -45,11 +36,13 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 	ImageView picViewSmall = null;
 	ImageView picViewExpanded = null;
 	ImageView chatIcon = null;
+	ImageView smsIcon = null;
 	ImageView facebookIcon = null;
 	ImageView buttonClose = null;
 	GeoPoint mGeoPoint = null;
-	String mImageURL= null;
-	String mUserFBID= null;
+	String mImageURL= "";
+	String mUserFBID= "";
+	String mUserFBUsername = "";
 	boolean isVisibleSmall = false;
 	boolean isVisibleExpanded = false;
 	private NearbyUser mNearbyUser = null;
@@ -60,6 +53,7 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 		this.mMapView = mapView;
 		this.mImageURL = user.getUserFBInfo().getImageURL();
 		this.mUserFBID = user.getUserFBInfo().getFbid();
+		this.mUserFBUsername = user.getUserFBInfo().getFBUsername();
 		this.mNearbyUser = user;
 		createAndDisplaySmallView();
 		/*Drawable icon= Platform.getInstance().getContext().getResources().getDrawable(R.drawable.green_marker);
@@ -160,6 +154,7 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 			picViewExpanded = (ImageView)viewOnMarkerExpanded.findViewById(R.id.expanded_pic);		
 			
 			chatIcon = (ImageView)viewOnMarkerExpanded.findViewById(R.id.chat_icon_view);
+			smsIcon = (ImageView)viewOnMarkerExpanded.findViewById(R.id.sms_icon);
 			facebookIcon = (ImageView)viewOnMarkerExpanded.findViewById(R.id.fb_icon_view);
 			buttonClose = (ImageView)viewOnMarkerExpanded.findViewById(R.id.button_close_balloon_expandedview);
 			
@@ -167,6 +162,14 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 				@Override
 				public void onClick(View buttonClose) {
 					showSmallIfExpanded();
+				}
+				});
+			
+			smsIcon.setOnClickListener(new OnClickListener() {				
+				@Override
+				public void onClick(View buttonClose) {
+					SmsDialogFragment sms_dialog = new SmsDialogFragment(mUserFBID);
+					sms_dialog.show(MapListActivityHandler.getInstance().getUnderlyingActivity().getSupportFragmentManager(), "sms_dialog");						
 				}
 				});
 			//SBImageLoader.getInstance().displayImageElseStub(mImageURL, picView, R.drawable.userpicicon);
@@ -180,9 +183,19 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 			chatIcon.setOnClickListener(new OnClickListener() {				
 				@Override
 				public void onClick(View chatIconView) {
-					ChatHandler.getInstance().onChatClickWithUser(mUserFBID);						
+					ChatHelper.getInstance().onChatClickWithUser(mUserFBID);						
 				}
 			});
+			
+			facebookIcon.setOnClickListener(new OnClickListener() {				
+				@Override
+				public void onClick(View chatIconView) {
+					FacebookConnector fbconnect = new FacebookConnector((Activity)context);
+					fbconnect.openFacebookPage(mUserFBID,mUserFBUsername);						
+				}
+			});
+			
+						
 			
 			mMapView.addView(viewOnMarkerExpanded,params);
 			viewOnMarkerExpanded.setVisibility(View.VISIBLE);
