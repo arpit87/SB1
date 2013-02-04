@@ -38,6 +38,7 @@ public class UserAttributes {
 	
 	//fb attributes
 	public static String  FBINFO = "fb_info";
+	public static String  FBUSERNAME = "fb_username";
 	public static String  FBID = "fbid";
 	public static String  FBTOKEN = "fbtoken";
 	public static String  FB_FIRSTNAME = "firstname";
