@@ -63,13 +63,13 @@ public class SBMapView extends MapView implements OnGestureListener {
     }
     
 	 
-	public boolean onTouchEvent(MotionEvent ev) {
+	/*public boolean onTouchEvent(MotionEvent ev) {
 		if (this.gd.onTouchEvent(ev)) {
 			return true;
 		} else {
 			return super.onTouchEvent(ev);
 		}
-	}
+	}*/
 	
 	public void setOnSingleTapListener(OnSingleTapListener singleTapListener) {
 		this.singleTapListener = singleTapListener;
