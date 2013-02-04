@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import my.b1701.SB.R;
+import my.b1701.SB.HelperClasses.SBImageLoader;
 import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.Users.CurrentNearbyUsers;
@@ -12,11 +13,8 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
-import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 
@@ -26,6 +24,7 @@ public class SBChatListViewAdapter extends BaseAdapter {
 	List<SBChatMessage> mListMessages = new ArrayList<SBChatMessage>();
 	String selfFBId = ThisUserConfig.getInstance().getString(ThisUserConfig.FBUID);
 	String selfFirstName = ThisUserConfig.getInstance().getString(ThisUserConfig.FB_FIRSTNAME);
+	String selfImageURL = ThisUserConfig.getInstance().getString(ThisUserConfig.FBPICURL);
 	/**
 	 * Returns the number of messages contained in the messages list.
 	 * @return The number of messages contained in the messages list.
@@ -84,45 +83,40 @@ public class SBChatListViewAdapter extends BaseAdapter {
 	 */
 	public View getView(int position, View convertView, ViewGroup parent) {
 	    View chatRowView;
-	    //here we are inflating everytime..inefficient?
-	    if (convertView == null) {
-		LayoutInflater inflater = (LayoutInflater) Platform.getInstance().getContext().getSystemService(Platform.getInstance().getContext().LAYOUT_INFLATER_SERVICE);
-		chatRowView = inflater.inflate(R.layout.chat_msg_row, null);
-	    } else {
-	    chatRowView = convertView;
-	    }	       
-	    	    
-	    TextView msgName = (TextView) chatRowView.findViewById(R.id.chatmessagename);
-	    TextView msgText = (TextView) chatRowView.findViewById(R.id.chatmessagetext);
-	    TextView msgDate = (TextView) chatRowView.findViewById(R.id.chatmessagedate);
+	    TextView msgText ;
+	    TextView msgDate ;
+	    ImageView imgView ;
+	    String imageURL = "";
 	    
+		LayoutInflater inflater = (LayoutInflater) Platform.getInstance().getContext().getSystemService(Platform.getInstance().getContext().LAYOUT_INFLATER_SERVICE);
+		
 	    SBChatMessage msg = mListMessages.get(position);	
 	    if(msg.getInitiator().equalsIgnoreCase(selfFBId))
 	    {
-	    	chatRowView.setBackgroundResource(R.drawable.chat_msg_frame_transred);
-	    	msgName.setText(selfFirstName);
+	    	chatRowView = inflater.inflate(R.layout.chat_msg_row_my, null);	    	
+	    	imageURL = selfImageURL;	   
+	    
 	    }
 	    else
 	    {
-	    	 NearbyUser n = CurrentNearbyUsers.getInstance().getNearbyUserWithFBID(msg.getInitiator());
+	    	 chatRowView = inflater.inflate(R.layout.chat_msg_row_other, null);
+	    	 NearbyUser n = CurrentNearbyUsers.getInstance().getNearbyUserWithFBID(msg.getInitiator());	    	  
 	 	    if(n!=null)
-	 	    {	 	    
-		    	if(n.getUserOtherInfo().isOfferingRide())
-		    		chatRowView.setBackgroundResource(R.drawable.chat_msg_frame_transgreen);
-		    	else
-		    		chatRowView.setBackgroundResource(R.drawable.chat_msg_frame_transblue);	
-		    	
-		    	msgName.setText(n.getUserFBInfo().getFirstName());
+	 	    {	 	
+	 	    	imageURL = n.getUserFBInfo().getImageURL();		    	
 	 	    }
-	 	   else
+	 	  /* else
 		    {
 		    	String err = "#User not in current nearby user list!";
 		    	msgText.setText(err);
 		    	msgText.setTextColor(Color.RED);
 		    	msgText.setError(err);
-		    }
+		    }*/
 	    }  
-	    
+	    	msgText = (TextView) chatRowView.findViewById(R.id.chatmessagetext);
+	    	msgDate = (TextView) chatRowView.findViewById(R.id.chatmessagedate);
+	    	imgView = (ImageView) chatRowView.findViewById(R.id.chat_msg_pic);
+	    	SBImageLoader.getInstance().displayImageElseStub(imageURL, imgView, R.drawable.userpicicon);
 		    msgText.setText(msg.getMessage());
 		   
 		    //registerForContextMenu(msgText);
@@ -135,8 +129,8 @@ public class SBChatListViewAdapter extends BaseAdapter {
 	    
 	    if (msg.isError()) {
 		String err = "#some error occured!";
-		msgName.setText(err);
-		msgName.setTextColor(Color.RED);
+		msgText.setText(err);
+		msgText.setTextColor(Color.RED);
 		msgDate.setError("");
 	    }
 	    return chatRowView;

@@ -106,7 +106,7 @@ public class SBChatMessage {
 	    if(mTimestamp!="")
 	    {
 	    	int colon_at= mTimestamp.indexOf(":", 0);
-	    	mTime = mTimestamp.substring(colon_at-2, colon_at+2);
+	    	mTime = mTimestamp.substring(colon_at-2, colon_at+3);
 	    }
 	    return mTime;
 	}

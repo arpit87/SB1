@@ -49,9 +49,9 @@ public class ChatWindow extends Activity{
 	private static String TAG = "my.b1701.SB.ChatClient.ChatWindow";
 	private IXMPPAPIs xmppApis = null;
 	private TextView mContactNameTextView;
-    private ImageView mContactPicFrame;	 
+   // private ImageView mContactPicFrame;	 
     private TextView mContactDestination;	
-    private ImageView mContactPic;   
+    //private ImageView mContactPic;   
     private ListView mMessagesListView;
     private EditText mInputField;
     private Button mSendButton;
@@ -79,9 +79,9 @@ public class ChatWindow extends Activity{
 		setContentView(R.layout.chatwindow);
 		//this.registerReceiver(mSBBroadcastReceiver, new IntentFilter(SBBroadcastReceiver.SBCHAT_CONNECTION_CLOSED));
 	    mContactNameTextView = (TextView) findViewById(R.id.chat_contact_name);
-	    mContactPicFrame = (ImageView) findViewById(R.id.chat_contact_pic_frame);
+	   // mContactPicFrame = (ImageView) findViewById(R.id.chat_contact_pic_frame);
 	    mContactDestination = (TextView) findViewById(R.id.chat_contact_destination);	    
-	    mContactPic = (ImageView) findViewById(R.id.chat_contact_pic);
+	   // mContactPic = (ImageView) findViewById(R.id.chat_contact_pic);
 	    mMessagesListView = (ListView) findViewById(R.id.chat_messages);
 	    mMessagesListView.setAdapter(mMessagesListAdapter);
 	    mInputField = (EditText) findViewById(R.id.chat_input);		
@@ -195,13 +195,15 @@ public void onResume() {
 	    	NearbyUser thisNearbyUser = CurrentNearbyUsers.getInstance().getNearbyUserWithFBID(fbid);
 	    	if(thisNearbyUser != null)
 	    	{
+	    		String travelInfo = "";
 		    	mContactNameTextView.setText(thisNearbyUser.getUserFBInfo().getName());
-		    	SBImageLoader.getInstance().displayImageElseStub(thisNearbyUser.getUserFBInfo().getImageURL(), mContactPic,R.drawable.userpicicon);
-		    	mContactDestination.setText(thisNearbyUser.getUserLocInfo().getUserDstLocality());
-		    	if(thisNearbyUser.getUserOtherInfo().isOfferingRide())
-		    		mContactPicFrame.setImageResource(R.drawable.list_frame_green_new);
-		    	else
-		    		mContactPicFrame.setImageResource(R.drawable.list_frame_blue_new);
+		    	//SBImageLoader.getInstance().displayImageElseStub(thisNearbyUser.getUserFBInfo().getImageURL(), mContactPic,R.drawable.userpicicon);
+		    	travelInfo = thisNearbyUser.getUserLocInfo().getUserSrcLocality() +" to "+thisNearbyUser.getUserLocInfo().getUserDstLocality() ;
+		    	mContactDestination.setText(travelInfo);
+		    	//if(thisNearbyUser.getUserOtherInfo().isOfferingRide())
+		    	//	mContactPicFrame.setImageResource(R.drawable.list_frame_green_new);
+		    	//else
+		    	//	mContactPicFrame.setImageResource(R.drawable.list_frame_blue_new);
 		    	//mContactStatusMsgTextView.setText("Status message if any");		    	
 	    	}
 	    	else
@@ -252,7 +254,7 @@ public void onResume() {
 				mMessagesListAdapter.setMessage(mMessagesListAdapter.getCount() - 1, lastMessage);
 			    } else{
 			    mMessagesListAdapter.addMessage(new SBChatMessage(mThiUserChatUserName, mParticipantFBID, inputContent, false, new Date().toString()));
-			    }			    
+			   }			    
 			    mMessagesListAdapter.notifyDataSetChanged();
 		   
 		}			   
