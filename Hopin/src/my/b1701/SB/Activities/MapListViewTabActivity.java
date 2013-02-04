@@ -218,9 +218,9 @@ public class MapListViewTabActivity extends SherlockFragmentActivity implements 
     		MapListActivityHandler.getInstance().myLocationButtonClick();    		
     		break;
     	
-    	case R.id.offerride_button:
-    		offerRideClick();
-    		break;    	   	
+    	//case R.id.offerride_button:
+    	//	offerRideClick();
+    	//	break;    	   	
     	
     	}
     }
@@ -287,7 +287,7 @@ if (fm != null) {
     		mMapViewContainer = (ViewGroup) getLayoutInflater().inflate(R.layout.map,null,false);
     		mMapView = (SBMapView) mMapViewContainer.findViewById(R.id.map_view);
     		selfLocationButton = (ImageButton) mMapViewContainer.findViewById(R.id.my_location_button);
-    		offerRideButton = (ToggleButton) mMapViewContainer.findViewById(R.id.offerride_button);
+    		//offerRideButton = (ToggleButton) mMapViewContainer.findViewById(R.id.offerride_button);
     		if(currentIsOfferMode)
     			offerRideButton.setChecked(true);
     		mMapView.getOverlays().clear();
@@ -303,9 +303,9 @@ if (fm != null) {
     	{
     		mMapViewContainer.addView(mMapView);
     		mMapViewContainer.addView(selfLocationButton);
-    		mMapViewContainer.addView(offerRideButton);
-    		if(currentIsOfferMode)
-    			offerRideButton.setChecked(true);
+    		//mMapViewContainer.addView(offerRideButton);
+    		//if(currentIsOfferMode)
+    		//	offerRideButton.setChecked(true);
     	}
     	return mMapViewContainer;
     }

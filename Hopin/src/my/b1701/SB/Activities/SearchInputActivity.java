@@ -40,8 +40,8 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
     GeoAddress destinationAddress;
     Button cancelFindUsers;
     Button findUsers;
-    CheckBox offerRide;
-    CheckBox dailyCarPool;
+    ToggleButton offerRide;
+    ToggleButton dailyCarPool;
     
     //these change as user chooses time
     String hourStr = "";
@@ -63,8 +63,8 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
         destination = (AutoCompleteTextView) findViewById(R.id.getuserpopupdestination);
         findUsers = (Button)findViewById(R.id.btn_findusers);
         cancelFindUsers = (Button)findViewById(R.id.btn_cancelfindusers);
-        offerRide = (CheckBox)findViewById(R.id.checkbox_rideoffer);
-        dailyCarPool = (CheckBox)findViewById(R.id.checkbox_dailycarpool);
+        offerRide = (ToggleButton)findViewById(R.id.btn_toggle_offer);
+        dailyCarPool = (ToggleButton)findViewById(R.id.btn_toggle_dailypool);
         am_pm_toggle = (ToggleButton) findViewById(R.id.btn_am_pm_toggle);
         timeView = (TextView) findViewById(R.id.time);
       
