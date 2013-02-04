@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"	
+	android:layout_height="wrap_content"
+	android:layout_width="fill_parent"
+	android:id="@+id/relativelayout_chatmsgrow"	
+	android:paddingTop="3dip"
+	android:paddingBottom="3dip"	
+	>	
+     <LinearLayout
+         android:id="@+id/chatmessageViewGroup"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"         
+         android:layout_toRightOf="@id/chat_msg_pic"
+         android:background="@drawable/chat_msg_frame_other2"
+         android:gravity="left"
+         android:orientation="vertical" >
+  
+	<!--  <TextView android:id="@+id/chatmessagename"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:layout_alignParentLeft="true" android:layout_alignParentTop="true"
+		android:textSize="16sp" android:textColor="@color/black" android:textStyle="bold"
+		android:paddingBottom="1dp" 
+		android:text="chat name"
+		/>-->
+	<TextView android:id="@+id/chatmessagetext"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"		
+		android:autoLink="all"
+		android:text="chat message is this" 
+		android:layout_marginLeft="10dip"
+		android:layout_marginRight="12dip"
+		android:textColor="@color/black"/>
+	<TextView android:id="@+id/chatmessagedate"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"		
+		android:autoLink="none"
+		android:text="Sending.."
+		android:layout_marginLeft="10dip"
+		android:layout_marginRight="12dip"
+		android:textColor="@color/gray" 
+		/>	
+	</LinearLayout> 
+	
+   
+
+     <ImageView
+            android:id="@+id/chat_msg_pic"
+            android:layout_width="50.0dip"
+            android:layout_height="50.0dip" 
+            android:layout_marginBottom="1dip"  
+            android:layout_marginLeft="1dip"          
+            android:scaleType="centerCrop" 
+            android:layout_alignBottom="@id/chatmessageViewGroup"/>
+
+       <!--  <ImageView
+            android:id="@+id/chat_msg_picframe"
+            android:layout_width="52.0dip"
+            android:layout_height="52.0dip"            
+            android:src="@drawable/icon_frame"
+            android:layout_alignBottom="@id/chatmessageViewGroup"/>--> 
+    
+    
+</RelativeLayout>
+
