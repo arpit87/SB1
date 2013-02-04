@@ -1,19 +1,12 @@
 package my.b1701.SB.FacebookHelpers;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import com.facebook.android.AsyncFacebookRunner;
-import com.facebook.android.AsyncFacebookRunner.RequestListener;
-import com.facebook.android.DialogError;
-import com.facebook.android.Facebook;
-import com.facebook.android.Facebook.DialogListener;
-import com.facebook.android.FacebookError;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.MalformedURLException;
+
 import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
 import my.b1701.SB.HelperClasses.ProgressHandler;
 import my.b1701.SB.HelperClasses.Store;
-import my.b1701.SB.HelperClasses.ThisAppConfig;
 import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.HelperClasses.ToastTracker;
 import my.b1701.SB.HttpClient.ChatServiceCreateUser;
@@ -22,12 +15,22 @@ import my.b1701.SB.HttpClient.SBHttpRequest;
 import my.b1701.SB.HttpClient.SaveFBInfoRequest;
 import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.Util.StringUtils;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.MalformedURLException;
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.util.Log;
+
+import com.facebook.android.AsyncFacebookRunner;
+import com.facebook.android.AsyncFacebookRunner.RequestListener;
+import com.facebook.android.DialogError;
+import com.facebook.android.Facebook;
+import com.facebook.android.Facebook.DialogListener;
+import com.facebook.android.FacebookError;
 
 public class FacebookConnector {
 	
@@ -131,7 +134,7 @@ public class FacebookConnector {
 	private void requestUserData() {
         ToastTracker.showToast("Fetching user name, profile pic...");
         Bundle params = new Bundle();
-        params.putString("fields", "name,first_name,last_name, picture");
+        params.putString("fields", "username,first_name,last_name, picture");
         mAsyncRunner.request("me", params, new FBUserRequestListener());
     }
 	
@@ -144,19 +147,19 @@ public class FacebookConnector {
 	        JSONObject jsonObject;
 	        try {
 	            jsonObject = new JSONObject(response);	  
-	            String picurl,name,first_name,last_name,id;
+	            String picurl,username,first_name,last_name,id;
 	            id = jsonObject.getString("id");
-	            name = jsonObject.getString("name");
+	            username = jsonObject.getString("username");
 	            first_name  = jsonObject.getString("first_name");
 	            last_name = jsonObject.getString("last_name");
 	            picurl = "http://graph.facebook.com/" + id + "/picture?type=small";
 	            ThisUserConfig.getInstance().putString(ThisUserConfig.FBUID,id );
 	            ThisUserConfig.getInstance().putString(ThisUserConfig.FBPICURL, picurl);
-	            ThisUserConfig.getInstance().putString(ThisUserConfig.FBNAME, name);
+	            ThisUserConfig.getInstance().putString(ThisUserConfig.FBUSERNAME, username);
 	            ThisUserConfig.getInstance().putString(ThisUserConfig.FB_FIRSTNAME, first_name);
 	            ThisUserConfig.getInstance().putString(ThisUserConfig.FB_LASTNAME, last_name);
                 if (StringUtils.isEmpty(ThisUserConfig.getInstance().getString(ThisUserConfig.USERNAME))) {
-                    ThisUserConfig.getInstance().putString(ThisUserConfig.USERNAME, name);
+                    ThisUserConfig.getInstance().putString(ThisUserConfig.USERNAME, first_name+" "+last_name);
                 }
 	            //id getting delayed in writing to file and not getting picked in call to server so pass as argument	           
 	            sendAddFBAndChatInfoToServer(id);
@@ -186,7 +189,7 @@ public class FacebookConnector {
 			  ThisUserConfig.getInstance().putLong(ThisUserConfig.FBACCESSEXPIRES,-1);
 			  ThisUserConfig.getInstance().putBool(ThisUserConfig.FBLOGGEDIN,false);
 			  ThisUserConfig.getInstance().putString(ThisUserConfig.FBPICURL, "");
-			  ThisUserConfig.getInstance().putString(ThisUserConfig.FBNAME, "");
+			  ThisUserConfig.getInstance().putString(ThisUserConfig.FBUSERNAME, "");
 			  ThisUserConfig.getInstance().putString(ThisUserConfig.FB_FIRSTNAME, "");
 			  ThisUserConfig.getInstance().putString(ThisUserConfig.FB_LASTNAME, "");
 			  ThisUserConfig.getInstance().putString(ThisUserConfig.FBUID, "");	
@@ -211,7 +214,19 @@ public class FacebookConnector {
 		  public void onFacebookError(FacebookError e, Object state) {}
 		}
 	
-	
+	public void openFacebookPage(String fbid,String username) {
+		Intent i;
+		   try {
+			   underlying_activity.getPackageManager().getPackageInfo("com.facebook.katana", 0);
+		     i = new Intent(Intent.ACTION_VIEW, Uri.parse("fb://profile/"+fbid));
+		   } catch (Exception e) {
+			   //if fb package not present then shows in browser
+		    i = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/"+username));
+		   }
+		   i.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP
+		 			| Intent.FLAG_ACTIVITY_NEW_TASK);
+		   underlying_activity.startActivity(i);
+		}
     
 }
 	
