@@ -5,9 +5,11 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import my.b1701.SB.FacebookHelpers.FacebookConnector;
 import my.b1701.SB.HelperClasses.SBImageLoader;
 import my.b1701.SB.R;
 import my.b1701.SB.Users.NearbyUser;
@@ -54,23 +56,33 @@ public class NearbyUsersListViewAdapter extends BaseAdapter{
         if(convertView==null)
         	thisUserView = inflater.inflate(R.layout.nearbyuser_list_row, null);
         ImageView userImageView = (ImageView)thisUserView.findViewById(R.id.nearbyuser_list_image); 
+        ImageView fbProfileView = (ImageView)thisUserView.findViewById(R.id.fbProfileView);
+        ImageView userProfileView = (ImageView)thisUserView.findViewById(R.id.userProfileView);        
         TextView userName = (TextView)thisUserView.findViewById(R.id.nearbyusername);
         TextView userSource = (TextView)thisUserView.findViewById(R.id.nearbyusersource);
         TextView userDestination = (TextView)thisUserView.findViewById(R.id.nearbyuserdestination);
-        TextView userTime = (TextView)thisUserView.findViewById(R.id.nearbyusertime);
-
+        TextView userTime = (TextView)thisUserView.findViewById(R.id.nearbyusertime);        
         SBImageLoader.getInstance().displayImageElseStub(thisUser.getUserFBInfo().getImageURL(), userImageView, R.id.userpic);
-        UserFBInfo thisUserFBInfo = thisUser.getUserFBInfo();
+        final UserFBInfo thisUserFBInfo = thisUser.getUserFBInfo();
         UserLocInfo thisUserLocInfo = thisUser.getUserLocInfo();
         UserOtherInfo thisUserOtherInfo = thisUser.getUserOtherInfo();
         String name = thisUserFBInfo.getName();
         String source = thisUserLocInfo.getUserSrcAddress();
-        String destination = thisUserLocInfo.getUserDstLocality();
+        String destination = thisUserLocInfo.getUserDstAddress();
         String time = thisUserOtherInfo.getTime();
         userName.setText(name);
         userSource.setText(source);
         userDestination.setText(destination);
         userTime.setText(time);
+        
+        fbProfileView.setOnClickListener(new OnClickListener() {				
+			@Override
+			public void onClick(View chatIconView) {
+				FacebookConnector fbconnect = new FacebookConnector(underLyingActivity);
+				fbconnect.openFacebookPage(thisUserFBInfo.getFbid(),thisUserFBInfo.getFBUsername());						
+			}
+		});
+        
 		return thisUserView;
 	}
 

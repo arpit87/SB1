@@ -98,7 +98,8 @@ public class MapListViewTabActivity extends SherlockFragmentActivity implements 
         showMapView();
         ab= getSupportActionBar();
         
-        ab.setBackgroundDrawable(getResources().getDrawable(R.drawable.abs_transparent));        
+        ab.setBackgroundDrawable(getResources().getDrawable(R.drawable.abs_transparent));   
+        
         ToastTracker.showToast("Your userid:"+ThisUser.getInstance().getUserID());
         ab.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);       
         ab.setDisplayHomeAsUpEnabled(false);
@@ -129,6 +130,11 @@ public class MapListViewTabActivity extends SherlockFragmentActivity implements 
     	//mymapview.getOverlays().clear();
     	//mymapview.postInvalidate();
     }
+	
+	@Override
+	  public void onBackPressed() {
+	    moveTaskToBack(true);
+	  }
 	
 	@Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -247,7 +253,7 @@ public class MapListViewTabActivity extends SherlockFragmentActivity implements 
     	if (fm != null) {
             
             FragmentTransaction ft = fm.beginTransaction();
-            ft.replace(R.id.tabcontent, new SBMapFragment());
+            ft.replace(R.id.maplistviewcontent, new SBMapFragment());
             ft.commit();
         }
     }
@@ -257,7 +263,7 @@ public class MapListViewTabActivity extends SherlockFragmentActivity implements 
 if (fm != null) {
             
             FragmentTransaction ft = fm.beginTransaction();
-            ft.replace(R.id.tabcontent, new SBListFragment());
+            ft.replace(R.id.maplistviewcontent, new SBListFragment());
             ft.commit();
         }
     }
@@ -290,7 +296,7 @@ if (fm != null) {
     		//offerRideButton = (ToggleButton) mMapViewContainer.findViewById(R.id.offerride_button);
     		if(currentIsOfferMode)
     			offerRideButton.setChecked(true);
-    		mMapView.getOverlays().clear();
+    		mMapView.getOverlays().clear();    		
     		MapListActivityHandler.getInstance().setMapView(mMapView);
             MapListActivityHandler.getInstance().setUnderlyingActivity(this);
             Log.i(TAG,"initialize handler");

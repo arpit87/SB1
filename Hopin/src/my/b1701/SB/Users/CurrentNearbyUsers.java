@@ -27,12 +27,16 @@ public class CurrentNearbyUsers {
 	
 	public void updateNearbyUsersFromJSON(JSONObject body)
 	{		
-		Log.i(TAG,"updating enarby users");
+		//we return null for 0 users so check for null always while getting nearby users
+		Log.i(TAG,"updating nearbyby users");
 		nearbyUserList = JSONHandler.getInstance().GetNearbyUsersInfoFromJSONObject(body);	
 		FBID_NearbyUserMap.clear();
-		for(NearbyUser n : nearbyUserList)
+		if(nearbyUserList!=null)
 		{
-			FBID_NearbyUserMap.put(n.getUserFBInfo().getFbid(), n);
+			for(NearbyUser n : nearbyUserList)
+			{
+				FBID_NearbyUserMap.put(n.getUserFBInfo().getFbid(), n);
+			}
 		}
 	}
 

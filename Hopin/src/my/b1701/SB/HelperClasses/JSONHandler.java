@@ -85,11 +85,16 @@ public class JSONHandler {
 	
 	public List<NearbyUser> GetNearbyUsersInfoFromJSONObject(JSONObject jObj)
 	{
-		ArrayList<NearbyUser> nearbyUsers = new ArrayList<NearbyUser>();
+		
+		//for 0 users we are returning null and not zero size list
+		ArrayList<NearbyUser> nearbyUsers = null;
 		try {			
 						
 			JSONArray users = jObj.getJSONArray("NearbyUsers");
 						
+			if(users.length() > 0)
+				nearbyUsers = new ArrayList<NearbyUser>();
+			
 			for(int i=0;i<users.length();i++)
 			{
 				JSONObject thisOtherUser=users.getJSONObject(i);

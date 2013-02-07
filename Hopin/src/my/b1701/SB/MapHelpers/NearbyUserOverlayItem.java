@@ -46,14 +46,16 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 	boolean isVisibleSmall = false;
 	boolean isVisibleExpanded = false;
 	private NearbyUser mNearbyUser = null;
+	private UserFBInfo mUserFBInfo = null;
 		
 	public NearbyUserOverlayItem(NearbyUser user ,MapView mapView) {
 		super(user.getUserLocInfo().getGeoPoint(), user.getUserFBInfo().getImageURL(), user.getUserFBInfo().getFbid());
 		this.mGeoPoint = user.getUserLocInfo().getGeoPoint();		
 		this.mMapView = mapView;
-		this.mImageURL = user.getUserFBInfo().getImageURL();
-		this.mUserFBID = user.getUserFBInfo().getFbid();
-		this.mUserFBUsername = user.getUserFBInfo().getFBUsername();
+		this.mUserFBInfo = user.getUserFBInfo();
+		this.mImageURL = mUserFBInfo.getImageURL();
+		this.mUserFBID = mUserFBInfo.getFbid();
+		this.mUserFBUsername = mUserFBInfo.getFBUsername();
 		this.mNearbyUser = user;
 		createAndDisplaySmallView();
 		/*Drawable icon= Platform.getInstance().getContext().getResources().getDrawable(R.drawable.green_marker);
@@ -71,8 +73,12 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 				MapView.LayoutParams.BOTTOM_CENTER);
 		params.mode = MapView.LayoutParams.MODE_MAP;
 		if(viewOnMarkerSmall==null)
-		{			
-			viewOnMarkerSmall = mInflater.inflate(R.layout.map_frame_layout_green, null);
+		{	
+			if(mNearbyUser.getUserOtherInfo().isOfferingRide())
+				viewOnMarkerSmall = mInflater.inflate(R.layout.map_frame_layout_green, null);
+			else
+				viewOnMarkerSmall = mInflater.inflate(R.layout.map_frame_layout_blue, null);
+			
 			picViewSmall = (ImageView)viewOnMarkerSmall.findViewById(R.id.userpic);	
 			
 			viewOnMarkerSmall.setOnTouchListener(new NearbyUserOnTouchListener());

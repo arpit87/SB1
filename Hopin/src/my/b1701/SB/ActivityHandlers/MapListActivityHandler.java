@@ -2,10 +2,13 @@ package my.b1701.SB.ActivityHandlers;
 
 import java.util.List;
 
+import my.b1701.SB.R;
 import my.b1701.SB.Activities.MapListViewTabActivity;
 import my.b1701.SB.CustomViewsAndListeners.SBMapView;
+import my.b1701.SB.Fragments.FBLoginDialogFragment;
 import my.b1701.SB.Fragments.SBListFragment;
 import my.b1701.SB.Fragments.SBMapFragment;
+import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.LocationHelpers.SBGeoPoint;
 import my.b1701.SB.LocationHelpers.SBLocation;
 import my.b1701.SB.LocationHelpers.SBLocationManager;
@@ -20,6 +23,13 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.ImageView;
+import android.widget.PopupWindow;
 
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
@@ -41,6 +51,10 @@ public class MapListActivityHandler  {
 	private boolean mapInitialized = false;
 	private SBMapFragment mapFrag;
 	private SBListFragment listFrag;
+	private boolean fbloginPromptIsShowing = false;
+	PopupWindow fbPopupWindow = null;
+	View fbloginlayout = null;
+	ViewGroup popUpView = null;
 	
 			
 	public BaseItemizedOverlay getNearbyUserItemizedOverlay() {
@@ -95,7 +109,7 @@ public class MapListActivityHandler  {
 		if(currLoc == null)
 		{
 			//location not found yet after initial screen!try more for 6 secs
-			progressDialog = ProgressDialog.show(underlyingActivity, "Problem fetching location", "Trying,please wait..", true);			
+			progressDialog = ProgressDialog.show(underlyingActivity, "Fetching location", "Trying,please wait..", true);			
 			 Runnable fetchLocation = new Runnable() {
 			      public void run() {
 			    	  SBLocation currLoc = SBLocationManager.getInstance().getLastXSecBestLocation(6*60);
@@ -183,6 +197,7 @@ public void centreMapTo(SBGeoPoint centrePoint)
 	    //onResume of mapactivity doesnt update user till its once initialized
 	    mapInitialized = true;
 	    
+	    
 	    if(CurrentNearbyUsers.getInstance().getAllNearbyUsers() !=null)
 	    	updateNearbyUsers();
 	}
@@ -192,8 +207,6 @@ public void centreMapTo(SBGeoPoint centrePoint)
 	public void updateNearbyUsers() {
 		
 		List<NearbyUser> nearbyUsers = CurrentNearbyUsers.getInstance().getAllNearbyUsers();
-		if(nearbyUsers == null)
-			return;
 		
 		//update map view
 		Log.i(TAG,"updating earby user");
@@ -203,6 +216,10 @@ public void centreMapTo(SBGeoPoint centrePoint)
 			nearbyUserItemizedOverlay.removeAllSmallViews();
 			mapView.getOverlays().remove(nearbyUserItemizedOverlay);	
 		}
+		
+		//null means 0 users returned by server or not yet single call to server
+		if(nearbyUsers == null)
+			return;			
 		
 		nearbyUserItemizedOverlay = nearbyUsersItemizedOverlayFactory.createItemizedOverlay(mapView);
 		nearbyUserItemizedOverlay.addList(nearbyUsers);
@@ -220,6 +237,74 @@ public void centreMapTo(SBGeoPoint centrePoint)
 		adapter.notifyDataSetChanged();	
 		}
 		
+		//show fb login popup at bottom if not yet logged in
+		boolean isfbloggedin = ThisUserConfig.getInstance().getBool(ThisUserConfig.FBLOGGEDIN);
+		if(!isfbloggedin)
+		{
+			fbloginpromptpopup_show(true);
+		}	
+		
+	}
+	
+	public void fbloginpromptpopup_show(boolean show)
+	{
+		
+		if(show )
+		{
+			if(!fbloginPromptIsShowing)
+			{
+				Log.i(TAG,"showing fblogin prompt");	
+				popUpView = (ViewGroup) underlyingActivity.getLayoutInflater().inflate(R.layout.fbloginpromptpopup, null); 
+				fbPopupWindow = new PopupWindow(popUpView,LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT,false); //Creation of popup
+				fbPopupWindow.setAnimationStyle(android.R.style.Animation_Dialog);   
+				fbPopupWindow.showAtLocation(popUpView, Gravity.BOTTOM, 0, 0);    // Displaying popup
+		        fbloginPromptIsShowing = true;		
+		        fbPopupWindow.setTouchable(true);
+		        fbPopupWindow.setFocusable(false);
+		        //fbPopupWindow.setOutsideTouchable(true);
+		        fbloginlayout = popUpView.findViewById(R.id.fbloginpromptloginlayout);
+		        fbloginlayout.setOnClickListener(new OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						FBLoginDialogFragment fblogin_dialog = new FBLoginDialogFragment();
+						fblogin_dialog.show(underlyingActivity.getSupportFragmentManager(), "fblogin_dialog");
+						fbPopupWindow.dismiss();
+						fbloginPromptIsShowing = false;
+						Log.i(TAG,"fblogin prompt clicked");
+					}
+				});
+		        ImageView buttonClosefbprompt = (ImageView) popUpView.findViewById(R.id.fbloginpromptclose);
+		        buttonClosefbprompt.setOnClickListener(new OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						fbPopupWindow.dismiss();
+						fbloginPromptIsShowing = false;
+					}
+				});
+			}
+			else
+			{
+				//will flicker prompt here if already showing
+				boolean needfocus = true;
+				for(int i = 0 ; i<10;i++)
+				{					
+					if(needfocus)
+						popUpView.setBackgroundResource(R.color.background_transparent_black);
+					else
+						popUpView.setBackgroundResource(R.color.background_transparent_green);
+					needfocus = !needfocus;
+				}
+				popUpView.setBackgroundResource(R.drawable.background_transparent_blackgreen);
+			}
+		}
+		if(!show)
+		{
+			if(fbloginPromptIsShowing && fbPopupWindow!=null)
+				fbPopupWindow.dismiss();
+			fbloginPromptIsShowing = false;
+		}
 	}
 	
 	public void updateThisUserMapOverlay()

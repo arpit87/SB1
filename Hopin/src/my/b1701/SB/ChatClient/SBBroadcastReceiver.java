@@ -48,8 +48,8 @@ public class SBBroadcastReceiver extends BroadcastReceiver{
 			NearbyUser thisNearbyUser = CurrentNearbyUsers.getInstance().getNearbyUserWithFBID(thisChatWindow.getParticipantFBID());
 			if(thisNearbyUser == null)
 			{
-				//this means assymetic result from server!!!should never happen
-				Toast.makeText(context, "User has moved out of request area,chat will close",
+				//this can happen if user get a chat after long time n other user has moved out till then
+				Toast.makeText(context, "This user has moved out of request area,chat will close",
 					    Toast.LENGTH_SHORT).show();
 				thisChatWindow.finish();
 			}

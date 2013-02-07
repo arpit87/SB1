@@ -1,5 +1,7 @@
 package my.b1701.SB.HelperClasses;
 
+import com.google.android.maps.MapActivity;
+
 import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
 import my.b1701.SB.ChatClient.ChatWindow;
 import my.b1701.SB.Fragments.FBLoginDialogFragment;
@@ -43,8 +45,8 @@ public class ChatHelper {
 		{
 			if(!ThisUserConfig.getInstance().getBool(ThisUserConfig.FBLOGGEDIN))
 			{
-				FBLoginDialogFragment fblogin_dialog = new FBLoginDialogFragment();
-				fblogin_dialog.show(MapListActivityHandler.getInstance().getUnderlyingActivity().getSupportFragmentManager(), "fblogin_dialog");
+				//make popup 
+				MapListActivityHandler.getInstance().fbloginpromptpopup_show(true);
 			}
 			else 
 			{
