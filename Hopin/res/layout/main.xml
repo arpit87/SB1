@@ -37,14 +37,14 @@
 
     <ImageView
         android:id="@+id/hoponlogo"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/sloganl3"
         android:layout_marginBottom="57dp"
         android:contentDescription="@string/hopon"
-        android:src="@drawable/hoponlogopng" />
+        android:src="@drawable/newlogo" />
 
     <ProgressBar
         android:id="@+id/hopon_progressBar"

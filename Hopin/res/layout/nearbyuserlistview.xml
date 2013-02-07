@@ -28,7 +28,7 @@
         android:id="@+id/selfthumbnailframe"
         android:layout_width="82dip"
         android:layout_height="82dip"
-        android:background="@drawable/list_frame_red_new"       
+        android:background="@drawable/icon_frame"       
         android:layout_margin="3dip"
         android:layout_centerVertical="true" 
          />
@@ -75,7 +75,7 @@
           android:layout_height="wrap_content"
           android:ellipsize="marquee"
           android:maxLines="1"
-          android:text="Please place a search request"
+          android:text="Search users to same destination"
           android:textColor="#040404"
           android:textSize="13sp" />
       

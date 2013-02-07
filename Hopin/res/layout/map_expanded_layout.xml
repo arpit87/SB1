@@ -12,7 +12,7 @@
     
     <RelativeLayout
         android:id="@+id/expanded_balloon_header"      
-        android:background="@color/gray"
+        android:background="@drawable/abs_transparent"
         android:layout_height="wrap_content"
         android:layout_width="250dip"
         android:paddingLeft="5dip"
@@ -21,10 +21,12 @@
             <TextView
             android:id="@+id/expanded_balloon_header"
             android:layout_width="wrap_content"
-            android:layout_height="20dip" 
+            android:layout_height="wrap_content" 
+            android:textSize="20dip"
             android:text="Powai->Andheri"           
             android:layout_marginLeft="1.0dip"            
-            android:layout_marginRight="1.0dip"            
+            android:layout_marginRight="1.0dip" 
+            android:layout_centerVertical="true"            
              />
             
         <ImageView

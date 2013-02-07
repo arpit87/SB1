@@ -9,7 +9,7 @@
         android:id="@+id/thumbnail"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:background="@drawable/list_frame_blue_new"       
+        android:background="@drawable/icon_frame"       
         android:layout_margin="3dip"
         android:layout_centerVertical="true" 
          />
@@ -33,14 +33,14 @@
         android:padding="3dip">
 
         <ImageView
-            android:id="@+id/FbLogin"
+            android:id="@+id/fbProfileView"
             android:layout_width="30.0dip"
             android:layout_height="28dp"
             android:scaleType="centerCrop"
             android:src="@drawable/fb_icon" />
         
         <ImageView
-            android:id="@+id/profile_icon_view"
+            android:id="@+id/userProfileView"
             android:layout_width="25.0dip"
             android:layout_height="28dp"       
             android:layout_marginTop="3dip"                    
