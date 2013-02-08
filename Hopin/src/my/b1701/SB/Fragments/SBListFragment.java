@@ -6,7 +6,7 @@ import my.b1701.SB.Activities.MapListViewTabActivity;
 import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
 import my.b1701.SB.ActivityHandlers.NearbyUsersListViewAdapter;
 import my.b1701.SB.ChatClient.ChatWindow;
-import my.b1701.SB.HelperClasses.ChatHelper;
+import my.b1701.SB.HelperClasses.CommunicationHelper;
 import my.b1701.SB.HelperClasses.ToastTracker;
 import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.Users.CurrentNearbyUsers;
@@ -53,7 +53,7 @@ public class SBListFragment extends ListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
 		NearbyUser userAtthisPosition = CurrentNearbyUsers.getInstance().getNearbyUserAtPosition(position);
 		if(userAtthisPosition != null)
-			ChatHelper.getInstance().onChatClickWithUser(userAtthisPosition.getUserFBInfo().getFbid());
+			CommunicationHelper.getInstance().onChatClickWithUser(userAtthisPosition.getUserFBInfo().getFbid());
 		else
 			ToastTracker.showToast("Unable to chat,user not in current list");
         ToastTracker.showToast("Chat with user at: " + position);

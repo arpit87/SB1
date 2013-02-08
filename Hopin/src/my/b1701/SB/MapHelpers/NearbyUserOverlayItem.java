@@ -4,8 +4,9 @@ import my.b1701.SB.R;
 import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
 import my.b1701.SB.FacebookHelpers.FacebookConnector;
 import my.b1701.SB.Fragments.SmsDialogFragment;
-import my.b1701.SB.HelperClasses.ChatHelper;
+import my.b1701.SB.HelperClasses.CommunicationHelper;
 import my.b1701.SB.HelperClasses.SBImageLoader;
+import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.Users.NearbyUser;
 import my.b1701.SB.Users.UserFBInfo;
@@ -164,6 +165,16 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 			facebookIcon = (ImageView)viewOnMarkerExpanded.findViewById(R.id.fb_icon_view);
 			buttonClose = (ImageView)viewOnMarkerExpanded.findViewById(R.id.button_close_balloon_expandedview);
 			
+			if(!ThisUserConfig.getInstance().getBool(ThisUserConfig.FBLOGGEDIN))
+			{
+				chatIcon.setImageResource(R.drawable.chat_icon_disabled);
+				chatIcon.invalidate();
+				smsIcon.setImageResource(R.drawable.sms_icon_disabled);
+				smsIcon.invalidate();
+				facebookIcon.setImageResource(R.drawable.fb_icon_disabled);
+				facebookIcon.invalidate();
+			}
+			
 			buttonClose.setOnClickListener(new OnClickListener() {				
 				@Override
 				public void onClick(View buttonClose) {
@@ -174,8 +185,7 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 			smsIcon.setOnClickListener(new OnClickListener() {				
 				@Override
 				public void onClick(View buttonClose) {
-					SmsDialogFragment sms_dialog = new SmsDialogFragment(mUserFBID);
-					sms_dialog.show(MapListActivityHandler.getInstance().getUnderlyingActivity().getSupportFragmentManager(), "sms_dialog");						
+					CommunicationHelper.getInstance().onSmsClickWithUser(mUserFBID);
 				}
 				});
 			//SBImageLoader.getInstance().displayImageElseStub(mImageURL, picView, R.drawable.userpicicon);
@@ -189,15 +199,14 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 			chatIcon.setOnClickListener(new OnClickListener() {				
 				@Override
 				public void onClick(View chatIconView) {
-					ChatHelper.getInstance().onChatClickWithUser(mUserFBID);						
+					CommunicationHelper.getInstance().onChatClickWithUser(mUserFBID);						
 				}
 			});
 			
 			facebookIcon.setOnClickListener(new OnClickListener() {				
 				@Override
 				public void onClick(View chatIconView) {
-					FacebookConnector fbconnect = new FacebookConnector((Activity)context);
-					fbconnect.openFacebookPage(mUserFBID,mUserFBUsername);						
+					CommunicationHelper.getInstance().onFBIconClickWithUser((Activity)context,mUserFBID,mUserFBUsername);						
 				}
 			});
 			

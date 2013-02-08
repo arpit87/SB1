@@ -22,6 +22,7 @@ import my.b1701.SB.Users.ThisUser;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.graphics.drawable.TransitionDrawable;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -287,17 +288,11 @@ public void centreMapTo(SBGeoPoint centrePoint)
 			else
 			{
 				//will flicker prompt here if already showing
-				boolean needfocus = true;
-				for(int i = 0 ; i<10;i++)
-				{					
-					if(needfocus)
-						popUpView.setBackgroundResource(R.color.background_transparent_black);
-					else
-						popUpView.setBackgroundResource(R.color.background_transparent_green);
-					needfocus = !needfocus;
-				}
-				popUpView.setBackgroundResource(R.drawable.background_transparent_blackgreen);
+				TransitionDrawable transition = (TransitionDrawable) popUpView.getBackground();
+				transition.startTransition(300);				
+				transition.reverseTransition(300);				
 			}
+			//popUpView.setBackgroundResource(R.drawable.transparent_black);
 		}
 		if(!show)
 		{
