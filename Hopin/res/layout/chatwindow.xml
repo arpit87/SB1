@@ -4,7 +4,7 @@
 	android:orientation="vertical">
 	<RelativeLayout android:id="@+id/chat_header"
 		android:layout_width="fill_parent" android:layout_height="wrap_content"		
-		android:background="@drawable/abs_transparent" 
+		android:background="@drawable/transparent_black" 
 		android:padding="4dip"
 		>
 				    

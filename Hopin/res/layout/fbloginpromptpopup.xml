@@ -6,7 +6,7 @@
 	    android:layout_height="wrap_content"
 	    android:layout_width="fill_parent"
 	    android:layout_alignParentBottom="true"
-	    android:background="@drawable/background_transparent_blackgreen"
+	    android:background="@drawable/fbloginpromptflicker"
 	    >
 	    <LinearLayout 
 	       android:id="@+id/fbloginpromptloginlayout"
@@ -43,7 +43,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"                    
             android:scaleType="centerCrop"
-            android:layout_marginRight="5dip" />
+            android:layout_margin="5dip" />
 	</RelativeLayout>
     
 

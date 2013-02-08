@@ -3,7 +3,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:layout_width="wrap_content"   
-    android:background="@drawable/rounded_rectangle_background"  >  
+      >  
       
  
             <TextView
@@ -15,10 +15,16 @@
             android:textSize="20dip"
             android:padding="2.0dip" 
               
-            android:background="@drawable/abs_transparent"         
+            android:background="@drawable/balloon_expanded_top"         
              />            
       
-     
+  <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"                
+        android:orientation="vertical"        
+        
+        android:padding="10dip"
+         android:background="@drawable/dialog_bottom">
     <EditText android:id="@+id/smsText"
         android:layout_width="250dip"
         android:layout_marginTop="10dip"
@@ -71,4 +77,5 @@
         android:layout_height="wrap_content" 
         android:paddingLeft="7dip"           
         android:text="*max 140 char" />
+</LinearLayout>
 </LinearLayout>
