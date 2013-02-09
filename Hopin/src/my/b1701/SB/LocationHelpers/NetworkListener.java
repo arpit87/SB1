@@ -61,7 +61,7 @@ public class NetworkListener implements LocationListener{
 		Log.i(TAG,"new network location acc:"+ location.getAccuracy());
 		ToastTracker.showToast("loc changed:acc:"+location.getAccuracy());
 		
-		locChangeCount = (locChangeCount+1)/LOC_CHANGE_PER_WINDOW;
+		locChangeCount = (locChangeCount+1)%LOC_CHANGE_PER_WINDOW;
 		
 		//we are considering fixed window size of LOC_CHANGE_PER_WINDOW. So we choose most accurate location
 		//in that window
