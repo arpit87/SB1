@@ -7,10 +7,12 @@ import com.google.android.maps.GeoPoint;
 
 public class NearbyUser {
 	
-		 
-	private UserLocInfo userLocInfo;
-	private UserFBInfo userFBInfo;
-	private UserOtherInfo userOtherInfo; 
+	/**
+	 * this class has all info for any nearby user returned by server	 * 	
+	 */
+	private UserLocInfo mUserLocInfo;
+	private UserFBInfo mUserFBInfo;
+	private UserOtherInfo mUserOtherInfo; 
 	
 	 
 	public NearbyUser(JSONObject thisOtherUserJObj)
@@ -26,7 +28,7 @@ public class NearbyUser {
 		JSONObject userOtherInfoJObj;
 		try {
 			userOtherInfoJObj = thisOtherUserJObj.getJSONObject(UserAttributes.OTHERINFO);
-			userOtherInfo = new UserOtherInfo(userOtherInfoJObj);					
+			mUserOtherInfo = new UserOtherInfo(userOtherInfoJObj);					
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -35,15 +37,15 @@ public class NearbyUser {
 	}
 
 	public UserFBInfo getUserFBInfo() {
-		return userFBInfo;
+		return mUserFBInfo;
 	}
 	
 	public UserLocInfo getUserLocInfo() {
-		return userLocInfo;
+		return mUserLocInfo;
 	}
 	
 	public UserOtherInfo getUserOtherInfo() {
-		return userOtherInfo;
+		return mUserOtherInfo;
 	}
 	
 	private void getUserLocInfo(JSONObject thisOtherUserJObj) {
@@ -51,12 +53,11 @@ public class NearbyUser {
 		JSONObject userLocInfoJObj;
 		try {
 			userLocInfoJObj = thisOtherUserJObj.getJSONObject(UserAttributes.LOCINFO);
-			userLocInfo = new UserLocInfo(userLocInfoJObj);			
+			mUserLocInfo = new UserLocInfo(userLocInfoJObj);			
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		
+		}		
 		
 	}
 		
@@ -65,15 +66,55 @@ public class NearbyUser {
 		JSONObject userFBInfoJObj;
 		try {
 			userFBInfoJObj = thisOtherUserJObj.getJSONObject(UserAttributes.FBINFO);
-			userFBInfo = new UserFBInfo(userFBInfoJObj);			
+			mUserFBInfo = new UserFBInfo(userFBInfoJObj);			
 		} catch (JSONException e) {
-			userFBInfo = new UserFBInfo();
+			mUserFBInfo = new UserFBInfo();
 			e.printStackTrace();
 		}
 		
 		
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((mUserFBInfo == null) ? 0 : mUserFBInfo.hashCode());
+		result = prime * result
+				+ ((mUserLocInfo == null) ? 0 : mUserLocInfo.hashCode());
+		result = prime * result
+				+ ((mUserOtherInfo == null) ? 0 : mUserOtherInfo.hashCode());
+		return result;
+	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		NearbyUser other = (NearbyUser) obj;
+		if (mUserFBInfo == null) {
+			if (other.mUserFBInfo != null)
+				return false;
+		} else if (!mUserFBInfo.equals(other.mUserFBInfo))
+			return false;
+		if (mUserLocInfo == null) {
+			if (other.mUserLocInfo != null)
+				return false;
+		} else if (!mUserLocInfo.equals(other.mUserLocInfo))
+			return false;
+		if (mUserOtherInfo == null) {
+			if (other.mUserOtherInfo != null)
+				return false;
+		} else if (!mUserOtherInfo.equals(other.mUserOtherInfo))
+			return false;
+		return true;
+	}
+	
+	
 	
 }

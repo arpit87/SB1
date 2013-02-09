@@ -1,5 +1,7 @@
 package my.b1701.SB.Users;
 
+import my.b1701.SB.LocationHelpers.SBGeoPoint;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -20,7 +22,7 @@ public class UserLocInfo {
 	private String srclongitude = "";
 	private String dstlatitude = "";
 	private String dstlongitude = "";
-	private GeoPoint geoPoint = null;
+	private SBGeoPoint geoPoint = null;
 	private String srcaddress = "";
 	private String srclocality = "";
 	private String dstaddress = "";
@@ -128,7 +130,17 @@ public class UserLocInfo {
 		return srclongitude;
 	}
 	
-	public GeoPoint getGeoPoint() {
+	public String getDstLatitude()
+	{
+		return dstlatitude;
+	}
+	
+	public String getDstLongitude()
+	{
+		return dstlongitude;
+	}
+	
+	public SBGeoPoint getGeoPoint() {
 		return geoPoint;
 	}
 
@@ -136,7 +148,56 @@ public class UserLocInfo {
 	private void getUserGeopoint()
 	{
 		if(srclatitude != "" && srclongitude != "")
-			geoPoint =  new GeoPoint((int)(Double.parseDouble(srclatitude)*1E6),(int)(Double.parseDouble(srclongitude)*1E6));
+			geoPoint =  new SBGeoPoint((int)(Double.parseDouble(srclatitude)*1E6),(int)(Double.parseDouble(srclongitude)*1E6),srclocality,srcaddress);
+	}
+
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((dstlatitude == null) ? 0 : dstlatitude.hashCode());
+		result = prime * result
+				+ ((dstlongitude == null) ? 0 : dstlongitude.hashCode());
+		result = prime * result
+				+ ((srclatitude == null) ? 0 : srclatitude.hashCode());
+		result = prime * result
+				+ ((srclongitude == null) ? 0 : srclongitude.hashCode());
+		return result;
+	}
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		UserLocInfo other = (UserLocInfo) obj;
+		if (dstlatitude == null) {
+			if (other.dstlatitude != null)
+				return false;
+		} else if (!dstlatitude.equals(other.dstlatitude))
+			return false;
+		if (dstlongitude == null) {
+			if (other.dstlongitude != null)
+				return false;
+		} else if (!dstlongitude.equals(other.dstlongitude))
+			return false;
+		if (srclatitude == null) {
+			if (other.srclatitude != null)
+				return false;
+		} else if (!srclatitude.equals(other.srclatitude))
+			return false;
+		if (srclongitude == null) {
+			if (other.srclongitude != null)
+				return false;
+		} else if (!srclongitude.equals(other.srclongitude))
+			return false;
+		return true;
 	}
 	
 	

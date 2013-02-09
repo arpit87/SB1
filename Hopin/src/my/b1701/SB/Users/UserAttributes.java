@@ -15,6 +15,7 @@ public class UserAttributes {
 	public static String OTHERINFO = "other_info";
 	public static String PERCENTMATCH = "percent_match";
 	public static String TIME = "time";
+	public static String MOBILENUMBER = "mobile_available";
 	
 	//user loc attributes
 	public static String FIRSTNAME = "first_name";
@@ -36,8 +37,9 @@ public class UserAttributes {
 	public static String  DSTADDRESS = "dst_address";
 	public static String DSTLOCALITY= "dst_locality";
 	
-	//fb attributes
+	//fb attributes	
 	public static String  FBINFO = "fb_info";
+	public static String  FBINFOAVAILABLE = "fb_info_available";
 	public static String  FBUSERNAME = "fb_username";
 	public static String  FBID = "fbid";
 	public static String  FBTOKEN = "fbtoken";

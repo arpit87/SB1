@@ -6,6 +6,7 @@ import org.json.JSONObject;
 public class UserFBInfo {
 
     JSONObject allInfo = null;
+    private String fbinfoavailable = "0";
     private String firstName = "";
     private String lastName = "";
     private String gender = "";
@@ -21,8 +22,14 @@ public class UserFBInfo {
         // TODO Auto-generated constructor stub
     }
 
-    public UserFBInfo(JSONObject jsonObject) {
+   
+	public UserFBInfo(JSONObject jsonObject) {
         allInfo = jsonObject;
+        try {
+        	fbinfoavailable = allInfo.getString(UserAttributes.FBINFOAVAILABLE);
+        } catch (JSONException e) {
+        	return;
+        }
 
         try {
             firstName = allInfo.getString(UserAttributes.FB_FIRSTNAME);
@@ -74,6 +81,13 @@ public class UserFBInfo {
         } catch (JSONException e) {
         }
     }
+	
+	public boolean FBInfoAvailable() {  
+		if(fbinfoavailable.equals("1"))
+			return true;
+		else
+			return false;
+    }
 
     public String getName() {
         return firstName + " " + lastName;
@@ -122,6 +136,31 @@ public class UserFBInfo {
     public String getFBUsername() {
         return fbusername;
     }
+    
+    @Override
+   	public int hashCode() {
+   		final int prime = 31;
+   		int result = 1;
+   		result = prime * result + ((fbid == null) ? 0 : fbid.hashCode());
+   		return result;
+   	}
+
+   	@Override
+   	public boolean equals(Object obj) {
+   		if (this == obj)
+   			return true;
+   		if (obj == null)
+   			return false;
+   		if (getClass() != obj.getClass())
+   			return false;
+   		UserFBInfo other = (UserFBInfo) obj;
+   		if (fbid == null) {
+   			if (other.fbid != null)
+   				return false;
+   		} else if (!fbid.equals(other.fbid))
+   			return false;
+   		return true;
+   	}
 
 
 }
