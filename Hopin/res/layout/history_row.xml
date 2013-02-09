@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:orientation="horizontal" >
+
+    <TextView
+            android:id="@+id/sourceLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:textColor="#343434"
+            android:textSize="30dip"
+            android:textStyle="bold"
+            android:layout_alignParentLeft="true" />
+    <TextView
+            android:id="@+id/destinationLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:textColor="#343434"
+            android:textSize="30dip"
+            android:textStyle="bold"
+            android:layout_alignParentRight="true"   />
+
+</RelativeLayout>
