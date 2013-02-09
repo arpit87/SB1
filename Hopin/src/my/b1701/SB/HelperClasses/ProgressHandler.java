@@ -1,30 +1,50 @@
 package my.b1701.SB.HelperClasses;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import my.b1701.SB.Platform.Platform;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.widget.ProgressBar;
 
+/**
+ * 
+ * @author arpit87
+ *This class is thread safe,call from anywhere to show and dismiss dialog
+ */
 public class ProgressHandler {
 	ProgressBar progressBar = null;	
 	private static ProgressDialog progressDialog = null;
-	
-	public static void showInfiniteProgressDialoge(final Activity underlying_activity,final String text1,final String text2)
+	private static AtomicBoolean isshowing = new AtomicBoolean(false);
+	public static void showInfiniteProgressDialoge(final Activity underlying_activity,final String title,final String message)
 	{
-		Platform.getInstance().getHandler().post((new Runnable(){
-			public void run() {	
-				progressDialog = ProgressDialog.show(underlying_activity, text1, text2, true);				
-			}}));
-		
+		if(!isshowing.getAndSet(true))
+		{
+			Platform.getInstance().getHandler().post((new Runnable(){
+				public void run() {						
+					progressDialog = ProgressDialog.show(underlying_activity, title, message, true);				
+				}}));
+		}
+		else
+		{
+			if(progressDialog!=null)
+			{
+				progressDialog.setTitle(title);
+				progressDialog.setMessage(message);
+			}
+		}
 	}
 	
 	public static void dismissDialoge()
 	{
-		Platform.getInstance().getHandler().post((new Runnable(){
-		public void run() {				
-			progressDialog.dismiss();						
-		}}));
+		if(isshowing.getAndSet(false))
+		{
+			Platform.getInstance().getHandler().post((new Runnable(){
+			public void run() {
+				progressDialog.dismiss();						
+			}}));
+		}
 	}
 	
 
