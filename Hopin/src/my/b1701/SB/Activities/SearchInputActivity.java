@@ -1,33 +1,40 @@
 package my.b1701.SB.Activities;
 
-import java.util.Calendar;
-
-import my.b1701.SB.R;
+import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.location.Address;
+import android.net.Uri;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.*;
 import my.b1701.SB.Adapter.AddressAdapter;
 import my.b1701.SB.HttpClient.AddThisUserScrDstCarPoolRequest;
 import my.b1701.SB.HttpClient.AddThisUserSrcDstRequest;
 import my.b1701.SB.HttpClient.SBHttpClient;
 import my.b1701.SB.HttpClient.SBHttpRequest;
 import my.b1701.SB.LocationHelpers.SBGeoPoint;
+import my.b1701.SB.R;
 import my.b1701.SB.Users.ThisUser;
-import my.b1701.SB.provider.CustomSuggestionProvider;
-import my.b1701.SB.provider.GeoAddress;
-import my.b1701.SB.provider.SearchRecentSuggestions;
-import android.app.Activity;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.AdapterView;
-import android.widget.AutoCompleteTextView;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.SeekBar;
-import android.widget.TextView;
-import android.widget.ToggleButton;
+import my.b1701.SB.provider.*;
+
+import java.util.Calendar;
+import java.util.List;
 
 public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarChangeListener{
     private static final String TAG = "my.b1701.SB.Activities.SearchInputActivity";
+    private static final int MAX_HISTORY_COUNT = 10;
+    private static Uri mHistoryUri = Uri.parse("content://" + HistoryContentProvider.AUTHORITY + "/history");
+    private static Uri mGeoAddressUri = Uri.parse("content://" + GeoAddressProvider.AUTHORITY + "/history");
+
+    private static String[] columns = new String[]{ "sourceLocation",
+            "destinationLocation",
+            "timeOfRequest",
+            "dailyInstantType",
+            "takeOffer",
+            "date"};
 
     SearchRecentSuggestions searchRecentSuggestions = new SearchRecentSuggestions(this, CustomSuggestionProvider.AUTHORITY, CustomSuggestionProvider.MODE);
 
@@ -74,6 +81,13 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
         {
         	String foundAddress = currGeopoint.getAddress();        
         	source.setText(foundAddress);
+            try {
+                SBGeoPoint sourceGeoPoint = ThisUser.getInstance().getSourceGeoPoint();
+                List<Address> addressList = GeoAddressProvider.geocoder.getFromLocation(sourceGeoPoint.getLatitude(), sourceGeoPoint.getLongitude(), 1);
+                ThisUser.getInstance().setSourceGeoAddress(new GeoAddress(addressList.get(0)));
+            } catch (Exception e) {
+                Log.e("GeoAddress", e.getMessage());
+            }
         }
         
         findUsers.setOnClickListener(new OnClickListener() {
@@ -97,6 +111,7 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
         			addThisUserSrcDstRequest = new AddThisUserSrcDstRequest();        		
                  
                 SBHttpClient.getInstance().executeRequest(addThisUserSrcDstRequest);
+                saveSearch();
                 finish();				
 			}
 		});
@@ -200,6 +215,7 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
         String subLocality = geoAddress.getSubLocality();
         String address = geoAddress.getAddressLine();
 
+        ThisUser.getInstance().setSourceGeoAddress(geoAddress);
         ThisUser.getInstance().setSourceGeoPoint(new SBGeoPoint(lat, lon, subLocality, address));
        
     }
@@ -211,8 +227,62 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
         String subLocality = geoAddress.getSubLocality();
         String address = geoAddress.getAddressLine();
 
+        ThisUser.getInstance().setDestinationGeoAddress(geoAddress);
         ThisUser.getInstance().setDestinationGeoPoint(new SBGeoPoint(lat, lon, subLocality, address));
         
     }
-	
+
+    private void saveSearch() {
+
+        new Thread("saveSearch") {
+            @Override
+            public void run() {
+                saveHistoryBlocking();
+            }
+        }.start();
+    }
+
+    private void saveHistoryBlocking() {
+        ContentResolver cr = getContentResolver();
+        long now = System.currentTimeMillis();
+
+        // Use content resolver (not cursor) to insert/update this query
+        try {
+            ContentValues values = new ContentValues();
+            ThisUser thisUser = ThisUser.getInstance();
+            values.put(columns[0], thisUser.getSourceGeoAddress().getSubLocality());
+            values.put(columns[1], thisUser.getDestinationGeoAddress().getSubLocality());
+            values.put(columns[2], thisUser.getTimeOfRequest());
+            values.put(columns[3], thisUser.get_Daily_Instant_Type());
+            values.put(columns[4], thisUser.get_Take_Offer_Type());
+            values.put(columns[5], now);
+            cr.insert(mHistoryUri, values);
+        } catch (RuntimeException e) {
+            Log.e(TAG, "saveHistoryQuery", e);
+        }
+
+        // Shorten the list (if it has become too long)
+        truncateHistory(cr, MAX_HISTORY_COUNT);
+    }
+
+    private void truncateHistory(ContentResolver cr, int maxEntries) {
+        if (maxEntries < 0) {
+            throw new IllegalArgumentException();
+        }
+
+        try {
+            // null means "delete all".  otherwise "delete but leave n newest"
+            String selection = null;
+            if (maxEntries > 0) {
+                selection = "_id IN " +
+                        "(SELECT _id FROM history" +
+                        " ORDER BY date DESC" +
+                        " LIMIT -1 OFFSET " + String.valueOf(maxEntries) + ")";
+            }
+            cr.delete(mHistoryUri, selection, null);
+        } catch (RuntimeException e) {
+            Log.e(TAG, "truncateHistory", e);
+        }
+    }
+
 }

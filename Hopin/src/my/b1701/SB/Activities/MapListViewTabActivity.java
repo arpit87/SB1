@@ -194,6 +194,10 @@ public class MapListViewTabActivity extends SherlockFragmentActivity implements 
    		// searchInputIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
    		// startActivity(searchInputIntent);
    		// break;
+            break;
+     case R.id.history:
+         Intent intent = new Intent(MapListViewTabActivity.this, HistoryActivity.class);
+         startActivity(intent);
         } 
         return super.onOptionsItemSelected(menuItem);
     }

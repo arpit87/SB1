@@ -1,10 +1,9 @@
 package my.b1701.SB.Users;
 
-import my.b1701.SB.HelperClasses.ThisUserConfig;
+import android.util.Log;
 import my.b1701.SB.LocationHelpers.SBGeoPoint;
 import my.b1701.SB.LocationHelpers.SBLocation;
 import my.b1701.SB.provider.GeoAddress;
-import android.util.Log;
 
 
 public class ThisUser {
@@ -18,6 +17,7 @@ public class ThisUser {
 	private SBGeoPoint destinationGeoPoint=null;
 	private GeoAddress currentGeoAddress=null;
 	private GeoAddress shareReqGeoAddress=null;
+    private GeoAddress sourceGeoAddress;
 	private GeoAddress destinationGeoAddress=null;
 	private String timeOfRequest;
 	private int take_offer_type = 0; //0=>offer 1=>share
@@ -145,6 +145,20 @@ public class ThisUser {
 	public void setTimeOfRequest(String timeOfRequest) {
 		this.timeOfRequest = timeOfRequest;
 	}	
-	
-	
+
+    public GeoAddress getSourceGeoAddress(){
+        return sourceGeoAddress;
+    }
+
+    public GeoAddress getDestinationGeoAddress() {
+        return destinationGeoAddress;
+    }
+
+    public void setDestinationGeoAddress(GeoAddress geoAddress) {
+        this.destinationGeoAddress = geoAddress;
+    }
+
+    public void setSourceGeoAddress(GeoAddress geoAddress) {
+        this.sourceGeoAddress = geoAddress;
+    }
 }
