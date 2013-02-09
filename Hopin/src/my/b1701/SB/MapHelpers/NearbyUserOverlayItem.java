@@ -2,11 +2,11 @@ package my.b1701.SB.MapHelpers;
 
 import my.b1701.SB.R;
 import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
-import my.b1701.SB.FacebookHelpers.FacebookConnector;
-import my.b1701.SB.Fragments.SmsDialogFragment;
+import my.b1701.SB.CustomViewsAndListeners.SBMapView;
 import my.b1701.SB.HelperClasses.CommunicationHelper;
 import my.b1701.SB.HelperClasses.SBImageLoader;
 import my.b1701.SB.HelperClasses.ThisUserConfig;
+import my.b1701.SB.LocationHelpers.SBGeoPoint;
 import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.Users.NearbyUser;
 import my.b1701.SB.Users.UserFBInfo;
@@ -32,24 +32,24 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 	protected MapView mMapView = null;
 	private static Context context =MapListActivityHandler.getInstance().getUnderlyingActivity();
 	protected static LayoutInflater mInflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
-	View viewOnMarkerSmall = null; 
-	View viewOnMarkerExpanded = null;	
-	ImageView picViewSmall = null;
-	ImageView picViewExpanded = null;
-	ImageView chatIcon = null;
-	ImageView smsIcon = null;
-	ImageView facebookIcon = null;
-	ImageView buttonClose = null;
-	GeoPoint mGeoPoint = null;
-	String mImageURL= "";
-	String mUserFBID= "";
-	String mUserFBUsername = "";
+	private View viewOnMarkerSmall = null; 
+	private View viewOnMarkerExpanded = null;	
+	private ImageView picViewSmall = null;
+	private ImageView picViewExpanded = null;
+	private ImageView chatIcon = null;
+	private ImageView smsIcon = null;
+	private ImageView facebookIcon = null;
+	private ImageView buttonClose = null;
+	private SBGeoPoint mGeoPoint = null;
+	private String mImageURL= "";
+	private String mUserFBID= "";
+	private String mUserFBUsername = "";
 	boolean isVisibleSmall = false;
 	boolean isVisibleExpanded = false;
 	private NearbyUser mNearbyUser = null;
 	private UserFBInfo mUserFBInfo = null;
 		
-	public NearbyUserOverlayItem(NearbyUser user ,MapView mapView) {
+	public NearbyUserOverlayItem(NearbyUser user ,SBMapView mapView) {
 		super(user.getUserLocInfo().getGeoPoint(), user.getUserFBInfo().getImageURL(), user.getUserFBInfo().getFbid());
 		this.mGeoPoint = user.getUserLocInfo().getGeoPoint();		
 		this.mMapView = mapView;
@@ -64,6 +64,10 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 		this.mMarker = icon;*/
 	}
 	
+	public SBGeoPoint getGeoPoint() {
+		return mGeoPoint;
+	}
+
 	protected void createAndDisplaySmallView()
 	{
 		if(mMapView == null || mGeoPoint == null)
@@ -106,7 +110,7 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 	
 	private void setFBInfoOnExpandedBalloon(View balloonView,UserFBInfo userFBInfo)
 	{
-		
+		TextView userNotLoggedIn = null;
 		TextView fb_name = null;
 		TextView works_at = null;
 		TextView studied_at = null;
@@ -115,7 +119,13 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 		
 		String name_str,worksat_str,studiedat_str,hometown_str,gender_str = "";
 		
-		fb_name = (TextView)viewOnMarkerExpanded.findViewById(R.id.expanded_name);
+		if(!mNearbyUser.getUserFBInfo().FBInfoAvailable())
+			return;
+		
+		userNotLoggedIn = (TextView)viewOnMarkerExpanded.findViewById(R.id.usernotloggedintext);
+		userNotLoggedIn.setVisibility(View.GONE);
+		
+		fb_name = (TextView)viewOnMarkerExpanded.findViewById(R.id.expanded_balloon_header);
 		works_at = (TextView)viewOnMarkerExpanded.findViewById(R.id.expanded_work);
 		studied_at = (TextView)viewOnMarkerExpanded.findViewById(R.id.expanded_education);
 		hometown = (TextView)viewOnMarkerExpanded.findViewById(R.id.expanded_from);
@@ -174,6 +184,19 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 				facebookIcon.setImageResource(R.drawable.fb_icon_disabled);
 				facebookIcon.invalidate();
 			}
+			else if(!mUserFBInfo.FBInfoAvailable())
+			{
+				chatIcon.setImageResource(R.drawable.chat_icon_disabled);
+				chatIcon.invalidate();				
+				facebookIcon.setImageResource(R.drawable.fb_icon_disabled);
+				facebookIcon.invalidate();
+			}
+			
+			if(!mNearbyUser.getUserOtherInfo().isMobileNumberAvailable())
+			{
+				smsIcon.setImageResource(R.drawable.sms_icon_disabled);
+				smsIcon.invalidate();
+			}
 			
 			buttonClose.setOnClickListener(new OnClickListener() {				
 				@Override
@@ -208,10 +231,9 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 				public void onClick(View chatIconView) {
 					CommunicationHelper.getInstance().onFBIconClickWithUser((Activity)context,mUserFBID,mUserFBUsername);						
 				}
-			});
-			
+			});		
 						
-			
+		
 			mMapView.addView(viewOnMarkerExpanded,params);
 			viewOnMarkerExpanded.setVisibility(View.VISIBLE);
 			isVisibleExpanded = true;
@@ -306,6 +328,7 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 		public boolean onTouch(View v, MotionEvent event) {
 			removeSmallView();
 			showExpandedView();
+			MapListActivityHandler.getInstance().centreMapToPlusLilUp(mGeoPoint);
 			return true;
 		}
 		

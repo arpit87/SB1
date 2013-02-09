@@ -8,6 +8,7 @@ import my.b1701.SB.R;
 import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
 import my.b1701.SB.CustomViewsAndListeners.SBMapView;
 import my.b1701.SB.Users.NearbyUser;
+import my.b1701.SB.Users.ThisUser;
 import android.content.Context;
 
 
@@ -18,12 +19,12 @@ public class NearbyUsersItemizedOverlay extends BaseItemizedOverlay{
 	private static Context context = MapListActivityHandler.getInstance().getUnderlyingActivity();
 	
 	public NearbyUsersItemizedOverlay(SBMapView mapView) {
-		super(boundCenter(context.getResources().getDrawable(R.drawable.my_dot_green)));
+		super(boundCenter(context.getResources().getDrawable(R.drawable.map_dp_frame_shadow)));
 		this.mMapView = mapView;
 	}
 	
 	public NearbyUsersItemizedOverlay() {
-		super(boundCenter(context.getResources().getDrawable(R.drawable.my_dot_green)));
+		super(boundCenter(context.getResources().getDrawable(R.drawable.map_dp_frame_shadow)));
 		}
 	
 	@Override
@@ -60,6 +61,17 @@ public class NearbyUsersItemizedOverlay extends BaseItemizedOverlay{
 		}
 	}
 	
+	public void removeAllExpandedViews()
+	{
+		if(size()==0)
+			return;
+		Iterator<NearbyUserOverlayItem> it = (Iterator<NearbyUserOverlayItem>) userList.iterator();
+		while(it.hasNext() )
+		{
+			it.next().removeExpandedView();			
+		}
+	}
+	
 	public void removeExpandedShowSmallViews()
 	{
 		if(size()==0)
@@ -76,7 +88,8 @@ public class NearbyUsersItemizedOverlay extends BaseItemizedOverlay{
 	protected boolean onTap(int i)
 	{
 		//on tap check if user logged in to fb
-		userList.get(i).toggleSmallView();		
+		userList.get(i).toggleSmallView();	
+		MapListActivityHandler.getInstance().centreMapTo(userList.get(i).getGeoPoint());
 		return true;
 		
 	}

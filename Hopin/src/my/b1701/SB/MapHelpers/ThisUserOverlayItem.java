@@ -86,7 +86,7 @@ public class ThisUserOverlayItem extends BaseOverlayItem{
 			{
 				picView.setImageDrawable( Platform.getInstance().getContext().getResources().getDrawable(R.drawable.userpicicon));
 			}
-			mMapView.addView(viewOnMarker,params);
+			mMapView.addSelfView(viewOnMarker,params);
 			viewOnMarker.setVisibility(View.VISIBLE);
 			isVisible = true;
 		}

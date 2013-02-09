@@ -11,19 +11,19 @@ import android.util.Log;
 public class ThisUserItemizedOverlay extends BaseItemizedOverlay{
 
 	ArrayList<ThisUserOverlayItem> userList=new ArrayList<ThisUserOverlayItem>();
-	ThisUserOverlayItem overlay;
+	ThisUserOverlayItem selfOverlayItem;
 	private static final String TAG = "my.b1701.SB.MapHelpers.ThisUserItemizedOverlay";
 	private SBMapView mMapView = null;
 	
 	
 	public ThisUserItemizedOverlay(SBMapView mapView) {		
-		super(boundCenter(Platform.getInstance().getContext().getResources().getDrawable(R.drawable.my_dot_red)));
+		super(boundCenter(Platform.getInstance().getContext().getResources().getDrawable(R.drawable.map_dp_frame_shadow)));
 		this.mMapView = mapView;
 		// TODO Auto-generated constructor stub
 	}
 	
 	public ThisUserItemizedOverlay() {		
-		super(boundCenter(Platform.getInstance().getContext().getResources().getDrawable(R.drawable.my_dot_red)));		
+		super(boundCenter(Platform.getInstance().getContext().getResources().getDrawable(R.drawable.map_dp_frame_shadow)));		
 	}
 
 	@Override
@@ -41,29 +41,29 @@ public class ThisUserItemizedOverlay extends BaseItemizedOverlay{
 	@Override
 	public void addThisUser() {
 		
-		overlay=new ThisUserOverlayItem(ThisUser.getInstance().getSourceGeoPoint(), ThisUser.getInstance().getUserID(), "",mMapView);
-		userList.add(overlay);
+		selfOverlayItem=new ThisUserOverlayItem(ThisUser.getInstance().getSourceGeoPoint(), ThisUser.getInstance().getUserID(), "",mMapView);
+		userList.add(selfOverlayItem);
 		populate();
 	}
 	
 	public void  updateThisUser()
 	{
-		Log.i(TAG,"updating this user,removing overlay");
-		if(overlay!=null)
-		{
-			overlay.removeView();
-			userList.remove(overlay);			
+		Log.i(TAG,"updating this user,removing overlay");		
+		mMapView.removeSelfView();
+		if(selfOverlayItem!=null)
+		{			
+			userList.remove(selfOverlayItem);			
 		}
-		overlay=new ThisUserOverlayItem(ThisUser.getInstance().getSourceGeoPoint(), ThisUser.getInstance().getUserID(), "",mMapView);
+		selfOverlayItem=new ThisUserOverlayItem(ThisUser.getInstance().getSourceGeoPoint(), ThisUser.getInstance().getUserID(), "",mMapView);
 		Log.i(TAG,"adding new this overlay");
-		userList.add(overlay);
+		userList.add(selfOverlayItem);
 		populate();
 	}
 	
 	protected boolean onTap(int i)
 	{
 		Log.i(TAG,"toggling this user view");
-		overlay.ToggleView();
+		selfOverlayItem.ToggleView();
 		return true;
 		
 	}
