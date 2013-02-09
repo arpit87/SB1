@@ -91,6 +91,10 @@
             android:screenOrientation="portrait" >
             
         </activity>
+       
+       <activity android:name=".Activities.HistoryActivity"
+                 android:theme="@android:style/Theme.NoTitleBar"
+                 android:screenOrientation="portrait" />
 
        <activity android:name=".Activities.SearchableActivity" >
            <intent-filter>
@@ -110,7 +114,11 @@
                android:authorities="my.b1701.SB.provider.CustomSuggestionProvider" >
        </provider>
 
-        <receiver android:name=".LocationHelpers.LocationUpdaterFromIntent"           
+       <provider
+           android:name="my.b1701.SB.provider.HistoryContentProvider"
+           android:authorities="my.b1701.SB.provider.HistoryContentProvider" />
+
+        <receiver android:name=".LocationHelpers.LocationUpdaterFromIntent"
             android:exported="false">
              </receiver>
          
