@@ -1,6 +1,7 @@
 package my.b1701.SB.Server;
 
 import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
+import my.b1701.SB.HelperClasses.ProgressHandler;
 import my.b1701.SB.Users.CurrentNearbyUsers;
 
 import org.apache.http.HttpResponse;
@@ -40,9 +41,15 @@ public class GetMatchingNearbyUsersResponse extends ServerResponseBase{
 		Intent notifyUpdateintent = new Intent();
 		notifyUpdateintent.setAction(NEARBY_USER_UPDATED);		
 		
-		MapListActivityHandler.getInstance().getUnderlyingActivity().sendBroadcast(notifyUpdateintent); 
-		MapListActivityHandler.getInstance().updateNearbyUsers();		
+		//this broadcast is for chat window which queries for nearby users in case of incoming chat 
+		//from user which has not yet been fetched by getmatch request
+		MapListActivityHandler.getInstance().getUnderlyingActivity().sendBroadcast(notifyUpdateintent);
+		//this function checks internally if new users added etc and how to display
+		//Arpit 9 feb - real 
+		MapListActivityHandler.getInstance().updateNearbyUsers();
 		
+		//dismiss dialog if any..safe to call even if no dialog showing
+		ProgressHandler.dismissDialoge();
 	}
 	
 	
