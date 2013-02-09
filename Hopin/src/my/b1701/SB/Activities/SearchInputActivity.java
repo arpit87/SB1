@@ -1,5 +1,24 @@
 package my.b1701.SB.Activities;
 
+
+import java.util.Calendar;
+import java.util.List;
+
+import my.b1701.SB.R;
+import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
+import my.b1701.SB.Adapter.AddressAdapter;
+import my.b1701.SB.HelperClasses.ProgressHandler;
+import my.b1701.SB.HttpClient.AddThisUserScrDstCarPoolRequest;
+import my.b1701.SB.HttpClient.AddThisUserSrcDstRequest;
+import my.b1701.SB.HttpClient.SBHttpClient;
+import my.b1701.SB.HttpClient.SBHttpRequest;
+import my.b1701.SB.LocationHelpers.SBGeoPoint;
+import my.b1701.SB.Users.ThisUser;
+import my.b1701.SB.provider.CustomSuggestionProvider;
+import my.b1701.SB.provider.GeoAddress;
+import my.b1701.SB.provider.GeoAddressProvider;
+import my.b1701.SB.provider.HistoryContentProvider;
+import my.b1701.SB.provider.SearchRecentSuggestions;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -9,19 +28,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.*;
-import my.b1701.SB.Adapter.AddressAdapter;
-import my.b1701.SB.HttpClient.AddThisUserScrDstCarPoolRequest;
-import my.b1701.SB.HttpClient.AddThisUserSrcDstRequest;
-import my.b1701.SB.HttpClient.SBHttpClient;
-import my.b1701.SB.HttpClient.SBHttpRequest;
-import my.b1701.SB.LocationHelpers.SBGeoPoint;
-import my.b1701.SB.R;
-import my.b1701.SB.Users.ThisUser;
-import my.b1701.SB.provider.*;
-
-import java.util.Calendar;
-import java.util.List;
+import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+import android.widget.SeekBar;
+import android.widget.TextView;
+import android.widget.ToggleButton;
 
 public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarChangeListener{
     private static final String TAG = "my.b1701.SB.Activities.SearchInputActivity";
@@ -70,8 +82,8 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
         destination = (AutoCompleteTextView) findViewById(R.id.getuserpopupdestination);
         findUsers = (Button)findViewById(R.id.btn_findusers);
         cancelFindUsers = (Button)findViewById(R.id.btn_cancelfindusers);
-        offerRide = (ToggleButton)findViewById(R.id.btn_toggle_offer);
-        dailyCarPool = (ToggleButton)findViewById(R.id.btn_toggle_dailypool);
+        //offerRide = (ToggleButton)findViewById(R.id.btn_toggle_offer);
+        //dailyCarPool = (ToggleButton)findViewById(R.id.btn_toggle_dailypool);
         am_pm_toggle = (ToggleButton) findViewById(R.id.btn_am_pm_toggle);
         timeView = (TextView) findViewById(R.id.time);
       
@@ -91,7 +103,8 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
         }
         
         findUsers.setOnClickListener(new OnClickListener() {
-        	@Override
+        	
+			@Override
 			public void onClick(View v) {       
         		String time24HrFormat ;
         		if(am_pm_toggle.isChecked())
@@ -104,6 +117,7 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
         		ThisUser.getInstance().set_Take_Offer_Type(offerRide.isChecked()?1:0);//0 share ,1 offer
         		
         		Log.i(TAG, "user destination set... querying server");
+        		ProgressHandler.showInfiniteProgressDialoge(MapListActivityHandler.getInstance().getUnderlyingActivity(), "Fetching users", "Please wait..");
         		SBHttpRequest addThisUserSrcDstRequest;
         		if(dailyCarPool.isChecked())        		
         			addThisUserSrcDstRequest = new AddThisUserScrDstCarPoolRequest();        		
