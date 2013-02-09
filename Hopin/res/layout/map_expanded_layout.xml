@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 <RelativeLayout
-        android:id="@+id/expanded_balloon_header"      
+        android:id="@+id/expanded_balloon_header_layout"      
         android:background="@drawable/balloon_expanded_top"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
@@ -20,7 +20,8 @@
             android:text="Arpit Mishra"           
             android:layout_marginLeft="1.0dip"            
             android:layout_marginRight="1.0dip" 
-            android:layout_centerVertical="true"            
+            android:layout_centerVertical="true" 
+            android:textColor="@color/white"           
              />
             
         <ImageView
@@ -80,6 +81,7 @@
                 android:layout_height="fill_parent"
                 android:layout_marginTop="5.0dip"
                 android:orientation="vertical" 
+                android:paddingTop="1dip"
                >
 
                 <TextView
@@ -88,11 +90,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"
-                    android:lines="3"         
-                    android:text="User is not FB logged in. Information not available"          
+                    android:lines="4"         
+                    android:text="User information not available. This user   is not FB logged in"          
                     android:visibility="visible" />
                 
-                <TextView
+              <!--    <TextView
                     android:id="@+id/expanded_name"
                     android:textSize="12dip"                    
                     android:layout_width="match_parent"
@@ -100,7 +102,7 @@
                     android:textColor="@color/black"
                     android:singleLine="true"                    
                     android:visibility="visible" 
-                    android:text="Name:"/>
+                    android:text="Name:"/> -->
                 
                 <TextView
                     android:id="@+id/expanded_gender"
@@ -119,8 +121,7 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"
                     android:singleLine="true"
-                    android:text="Works at:"
-                    
+                    android:text="Works at:"                    
                     android:visibility="visible" />
 
                 <TextView

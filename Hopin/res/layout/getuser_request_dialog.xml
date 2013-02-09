@@ -110,16 +110,6 @@
     android:textColor="@color/fb_blue"
     android:textSize="15dip" />
 
-
-
-
-
-
-
-
-
-
-
 <TextView
     android:id="@+id/time"
     android:layout_width="wrap_content"
@@ -205,8 +195,83 @@
         android:textColor="@color/black" />
 </RelativeLayout>
 
+
+
 </RelativeLayout>
-  
+<TextView
+    android:id="@+id/entertimeheader"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="15dip"
+    android:text="Enter date"
+    android:textColor="@color/fb_blue"
+    android:textSize="15dip" />
+
+<SeekBar
+    android:id="@+id/freqseekBar"
+    android:layout_marginTop="10dip"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/timescalelayout"
+    android:layout_centerInParent="true" />
+
+
+<RelativeLayout
+    android:id="@+id/freqscalelayout"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignBaseline="@+id/freqseekBar"
+    android:layout_below="@id/timescalelayout"
+    android:layout_centerInParent="true"
+    android:layout_marginTop="5dip"
+    android:gravity="fill_horizontal" >
+
+
+    <TextView
+        android:id="@+id/textView12left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:text="Today"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/textView12right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:text="Daily"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="32dp"
+        android:layout_toLeftOf="@+id/textView12right"
+        android:text="T+3"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:text="T+2"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="32dp"
+        android:layout_toRightOf="@+id/textView12left"
+        android:text="T+1"
+        android:textColor="@color/black" />
+</RelativeLayout>
+
 <LinearLayout
     android:id="@+id/extrashareinfolayout"
     android:layout_height="wrap_content"
@@ -217,7 +282,7 @@
      android:layout_marginTop="10dip"  
      >  
      
-    <ToggleButton android:id="@+id/btn_toggle_dailypool" android:background="@drawable/dailypool_toggle" 
+  <!--  <ToggleButton android:id="@+id/btn_toggle_dailypool" android:background="@drawable/dailypool_toggle" 
         android:textOn="" android:textOff=""  
         android:layout_width="160dip" android:layout_height="wrap_content" 
         android:layout_marginRight="8.0dip"  
@@ -229,7 +294,7 @@
         android:layout_width="120dip" android:layout_height="wrap_content" 
         android:layout_marginRight="8.0dip"  
         android:contentDescription="@string/icon_offerride" 
-        />
+        /> --> 
     
   <!--    <CheckBox 
         android:id="@+id/checkbox_dailycarpool"
