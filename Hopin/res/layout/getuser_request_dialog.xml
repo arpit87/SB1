@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/rounded_rectangle_background"
+    android:background="@drawable/rounded_rectangle_background_gray"
     android:gravity="center_horizontal"
     android:orientation="vertical"
     android:padding="5dip"
@@ -15,7 +15,7 @@
         android:padding="5dip" >
 
         <TextView
-            android:id="@+id/enter_username_header_text"
+            android:id="@+id/enter_searchdetails_header_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="2.0dip"
@@ -24,7 +24,7 @@
             android:paddingTop="2.0dip"
             android:text="Find users"
             android:textStyle="bold"
-            android:textColor="@color/black"            
+            android:textColor="@color/fb_blue"            
             android:textSize="20dip" />        
        
 
@@ -40,26 +40,29 @@
  <LinearLayout 
      android:layout_height="wrap_content"
      android:layout_width="fill_parent"
-     android:background="@drawable/rounded_rectangle_background"
+     android:background="@drawable/rounded_rectangle_background_gray"
      android:orientation="vertical"
      android:padding="5dip"
      >   
  <TextView android:text="Enter source"
-     android:textColor="@color/fb_blue"
+     android:textColor="@color/frame_blue"
      android:layout_height="wrap_content"
      android:layout_width="wrap_content"
      android:textSize="15dip"
      android:layout_gravity="left"
      android:layout_marginLeft="15dip"
      android:layout_marginTop="10dip"
+     android:layout_marginBottom="3dip"
      />    
  <AutoCompleteTextView        
          android:id="@+id/getuserpopupsource"         
         android:layout_width="fill_parent"
-        android:layout_height="38dip"        
-        android:layout_margin="5dip"          
-        android:textColor="@color/gray"
-        android:background="@drawable/rounded_rectangle_background" 
+        android:layout_height="wrap_content"   
+        android:textSize="15dip"     
+        android:layout_marginLeft="15dip" 
+        android:layout_marginRight="15dip"          
+        android:textColor="@color/black"
+        android:background="@drawable/gray_green_background_selector" 
         android:gravity="center_vertical"  
         android:paddingLeft="10dip"
         android:singleLine="true"
@@ -68,25 +71,28 @@
       
  
 <TextView android:text="Enter destination"
-     android:textColor="@color/fb_blue"
+     android:textColor="@color/frame_blue"
      android:layout_height="wrap_content"
-     android:layout_width="wrap_content"
-     android:textSize="15dip"
+     android:layout_width="wrap_content"     
      android:layout_gravity="left"
      android:layout_marginTop="15dip" 
-     android:layout_marginLeft="15dip"
+     android:layout_marginLeft="15dip" 
+     android:layout_marginRight="15dip"
+     android:layout_marginBottom="3dip"
      />
 
  <AutoCompleteTextView        
          android:id="@+id/getuserpopupdestination"         
         android:layout_width="fill_parent"
-        android:layout_height="38dip"        
-        android:layout_margin="5dip"          
+        android:layout_height="wrap_content"
+        android:textSize="15dip"         
+       	android:layout_marginLeft="15dip" 
+     	android:layout_marginRight="15dip"          
         android:textColor="@color/gray"
-        android:background="@drawable/rounded_rectangle_background"
+        android:background="@drawable/gray_green_background_selector"
         android:gravity="center_vertical"
         android:paddingLeft="10dip"
-        android:singleLine="true"
+        android:singleLine="true"        
 		android:hint="Enter destination"
         />
 
@@ -98,7 +104,8 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="8dip"
-    android:padding="15dip" >
+    android:layout_marginLeft="15dip"
+    android:layout_marginRight="15dip" >
 
 
 <TextView
@@ -107,7 +114,7 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="15dip"
     android:text="Enter time"
-    android:textColor="@color/fb_blue"
+    android:textColor="@color/frame_blue"
     android:textSize="15dip" />
 
 <TextView
@@ -195,36 +202,36 @@
         android:textColor="@color/black" />
 </RelativeLayout>
 
-
-
 </RelativeLayout>
 <TextView
-    android:id="@+id/entertimeheader"
+    android:id="@+id/enterdateheader"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginTop="15dip"
+    android:layout_marginTop="12dip"
+    android:layout_marginLeft="15dip"
     android:text="Enter date"
-    android:textColor="@color/fb_blue"
+    android:textColor="@color/frame_blue"
     android:textSize="15dip" />
 
 <SeekBar
-    android:id="@+id/freqseekBar"
-    android:layout_marginTop="10dip"
+    android:id="@+id/dateseekBar"
+    android:layout_marginTop="5dip"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_below="@id/timescalelayout"
-    android:layout_centerInParent="true" />
+    android:layout_height="wrap_content" 
+    android:layout_marginLeft="15dip"
+    android:layout_marginRight="15dip"   
+   />
+
 
 
 <RelativeLayout
-    android:id="@+id/freqscalelayout"
+    android:id="@+id/datescalelayout"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:layout_alignBaseline="@+id/freqseekBar"
-    android:layout_below="@id/timescalelayout"
-    android:layout_centerInParent="true"
-    android:layout_marginTop="5dip"
-    android:gravity="fill_horizontal" >
+    android:layout_height="wrap_content"    
+    android:layout_marginTop="4dip"
+    android:gravity="fill_horizontal"
+    android:layout_marginLeft="15dip"
+    android:layout_marginRight="15dip"  >
 
 
     <TextView
@@ -323,7 +330,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"                
         android:orientation="horizontal"
-        android:background="@drawable/rounded_rectangle_background" 
+        android:background="@drawable/rounded_rectangle_background_gray" 
         android:layout_marginTop="15dip">
 
         <Button
@@ -335,7 +342,9 @@
             android:layout_weight="1"
             android:background="@drawable/custom_button_grey"
             android:text="Cancel"
-            android:textColor="@color/black" />
+            android:paddingTop="10dip"
+            android:paddingBottom="10dip"
+            android:textColor="@color/black" />        
 
         <Button
             android:id="@+id/btn_findusers"
@@ -344,8 +353,10 @@
             android:layout_gravity="center"
             android:layout_margin="5dip"
             android:layout_weight="1"
-            android:background="@drawable/custom_button_grey"
+            android:background="@drawable/custom_button_green"
             android:text="Find"
+            android:paddingTop="10dip"
+            android:paddingBottom="10dip"
             android:textColor="@color/black" />
 
     </LinearLayout>
