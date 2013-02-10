@@ -14,6 +14,7 @@ public class UserAttributes {
 	public static String SHAREOFFERTYPE = "type";
 	public static String OTHERINFO = "other_info";
 	public static String PERCENTMATCH = "percent_match";
+	public static String DATETIME = "time";
 	public static String TIME = "time";
 	public static String MOBILENUMBER = "mobile_available";
 	

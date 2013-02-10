@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import my.b1701.SB.HelperClasses.ProgressHandler;
 import my.b1701.SB.HelperClasses.ToastTracker;
 import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.Service.CheckAndDeleteUserRequestService;
@@ -36,8 +37,7 @@ public class AddThisUserSrcDstResponse extends ServerResponseBase{
 		
 		try {
 			body = jobj.getJSONObject("body");
-			ToastTracker.showToast("added this user src,dst");
-			ThisUser.getInstance().setShareReqGeoPoint();
+			ToastTracker.showToast("added this user src,dst");			
             Context context = Platform.getInstance().getContext();
             Intent getNearByUsersIntent = new Intent(context, GetNearByUsersService.class);
             context.startService(getNearByUsersIntent);
@@ -48,7 +48,8 @@ public class AddThisUserSrcDstResponse extends ServerResponseBase{
             alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, TIME_INTERVAL, TIME_INTERVAL, pendingIntent);
 		} catch (JSONException e) {
 			Log.e(TAG, "Error returned by server on user add scr dst");
-			ToastTracker.showToast("Unable to add this user src,dst");
+			ProgressHandler.dismissDialoge();
+			ToastTracker.showToast("Network error,try again");
 			e.printStackTrace();
 		}
 		

@@ -24,8 +24,8 @@ public class CheckAndDeleteUserRequestService extends IntentService{
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        SBGeoPoint currGeoPoint = ThisUser.getInstance().getSourceGeoPoint();
-        SBGeoPoint shareReqGeoPoint = ThisUser.getInstance().getShareReqGeoPoint();
+        SBGeoPoint currGeoPoint = ThisUser.getInstance().getCurrentGeoPoint();
+        SBGeoPoint shareReqGeoPoint = ThisUser.getInstance().getSourceGeoPoint();
 
         Log.i(TAG, "Checking if user out of request area");
         ToastTracker.showToast("checking if user out of req area");

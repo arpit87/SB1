@@ -41,7 +41,7 @@ public class GetMatchingCarPoolUsersRequest  extends SBHttpRequest{
 		jsonobjGetNearbyUsers = GetServerAuthenticatedJSON();;
 		try {
 			jsonobjGetNearbyUsers.put(UserAttributes.USERID, ThisUser.getInstance().getUserID());	
-			jsonobjGetNearbyUsers.put(UserAttributes.SRCADDRESS, ThisUser.getInstance().getSourceGeoPoint().getAddress());
+			jsonobjGetNearbyUsers.put(UserAttributes.SRCADDRESS, ThisUser.getInstance().getCurrentGeoPoint().getAddress());
 			jsonobjGetNearbyUsers.put(UserAttributes.DSTADDRESS, ThisUser.getInstance().getDestinationGeoPoint().getAddress());
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block

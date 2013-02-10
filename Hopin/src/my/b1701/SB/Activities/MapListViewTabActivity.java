@@ -104,9 +104,7 @@ public class MapListViewTabActivity extends SherlockFragmentActivity implements 
         ab.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);       
         ab.setDisplayHomeAsUpEnabled(false);
         ab.setDisplayShowTitleEnabled(true);
-        //ab.setIcon(R.drawable.hoponlogoforactionbar);
-        //ab.setDisplayUseLogoEnabled(true);
-      
+            
         fbconnect = new FacebookConnector(this);
         
     }
@@ -115,26 +113,26 @@ public class MapListViewTabActivity extends SherlockFragmentActivity implements 
     	super.onResume();
     	//we update realtime when on map activity
     	SBLocationManager.getInstance().StartListeningtoNetwork(); 
-    	MapListActivityHandler.getInstance().setUpdateMapRealTime(true);
-    	if(MapListActivityHandler.getInstance().isMapInitialized())
-    		MapListActivityHandler.getInstance().updateThisUserMapOverlay();
-        updateDestinationInListView();
+    	//MapListActivityHandler.getInstance().setUpdateMap(true);
+    	//if(MapListActivityHandler.getInstance().isMapInitialized())
+    	//	MapListActivityHandler.getInstance().updateThisUserMapOverlay();
+        //updateDestinationInListView();
     }
 
     //test
 	public void onPause(){
     	super.onPause();
-    	MapListActivityHandler.getInstance().setUpdateMapRealTime(false);
+    	//MapListActivityHandler.getInstance().setUpdateMap(false);
     	SBLocationManager.getInstance().StopListeningtoGPS();    	
         SBLocationManager.getInstance().StopListeningtoNetwork();
     	//mymapview.getOverlays().clear();
     	//mymapview.postInvalidate();
     }
 	
-	@Override
+	/*@Override
 	  public void onBackPressed() {
 	    moveTaskToBack(true);
-	  }
+	  }*/
 	
 	@Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -226,12 +224,7 @@ public class MapListViewTabActivity extends SherlockFragmentActivity implements 
     	{
     	case R.id.my_location_button:
     		MapListActivityHandler.getInstance().myLocationButtonClick();    		
-    		break;
-    	
-    	//case R.id.offerride_button:
-    	//	offerRideClick();
-    	//	break;    	   	
-    	
+    		break; 	
     	}
     }
 

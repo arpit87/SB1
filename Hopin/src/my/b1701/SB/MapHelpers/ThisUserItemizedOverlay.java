@@ -41,7 +41,7 @@ public class ThisUserItemizedOverlay extends BaseItemizedOverlay{
 	@Override
 	public void addThisUser() {
 		
-		selfOverlayItem=new ThisUserOverlayItem(ThisUser.getInstance().getSourceGeoPoint(), ThisUser.getInstance().getUserID(), "",mMapView);
+		selfOverlayItem=new ThisUserOverlayItem(ThisUser.getInstance().getCurrentGeoPoint(), ThisUser.getInstance().getUserID(), "",mMapView);
 		userList.add(selfOverlayItem);
 		populate();
 	}

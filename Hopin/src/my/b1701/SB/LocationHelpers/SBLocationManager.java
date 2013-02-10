@@ -110,14 +110,14 @@ public class SBLocationManager {
 	        {
 	        	if ((time > currentLocation.getTime() && accuracy < currentLocation.getAccuracy()))
 	        	{
-	        		ThisUser.getInstance().setLocation(new SBLocation(location));
+	        		ThisUser.getInstance().setCurrentLocation(new SBLocation(location));
 	        		MapListActivityHandler.getInstance().updateThisUserMapOverlay();
 	        		return new SBLocation(location);
 	        	}
 	        
 	        }
 	        else
-	        	ThisUser.getInstance().setLocation(new SBLocation(location));
+	        	ThisUser.getInstance().setCurrentLocation(new SBLocation(location));
 	                		        
 		}
 		return ThisUser.getInstance().getLocation();

@@ -1,5 +1,6 @@
 package my.b1701.SB.Server;
 
+import my.b1701.SB.HelperClasses.ProgressHandler;
 import my.b1701.SB.HelperClasses.ToastTracker;
 import my.b1701.SB.HttpClient.GetMatchingCarPoolUsersRequest;
 import my.b1701.SB.HttpClient.SBHttpClient;
@@ -39,7 +40,8 @@ public class AddThisUserSrcDstCarPoolResponse extends ServerResponseBase{
 			
 		} catch (JSONException e) {
 			Log.e(TAG, "Error returned by server on user add scr dst");
-			ToastTracker.showToast("Unable to add this user src,dst for car pool");
+			ToastTracker.showToast("Network error,try again");
+			ProgressHandler.dismissDialoge();
 			e.printStackTrace();
 		}
 		

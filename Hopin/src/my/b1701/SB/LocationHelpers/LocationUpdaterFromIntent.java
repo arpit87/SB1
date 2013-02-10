@@ -19,7 +19,7 @@ public class LocationUpdaterFromIntent extends BroadcastReceiver{
 	public void UpdateToBestCurrentLocation(SBLocation newLocation)
 	{
 		
-		ThisUser.getInstance().setLocation(newLocation);
+		ThisUser.getInstance().setCurrentLocation(newLocation);
 		Toast toast = Toast.makeText(Platform.getInstance().getContext(), "Updating cur loc", Toast.LENGTH_SHORT);       
 		toast.show();
 		MapListActivityHandler.getInstance().updateThisUserMapOverlay();
@@ -35,7 +35,7 @@ public class LocationUpdaterFromIntent extends BroadcastReceiver{
 			context.unregisterReceiver(this);
 			Location location = (Location)intent.getExtras().get(locationKey);
 			Log.d(TAG,"updating loc in intent");
-			ThisUser.getInstance().setLocation(new SBLocation(location));
+			ThisUser.getInstance().setCurrentLocation(new SBLocation(location));
 		}
 		else
 			Log.d(TAG,"lockey not found in loc intent");

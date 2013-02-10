@@ -152,7 +152,7 @@ public class StartStrangerBuddyActivity extends Activity {
        		  	 timer.purge();
         		 ToastTracker.showToast("starting activity in counter:"+counter);  
         		 if(currLoc != null)
-        			 ThisUser.getInstance().setLocation(currLoc);        		 
+        			 ThisUser.getInstance().setCurrentLocation(currLoc);        		 
         		 if(!mapActivityStarted.getAndSet(true))
 	        	  {
         			 Platform.getInstance().getHandler().post(startMapActivity);

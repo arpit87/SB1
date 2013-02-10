@@ -45,7 +45,7 @@ public class MapListActivityHandler  {
 	private BaseItemizedOverlay nearbyUserItemizedOverlay;
 	private MapController mapcontroller;	
 	private BaseItemizedOverlay thisUserOverlay;
-	private boolean updateMapRealTime = false;
+	private boolean updateMap = false;
 	private ProgressDialog progressDialog;
 	AlertDialog alertDialog ;	
 	private boolean mapInitialized = false;
@@ -93,13 +93,13 @@ public class MapListActivityHandler  {
 		this.mapView = mapView;
 	}		
 	
-	public boolean isUpdateMapRealTime() {
-		return updateMapRealTime;
+	public boolean isUpdateMap() {
+		return updateMap;
 	}
 
 
-	public void setUpdateMapRealTime(boolean updateMapRealTime) {
-		this.updateMapRealTime = updateMapRealTime;
+	public void setUpdateMap(boolean updateMapRealTime) {
+		this.updateMap = updateMapRealTime;
 	}
 		
 	public void initMyLocation() 
@@ -116,7 +116,7 @@ public class MapListActivityHandler  {
 			    	  progressDialog.dismiss();
 			    	  if(currLoc != null)
 			    	  {			    		  
-			    		  ThisUser.getInstance().setLocation(currLoc);
+			    		  ThisUser.getInstance().setCurrentLocation(currLoc);
 			    		  putInitialOverlay();
 			    	  }
 			    	  else
@@ -161,15 +161,15 @@ public class MapListActivityHandler  {
 				if(thisCurrLoc != null)
 				{
 					progressDialog.dismiss();
-					ThisUser.getInstance().setLocation(thisCurrLoc);
+					ThisUser.getInstance().setCurrentLocation(thisCurrLoc);
 					updateThisUserMapOverlay();
-					centreMapTo(ThisUser.getInstance().getSourceGeoPoint());
+					centreMapTo(ThisUser.getInstance().getCurrentGeoPoint());
 					return;
 				}
 			}
 			progressDialog.dismiss();
 	}
-		centreMapTo(ThisUser.getInstance().getSourceGeoPoint());
+		centreMapTo(ThisUser.getInstance().getCurrentGeoPoint());
 	}
 		
 public void centreMapTo(SBGeoPoint centrePoint)
@@ -200,7 +200,7 @@ public void centreMapToPlusLilUp(SBGeoPoint centrePoint)
 	    thisUserOverlay.addThisUser();	    
 	    mapView.getOverlays().add(thisUserOverlay);
 	    mapView.postInvalidate();	       
-	    mapcontroller.animateTo(ThisUser.getInstance().getSourceGeoPoint());
+	    mapcontroller.animateTo(ThisUser.getInstance().getCurrentGeoPoint());
 	    //onResume of mapactivity doesnt update user till its once initialized
 	    mapInitialized = true;
 	  
@@ -340,8 +340,8 @@ public void centreMapToPlusLilUp(SBGeoPoint centrePoint)
 	
 	private void centerMap() {
 
-		int mylat = ThisUser.getInstance().getSourceGeoPoint().getLatitudeE6();
-		int mylon = ThisUser.getInstance().getSourceGeoPoint().getLongitudeE6();
+		int mylat = ThisUser.getInstance().getCurrentGeoPoint().getLatitudeE6();
+		int mylon = ThisUser.getInstance().getCurrentGeoPoint().getLongitudeE6();
         int minLat = mylat;
         int maxLat = mylat;
         int minLon = mylon;

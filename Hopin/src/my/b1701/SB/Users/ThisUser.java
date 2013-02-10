@@ -13,13 +13,12 @@ public class ThisUser {
 	//private SBLocation dstlocation=null;
 
 	private SBGeoPoint currentGeoPoint=null;
-	private SBGeoPoint shareReqGeoPoint=null;
-	private SBGeoPoint destinationGeoPoint=null;
-	private GeoAddress currentGeoAddress=null;
-	private GeoAddress shareReqGeoAddress=null;
-    private GeoAddress sourceGeoAddress;
+	private SBGeoPoint sourceGeoPoint=null;
+	private SBGeoPoint destinationGeoPoint=null;	
+    private GeoAddress sourceGeoAddress = null;
 	private GeoAddress destinationGeoAddress=null;
-	private String timeOfRequest;
+	private String timeOfRequest = "";
+	private String dateOfRequest = "";
 	private int take_offer_type = 0; //0=>offer 1=>share
 	private int daily_instant_type = 0;//pool 0.instant 1
 	/*
@@ -80,7 +79,7 @@ public class ThisUser {
 		return currlocation;
 	}
 
-	public void setLocation(SBLocation location) {
+	public void setCurrentLocation(SBLocation location) {
 		this.currlocation = location;		 
 		currentGeoPoint = new SBGeoPoint(location);
 		Log.i(TAG,"setting location"+currentGeoPoint.toString());
@@ -113,38 +112,41 @@ public class ThisUser {
 		this.destinationGeoPoint = sbGeoPoint;
 	}
 
-	public SBGeoPoint getSourceGeoPoint() {
-		Log.i(TAG,"get curr loc");
-		
-			return currentGeoPoint;
-		
-			
+	public SBGeoPoint getCurrentGeoPoint() {
+		return currentGeoPoint;
 	}
-	public void setSourceGeoPoint(SBGeoPoint currentGeoPoint) {
-		if(currentGeoPoint != null){
-			Log.i(TAG, "Set!");
-		}
+	
+	public void setCurrentGeoPoint(SBGeoPoint currentGeoPoint) {
 		this.currentGeoPoint = currentGeoPoint;
 	}
 
-	public SBGeoPoint getShareReqGeoPoint() {
-		return shareReqGeoPoint;
+	public SBGeoPoint getSourceGeoPoint() {
+		return sourceGeoPoint;
 	}
 
-	public void setShareReqGeoPoint() {
-		if(currlocation!=null)
-			this.shareReqGeoPoint = this.currentGeoPoint;
-		else
-			Log.i(TAG,"current share loc found to be null");
+	public void setSourceGeoPoint(SBGeoPoint srcGeoPoint) {		
+			this.sourceGeoPoint = srcGeoPoint;		
 	}
 
 	public String getTimeOfRequest() {
 		return timeOfRequest;
 	}
 
+	public void setDateOfRequest(String dateOfRequest) {
+		this.dateOfRequest = timeOfRequest;
+	}	
+	
+	public String getDateOfRequest() {
+		return dateOfRequest;
+	}
+
 	public void setTimeOfRequest(String timeOfRequest) {
 		this.timeOfRequest = timeOfRequest;
-	}	
+	}
+	
+	public String getDateAndTimeOfRequest() {
+		return dateOfRequest + " " + timeOfRequest;
+	}
 
     public GeoAddress getSourceGeoAddress(){
         return sourceGeoAddress;

@@ -23,8 +23,8 @@ public class CheckAndDeleteUserOutOfReqArea extends TimerTask{
 	
 	@Override
 	public void run() {
-		currGeoPoint = ThisUser.getInstance().getSourceGeoPoint();
-		shareReqGeoPoint = ThisUser.getInstance().getShareReqGeoPoint();
+		currGeoPoint = ThisUser.getInstance().getCurrentGeoPoint();
+		shareReqGeoPoint = ThisUser.getInstance().getSourceGeoPoint();
 		
 		ToastTracker.showToast("chking if user out of req area");
 		

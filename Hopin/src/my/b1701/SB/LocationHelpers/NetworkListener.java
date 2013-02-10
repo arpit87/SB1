@@ -79,8 +79,8 @@ public class NetworkListener implements LocationListener{
 			//window continuing
 			//Log.i(TAG,"thiswindowbest location:"+thisWindowBestLocation.toString());
 			thisWindowBestLocation = location;		
-			ThisUser.getInstance().setLocation(new SBLocation(location));
-			if(MapListActivityHandler.getInstance().isUpdateMapRealTime() && MapListActivityHandler.getInstance().isMapInitialized())
+			ThisUser.getInstance().setCurrentLocation(new SBLocation(location));
+			if(MapListActivityHandler.getInstance().isUpdateMap() && MapListActivityHandler.getInstance().isMapInitialized())
 			{				
 				MapListActivityHandler.getInstance().updateThisUserMapOverlay();				
 			}
