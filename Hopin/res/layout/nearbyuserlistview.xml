@@ -59,10 +59,9 @@
       android:layout_marginTop="5dip" >
 
       <TextView
-          android:id="@+id/UserNameInList"
+          android:id="@+id/my_name_listview"
           android:layout_width="wrap_content"
-          android:layout_height="wrap_content"          
-          android:text="Arpit Mishra"
+          android:layout_height="wrap_content" 
           android:ellipsize="marquee"
           android:maxLines="1"
           android:textColor="#040404"
@@ -70,31 +69,30 @@
           android:textStyle="bold" />
 
       <TextView
-          android:id="@+id/SourceInList"
+          android:id="@+id/my_source_listview"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:ellipsize="marquee"
           android:maxLines="1"
-          android:text="Search users to same destination"
+          android:text="@string/source_listview"
           android:textColor="#040404"
           android:textSize="13sp" />
       
        <TextView
-          android:id="@+id/DestinationInList"
+          android:id="@+id/my_destination_listview"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:ellipsize="marquee"
           android:maxLines="1" 
-          android:text="Tap on search icon on bar"         
+          android:text="@string/destination_listview"         
           android:textColor="#040404"
           android:textSize="13sp" />
        
        <TextView
-          android:id="@+id/TimeInList"
+          android:id="@+id/my_time_listview"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:ellipsize="marquee"
-          
+          android:ellipsize="marquee"          
           android:maxLines="2"
           android:textColor="#040404"
           android:textSize="13sp" />

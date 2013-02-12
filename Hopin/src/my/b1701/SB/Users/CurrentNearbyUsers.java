@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import my.b1701.SB.HelperClasses.JSONHandler;
+import my.b1701.SB.HelperClasses.ToastTracker;
 
 import org.json.JSONObject;
 
@@ -32,6 +33,10 @@ public class CurrentNearbyUsers {
 		//we return null for 0 users so check for null always while getting nearby users
 		Log.i(TAG,"updating nearby users");
 		mNewNearbyUserList = JSONHandler.getInstance().GetNearbyUsersInfoFromJSONObject(body);	
+		if(mNewNearbyUserList!=null)
+			ToastTracker.showToast("new users:"+mNewNearbyUserList.size());
+		else
+			ToastTracker.showToast("new users 0");
 		
 	}
 
@@ -69,6 +74,7 @@ public class CurrentNearbyUsers {
 	
 	public boolean usersHaveChanged()
 	{
+		Log.i(TAG,"chking if usr changed ");
 		if(mCurrentNearbyUserList == null)
 		{			
 			if(mNewNearbyUserList == null)
@@ -77,22 +83,31 @@ public class CurrentNearbyUsers {
 				return true; //first time update
 		}
 		else if(mNewNearbyUserList == null)
-			return true; //new number of users is 0 but currently we showing some who moved out		
-		
+		{
+			ToastTracker.showToast("users changed to 0");
+			return true; //new number of users is 0 but currently we showing some who moved out	
+		}
 				
 		//check for objects inside..we have overriden equals..yiipee
-		if(mNewNearbyUserList.equals(mCurrentNearbyUserList))
+		for(NearbyUser n:mNewNearbyUserList)
 		{
-			Log.i(TAG,"user did not change ");
-			return false;
-		}
-		else
-		{		
+			if(mCurrentNearbyUserList.contains(n))
+				continue;	
+				
 			Log.i(TAG,"user have changed ");
+			ToastTracker.showToast("users changed");
 			return true;
-		}
-		
-		
+		}		
+		Log.i(TAG,"user did not change ");
+		ToastTracker.showToast("users not changed");
+		return false;
+	}
+	
+	public void clearAllData()
+	{
+		mCurrentNearbyUserList.clear();
+		mNewNearbyUserList.clear();
+		FBID_NearbyUserMap.clear();
 	}
 	
 }

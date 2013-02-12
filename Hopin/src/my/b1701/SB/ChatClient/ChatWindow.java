@@ -20,6 +20,7 @@ import my.b1701.SB.HttpClient.GetMatchingNearbyUsersRequest;
 import my.b1701.SB.HttpClient.SBHttpClient;
 import my.b1701.SB.HttpClient.SBHttpRequest;
 import my.b1701.SB.Server.GetMatchingNearbyUsersResponse;
+import my.b1701.SB.Server.ServerConstants;
 import my.b1701.SB.Users.CurrentNearbyUsers;
 import my.b1701.SB.Users.NearbyUser;
 import android.app.Activity;
@@ -62,7 +63,7 @@ public class ChatWindow extends Activity{
     private ISBChatConnAndMiscListener mCharServiceConnMiscListener = new SBChatServiceConnAndMiscListener();
     private final ChatServiceConnection mChatServiceConnection = new ChatServiceConnection();
     private String mParticipantFBID = "";    
-    private SBBroadcastReceiver mSBBroadcastReceiver = new SBBroadcastReceiver();
+    private SBChatBroadcastReceiver mSBBroadcastReceiver = new SBChatBroadcastReceiver();
     Handler mHandler = new Handler();
     private SBChatListViewAdapter mMessagesListAdapter = new SBChatListViewAdapter();
     private boolean mBinded = false;
@@ -211,7 +212,7 @@ public void onResume() {
 	    		//some new user not yet visible to this user has initiated chat
 	    		//so we call server to get nearby user which should have this user
 	    		ProgressHandler.showInfiniteProgressDialoge(this, "Please wait..", "");
-	    		this.registerReceiver(mSBBroadcastReceiver, new IntentFilter(GetMatchingNearbyUsersResponse.NEARBY_USER_UPDATED));
+	    		this.registerReceiver(mSBBroadcastReceiver, new IntentFilter(ServerConstants.NEARBY_USER_UPDATED));
 	    		SBHttpRequest getNearbyUsersRequest = new GetMatchingNearbyUsersRequest();
 	    	    SBHttpClient.getInstance().executeRequest(getNearbyUsersRequest);	    		
 	    	}

@@ -1,6 +1,10 @@
 package my.b1701.SB.ActivityHandlers;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.logging.SimpleFormatter;
 
 import my.b1701.SB.R;
 import my.b1701.SB.Activities.MapListViewTabActivity;
@@ -9,7 +13,9 @@ import my.b1701.SB.Fragments.FBLoginDialogFragment;
 import my.b1701.SB.Fragments.SBListFragment;
 import my.b1701.SB.Fragments.SBMapFragment;
 import my.b1701.SB.HelperClasses.ProgressHandler;
+import my.b1701.SB.HelperClasses.SBImageLoader;
 import my.b1701.SB.HelperClasses.ThisUserConfig;
+import my.b1701.SB.HelperClasses.ToastTracker;
 import my.b1701.SB.LocationHelpers.SBGeoPoint;
 import my.b1701.SB.LocationHelpers.SBLocation;
 import my.b1701.SB.LocationHelpers.SBLocationManager;
@@ -17,12 +23,17 @@ import my.b1701.SB.MapHelpers.BaseItemizedOverlay;
 import my.b1701.SB.MapHelpers.NearbyUsersItemizedOverlay;
 import my.b1701.SB.MapHelpers.ThisUserItemizedOverlay;
 import my.b1701.SB.Platform.Platform;
+import my.b1701.SB.Server.GetMatchingNearbyUsersResponse;
+import my.b1701.SB.Server.ServerConstants;
 import my.b1701.SB.Users.CurrentNearbyUsers;
 import my.b1701.SB.Users.NearbyUser;
 import my.b1701.SB.Users.ThisUser;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.TransitionDrawable;
 import android.util.Log;
 import android.view.Gravity;
@@ -31,12 +42,15 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;
 
-public class MapListActivityHandler  {
+public class MapListActivityHandler  extends BroadcastReceiver{
 	
 	SBMapView mapView;	
 	private static final String TAG = "my.b1701.SB.ActivityHandlers.MapActivityHandler";
@@ -55,6 +69,14 @@ public class MapListActivityHandler  {
 	PopupWindow fbPopupWindow = null;
 	View fbloginlayout = null;
 	ViewGroup popUpView = null;
+	ViewGroup mListViewContainer;
+	private ListView mListView;
+	ImageView mListImageView;
+	private TextView mDestination;
+	private TextView mSource;
+	private TextView mUserName;
+	private TextView mtime;
+	
 	
 			
 	public BaseItemizedOverlay getNearbyUserItemizedOverlay() {
@@ -75,6 +97,13 @@ public class MapListActivityHandler  {
 		this.underlyingActivity = underlyingActivity;
 	}
 
+	public void setListFrag(SBListFragment listFrag) {
+		this.listFrag = listFrag;
+	}
+	
+	public void setMapFrag(SBMapFragment mapFrag) {
+		this.mapFrag = mapFrag;
+	}
 
 	private MapListActivityHandler(){super();}	
 	
@@ -91,7 +120,8 @@ public class MapListActivityHandler  {
 
 	public void setMapView(SBMapView mapView) {
 		this.mapView = mapView;
-	}		
+	}	
+	
 	
 	public boolean isUpdateMap() {
 		return updateMap;
@@ -105,7 +135,7 @@ public class MapListActivityHandler  {
 	public void initMyLocation() 
 	{ 
 		
-		SBLocation currLoc = ThisUser.getInstance().getLocation();
+		SBLocation currLoc = ThisUser.getInstance().getCurrentLocation();
 		if(currLoc == null)
 		{
 			//location not found yet after initial screen!try more for 6 secs
@@ -123,7 +153,7 @@ public class MapListActivityHandler  {
 			    	  {
 			    		  alertDialog = new AlertDialog.Builder(underlyingActivity).create(); 
 			    		  alertDialog.setTitle("Boo-hoo..");
-			    		  alertDialog.setMessage("Some problem with fetching network location,please enter location yourself");
+			    		  alertDialog.setMessage("Some problem with fetching network location,please enter source location yourself in user search");
 			    		  alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
 			    	           public void onClick(DialogInterface dialog, int id) {
 			    	                dialog.cancel();
@@ -133,10 +163,10 @@ public class MapListActivityHandler  {
 			    	  }
 			      } 
 			 };			        
-			Platform.getInstance().getHandler().postDelayed(fetchLocation, 6000);// post after 6 secs
+			Platform.getInstance().getHandler().postDelayed(fetchLocation, 4000);// post after 6 secs
 		}
 		else
-		{					
+		{				
 			putInitialOverlay();		
 		}
 	}
@@ -149,7 +179,15 @@ public class MapListActivityHandler  {
 			return;
 		}
 		
-		int startInterval = 60;
+		//if we have source which might be different from current then zoom in to source
+		SBGeoPoint sourceGeoPoint = ThisUser.getInstance().getSourceGeoPoint();
+		if(sourceGeoPoint!=null)
+		{
+			centreMapTo(sourceGeoPoint);
+			return;
+		}
+		//else to current
+		int startInterval = 300;
 		SBLocation thisCurrLoc = SBLocationManager.getInstance().getLastXSecBestLocation(startInterval);
 		if(thisCurrLoc == null)
 		{
@@ -160,16 +198,14 @@ public class MapListActivityHandler  {
 				thisCurrLoc = SBLocationManager.getInstance().getLastXSecBestLocation(startInterval*attempt);
 				if(thisCurrLoc != null)
 				{
-					progressDialog.dismiss();
-					ThisUser.getInstance().setCurrentLocation(thisCurrLoc);
-					updateThisUserMapOverlay();
-					centreMapTo(ThisUser.getInstance().getCurrentGeoPoint());
-					return;
+					break;
 				}
 			}
 			progressDialog.dismiss();
-	}
-		centreMapTo(ThisUser.getInstance().getCurrentGeoPoint());
+		}
+		ThisUser.getInstance().setCurrentLocation(thisCurrLoc);
+		ThisUser.getInstance().setSourceLocation(thisCurrLoc);
+		updateThisUserMapOverlay();
 	}
 		
 public void centreMapTo(SBGeoPoint centrePoint)
@@ -181,8 +217,8 @@ public void centreMapTo(SBGeoPoint centrePoint)
 public void centreMapToPlusLilUp(SBGeoPoint centrePoint)
 {
 	GeoPoint lilUpcentrePoint = new GeoPoint(centrePoint.getLatitudeE6()+1000/mapView.getZoomLevel(), centrePoint.getLongitudeE6());
-	if(centrePoint !=null)
-		mapcontroller.animateTo(centrePoint);
+	if(lilUpcentrePoint !=null)
+		mapcontroller.animateTo(lilUpcentrePoint);
 }
 	
 	
@@ -237,6 +273,7 @@ public void centreMapToPlusLilUp(SBGeoPoint centrePoint)
 			mapView.removeAllNearbyUserView();
 		}		
 		
+		
 		//null means 0 users returned by server or not yet single call to server
 		if(nearbyUsers == null)
 			return;			
@@ -249,8 +286,7 @@ public void centreMapToPlusLilUp(SBGeoPoint centrePoint)
 		
 		//update listview
 		NearbyUsersListViewAdapter adapter = new NearbyUsersListViewAdapter(underlyingActivity, nearbyUsers);
-		if(listFrag == null)
-			listFrag = (SBListFragment)underlyingActivity.getListFrag();
+		
 		if(listFrag != null)
 		{
 			listFrag.setListAdapter(adapter);
@@ -332,12 +368,13 @@ public void centreMapToPlusLilUp(SBGeoPoint centrePoint)
 		    thisUserOverlay.updateThisUser();
 		    Log.i(TAG,"this user map overlay updated");
 		    mapView.postInvalidate();	       
-		    mapcontroller.animateTo(ThisUser.getInstance().getSourceGeoPoint());
+		    //mapcontroller.animateTo(ThisUser.getInstance().getSourceGeoPoint());
 		}
 		else
 			Log.i(TAG,"but thisUSeroverlay empty!how?shldnt be..we initialixed it in init");
 	}	
 	
+		
 	private void centerMap() {
 
 		int mylat = ThisUser.getInstance().getCurrentGeoPoint().getLatitudeE6();
@@ -359,8 +396,114 @@ public void centreMapToPlusLilUp(SBGeoPoint centrePoint)
                 minLon = Math.min(lon, minLon);
         }
 
-        mapcontroller.zoomToSpan(Math.abs(maxLat - minLat), Math.abs(maxLon - minLon));
+        mapcontroller.zoomToSpan(Math.abs(maxLat - minLat), Math.abs(maxLon - minLon));        
         mapcontroller.animateTo(new GeoPoint((maxLat + minLat) / 2, (maxLon + minLon) / 2));
+}
+	
+public void clearAllData()
+{
+	if(mapView!=null)
+	{
+		mapView.removeAllViews();
+		mapView.getOverlays().clear();
+	}
+	if(mListView!=null)
+		mListView.removeAllViews();
+	if(mSource!=null)
+		mSource.setText(R.string.source_listview);
+	if(mDestination!=null)
+		mDestination.setText(R.string.destination_listview);
+	if(mtime!=null)
+		mtime.setText("");
+}
+
+
+@Override
+public void onReceive(Context context, Intent intent) {
+	String intentAction = intent.getAction();
+	if(intentAction.equals(ServerConstants.NEARBY_USER_UPDATED))
+	{
+		ToastTracker.showToast("update intent received");
+		updateNearbyUsers();
+	}	
+}
+
+public ViewGroup getThisListContainerWithListView() {
+    if (mListViewContainer == null) {
+        mListViewContainer = (ViewGroup) underlyingActivity.getLayoutInflater().inflate(R.layout.nearbyuserlistview, null, false);
+        mListImageView = (ImageView) mListViewContainer.findViewById(R.id.selfthumbnail);
+        mUserName = (TextView) mListViewContainer.findViewById(R.id.my_name_listview);
+        mDestination = (TextView) mListViewContainer.findViewById(R.id.my_destination_listview);
+        mSource =  (TextView) mListViewContainer.findViewById(R.id.my_source_listview);         
+        mListView = (ListView) mListViewContainer.findViewById(R.id.list);
+        mtime = (TextView) mListViewContainer.findViewById(R.id.my_time_listview); 
+        updateUserNameInListView();
+        updateUserPicInListView();
+        //mMapViewContainer.removeView(mMapView);
+    }    
+
+	return mListViewContainer;
+}
+
+public void updateUserPicInListView() {
+    if (mListImageView != null) {
+        String fbPicURL = ThisUserConfig.getInstance().getString(ThisUserConfig.FBPICURL);
+        if (fbPicURL != "") {
+            SBImageLoader.getInstance().displayImageElseStub(fbPicURL, mListImageView, R.drawable.userpicicon);
+        } else {
+            mListImageView.setImageDrawable(Platform.getInstance().getContext().getResources().getDrawable(R.drawable.userpicicon));
+        }
+    }
+}
+
+public void updateUserNameInListView() {
+    if (mUserName != null) {
+        String userName = ThisUserConfig.getInstance().getString(ThisUserConfig.USERNAME);
+        if (userName==null) {
+            return;
+        }
+        mUserName.setText(userName);
+    }
+}
+
+public void updateSrcDstTimeInListView() {
+	
+	if (mListViewContainer == null) {
+        mListViewContainer = (ViewGroup) underlyingActivity.getLayoutInflater().inflate(R.layout.nearbyuserlistview, null, false);
+        mListImageView = (ImageView) mListViewContainer.findViewById(R.id.selfthumbnail);
+        mUserName = (TextView) mListViewContainer.findViewById(R.id.my_name_listview);
+        mDestination = (TextView) mListViewContainer.findViewById(R.id.my_destination_listview);
+        mSource =  (TextView) mListViewContainer.findViewById(R.id.my_source_listview);         
+        mListView = (ListView) mListViewContainer.findViewById(R.id.list);
+        mtime = (TextView) mListViewContainer.findViewById(R.id.my_time_listview); 
+	}
+	
+    SBGeoPoint sourceGeoPoint = ThisUser.getInstance().getSourceGeoPoint();
+    if (sourceGeoPoint != null) {
+    	mSource.setText(sourceGeoPoint.getAddress());
+    }    
+
+    SBGeoPoint destinationGeoPoint = ThisUser.getInstance().getDestinationGeoPoint();
+    if (destinationGeoPoint != null) {
+        mDestination.setText(destinationGeoPoint.getAddress());
+    }    
+    
+    String date_time = ThisUser.getInstance().getDateAndTimeOfRequest();
+    if(date_time != "")
+    {
+    	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    	Date date;
+		try {
+			date = formatter.parse(date_time);
+			formatter.applyPattern("h:mm a, EEE, MMM d");
+	    	String newFormat = formatter.format(date);
+	    	mtime.setText("Time: "+newFormat);
+		} catch (ParseException e) {
+			
+			e.printStackTrace();
+		}
+    	
+    }
 }
 		
 }

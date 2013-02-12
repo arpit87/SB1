@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="260dip"
-    android:layout_height="wrap_content"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:background="@drawable/dialoge_background"
     android:orientation="vertical"
     android:paddingBottom="5dip"
@@ -23,13 +23,13 @@
             android:layout_marginRight="1.0dip"
             android:paddingBottom="2.0dip"
             android:paddingTop="2.0dip"
-            android:text="Enter your name"
+            android:text="Tutorial activity,enter name"
             android:textStyle="bold"
             android:textColor="@color/black"            
             android:textSize="20dip" />
 
         <View
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="2dip"
             android:layout_below="@+id/enter_username_header_text"
             android:background="@color/dialog_grey"

@@ -17,6 +17,8 @@ public class UserFBInfo {
     private String hometown = "";
     private String fbid = "";
     private String fbusername = "";
+    private String phone = "";
+    private String email = "";
 
     public UserFBInfo() {
         // TODO Auto-generated constructor stub
@@ -30,60 +32,79 @@ public class UserFBInfo {
         } catch (JSONException e) {
         	return;
         }
-
-        try {
-            firstName = allInfo.getString(UserAttributes.FB_FIRSTNAME);
-        } catch (JSONException e) {
-        }
-
-        try {
-            lastName = allInfo.getString(UserAttributes.FB_LASTNAME);
-        } catch (JSONException e) {
-        }
-
-        try {
-            gender = allInfo.getString(UserAttributes.GENDER);
-        } catch (JSONException e) {
-        }
-
-        try {
-            fbid = allInfo.getString(UserAttributes.FBID);
-        } catch (JSONException e) {
-        }
-
-        try {
-            imageURL = allInfo.getString(UserAttributes.IMAGEURL);
-        } catch (JSONException e) {
-        }
-
-        try {
-            worksAt = allInfo.getString(UserAttributes.WORKSAT);
-        } catch (JSONException e) {
-        }
-
-        try {
-            livesIn = allInfo.getString(UserAttributes.LIVESIN);
-        } catch (JSONException e) {
-        }
-
-        try {
-            studiedAt = allInfo.getString(UserAttributes.STUDYAT);
-        } catch (JSONException e) {
-        }
-
-        try {
-            hometown = allInfo.getString(UserAttributes.HOMETOWN);
-        } catch (JSONException e) {
-        }
         
-        try {
-            fbusername = allInfo.getString(UserAttributes.FBUSERNAME);
-        } catch (JSONException e) {
+        if(FBInfoAvailable())
+        {
+	        try {
+	            firstName = allInfo.getString(UserAttributes.FB_FIRSTNAME);
+	        } catch (JSONException e) {
+	        }
+	
+	        try {
+	            lastName = allInfo.getString(UserAttributes.FB_LASTNAME);
+	        } catch (JSONException e) {
+	        }
+	
+	        try {
+	            gender = allInfo.getString(UserAttributes.GENDER);
+	        } catch (JSONException e) {
+	        }
+	
+	        try {
+	            fbid = allInfo.getString(UserAttributes.FBID);
+	        } catch (JSONException e) {
+	        }
+	
+	        try {
+	            imageURL = allInfo.getString(UserAttributes.IMAGEURL);
+	        } catch (JSONException e) {
+	        }
+	
+	        try {
+	            worksAt = allInfo.getString(UserAttributes.WORKSAT);
+	        } catch (JSONException e) {
+	        }
+	
+	        try {
+	            livesIn = allInfo.getString(UserAttributes.LIVESIN);
+	        } catch (JSONException e) {
+	        }
+	
+	        try {
+	            studiedAt = allInfo.getString(UserAttributes.STUDYAT);
+	        } catch (JSONException e) {
+	        }
+	
+	        try {
+	            hometown = allInfo.getString(UserAttributes.HOMETOWN);
+	        } catch (JSONException e) {
+	        }
+	        
+	        try {
+	            fbusername = allInfo.getString(UserAttributes.FBUSERNAME);
+	        } catch (JSONException e) {
+	        }
+	        
+	        try {
+	            phone = allInfo.getString(UserAttributes.PHONE);
+	        } catch (JSONException e) {
+	        }
+	        try {
+	            email = allInfo.getString(UserAttributes.EMAIL);
+	        } catch (JSONException e) {
+	        }
         }
     }
 	
 	public boolean FBInfoAvailable() {  
 		if(fbinfoavailable.equals("1"))
+			return true;
+		else
+			return false;
+    }
+	
+	public boolean isPhoneAvailable() {  
+		if(phone!="")
 			return true;
 		else
 			return false;

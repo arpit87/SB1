@@ -23,7 +23,8 @@ public class ProgressHandler {
 		{
 			Platform.getInstance().getHandler().post((new Runnable(){
 				public void run() {						
-					progressDialog = ProgressDialog.show(underlying_activity, title, message, true);				
+					progressDialog = ProgressDialog.show(underlying_activity, title, message, true);	
+					progressDialog.setCancelable(true);
 				}}));
 		}
 		else

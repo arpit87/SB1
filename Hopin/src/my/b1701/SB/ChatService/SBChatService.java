@@ -3,6 +3,7 @@ package my.b1701.SB.ChatService;
 import my.b1701.SB.R;
 import my.b1701.SB.ChatClient.ChatWindow;
 import my.b1701.SB.HelperClasses.SBConnectivity;
+import my.b1701.SB.HelperClasses.ToastTracker;
 
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.ConnectionListener;
@@ -82,6 +83,7 @@ public class SBChatService extends Service {
 	@Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i("LocalService", "Received start id " + startId + ": " + intent);
+        ToastTracker.showToast("service strted with id:"+startId);
         // We want this service to continue running until it is explicitly
         // stopped, so return sticky.
         return START_STICKY;
@@ -90,13 +92,13 @@ public class SBChatService extends Service {
 	@Override
     public void onDestroy() {
 	super.onDestroy();
+	ToastTracker.showToast("stopping service and xmpp disconnecting");
 	isRunning = false;
 	mNotificationManager.cancelAll();
 	unregisterReceiver(mReceiver);
 	if (mConnectionAdapter.isAuthenticated() && SBConnectivity.isConnected())
 		mConnectionAdapter.disconnect();
-	Log.i(TAG, "Stopping the service");
-	Log.i(TAG, "Stopping the service");
+	Log.i(TAG, "Stopping the service");	
     }
 	
 	private void initializeConfigration()
@@ -164,7 +166,7 @@ class SBChatBroadcastReceiver extends BroadcastReceiver{
 	    if (intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, false)) {
 		Toast.makeText(context, context.getString(R.string.NetworkConnectivityLost),
 		    Toast.LENGTH_SHORT).show();
-		context.stopService(new Intent(context, SBChatService.class));
+		//context.stopService(new Intent(context, SBChatService.class));
 	    }
 	} else if(intentAction.equals(SBLOGIN_TO_CHAT))
 	{

@@ -6,6 +6,8 @@ import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import my.b1701.SB.R;
+import my.b1701.SB.Fragments.FBLoginDialogFragment;
+import my.b1701.SB.Fragments.UserNameDialogFragment;
 import my.b1701.SB.HelperClasses.SBConnectivity;
 import my.b1701.SB.HelperClasses.ThisAppConfig;
 import my.b1701.SB.HelperClasses.ThisAppInstallation;
@@ -64,23 +66,23 @@ public class StartStrangerBuddyActivity extends Activity {
         
         if(!SBConnectivity.isConnected())
         {
-			Toast.makeText(platformContext, "No inmternet", Toast.LENGTH_SHORT);
+			Toast.makeText(platformContext, "No network connection", Toast.LENGTH_SHORT);
 			finish();
 			return;
         }
         
       //this might only connect to xmpp server and not login if new user and not yet fb login
-        startChatService();
+      //  startChatService();
                
         //map activity can get started from 3 places, timer task if location found instantly
         //else this new runnable posted after 3 seconds
         //else on first run
-        showSBMapViewActivity = new Intent(this, MapListViewTabActivity.class);
-        showSBMapViewActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        showSBMapViewActivity = new Intent(platformContext, MapListViewTabActivity.class);
+        showSBMapViewActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
         
         startMapActivity = new Runnable() {
 	          public void run() {	        		  
-	        		  startActivity(showSBMapViewActivity);
+	        	  platformContext.startActivity(showSBMapViewActivity);
 	          }};
         
         
@@ -106,8 +108,9 @@ public class StartStrangerBuddyActivity extends Activity {
 		ToastTracker.showToast("Preparing for first run..");
 		String uuid = ThisAppInstallation.id(this.getBaseContext());
 		ThisAppConfig.getInstance().putString(ThisAppConfig.APPUUID,uuid);
-		SBHttpRequest request = new AddUserRequest(uuid);		
-		SBHttpClient.getInstance().executeRequest(request);
+		Intent show_tutorial = new Intent(this,Tutorial.class);
+		show_tutorial.putExtra("uuid", uuid);
+		startActivity(show_tutorial);		
 		
 	}
     
@@ -161,12 +164,12 @@ public class StartStrangerBuddyActivity extends Activity {
           }
      }
     
-    public void startChatService(){
+   /* public void startChatService(){
      
           Intent i = new Intent("my.b1701.SB.ChatService.SBChatService");                  
           Log.d( TAG, "Service starting" );
           platformContext.startService(i);
          
-         }
+         }*/
                     
 }

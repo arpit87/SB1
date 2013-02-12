@@ -64,5 +64,7 @@
     <string name="crash_toast_text">App has crashed</string>
     <string name="set_username">Set UserName</string>
     <string name="cancel">Cancel</string>
+    <string name="source_listview">Search users to same destination</string>
+    <string name="destination_listview">Tap on search icon on bar</string>
 
 </resources>

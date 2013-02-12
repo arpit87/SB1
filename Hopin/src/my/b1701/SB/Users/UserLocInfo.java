@@ -94,6 +94,11 @@ public class UserLocInfo {
 	}
 
 
+	public UserLocInfo() {
+		// TODO Auto-generated constructor stub
+	}
+
+
 	public String getUserID()
 	{
 		return userID;

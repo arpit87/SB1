@@ -99,12 +99,12 @@ public class SBLocationManager {
 		
 	}
 
-	public SBLocation getCurrentBestLocation(Location location) {
+	/*public SBLocation getCurrentBestLocation(Location location) {
 		
 		if (location != null) {
 	        float accuracy = location.getAccuracy();
 	        long time = location.getTime();
-	        SBLocation currentLocation = ThisUser.getInstance().getLocation();
+	        SBLocation currentLocation = ThisUser.getInstance().getCurrentLocation();
 	        
 	        if(currentLocation!=null)
 	        {
@@ -120,8 +120,8 @@ public class SBLocationManager {
 	        	ThisUser.getInstance().setCurrentLocation(new SBLocation(location));
 	                		        
 		}
-		return ThisUser.getInstance().getLocation();
-	}	
+		return ThisUser.getInstance().getCurrentLocation();
+	}	*/
 	
 }
 

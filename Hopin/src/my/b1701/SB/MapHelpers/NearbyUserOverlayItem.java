@@ -34,6 +34,7 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 	protected static LayoutInflater mInflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
 	private View viewOnMarkerSmall = null; 
 	private View viewOnMarkerExpanded = null;	
+	private TextView expandedBalloonHeader = null;
 	private ImageView picViewSmall = null;
 	private ImageView picViewExpanded = null;
 	private ImageView chatIcon = null;
@@ -43,7 +44,8 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 	private SBGeoPoint mGeoPoint = null;
 	private String mImageURL= "";
 	private String mUserFBID= "";
-	private String mUserFBUsername = "";
+	private String mUserName= "";
+	private String mUserFBName = "";
 	boolean isVisibleSmall = false;
 	boolean isVisibleExpanded = false;
 	private NearbyUser mNearbyUser = null;
@@ -53,10 +55,11 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 		super(user.getUserLocInfo().getGeoPoint(), user.getUserFBInfo().getImageURL(), user.getUserFBInfo().getFbid());
 		this.mGeoPoint = user.getUserLocInfo().getGeoPoint();		
 		this.mMapView = mapView;
+		this.mUserName = user.getUserOtherInfo().getUserName();
 		this.mUserFBInfo = user.getUserFBInfo();
 		this.mImageURL = mUserFBInfo.getImageURL();
 		this.mUserFBID = mUserFBInfo.getFbid();
-		this.mUserFBUsername = mUserFBInfo.getFBUsername();
+		this.mUserFBName = mUserFBInfo.getFirstName()+" "+mUserFBInfo.getLastName();
 		this.mNearbyUser = user;
 		createAndDisplaySmallView();
 		/*Drawable icon= Platform.getInstance().getContext().getResources().getDrawable(R.drawable.green_marker);
@@ -169,11 +172,16 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 			removeSmallView();
 			viewOnMarkerExpanded = mInflater.inflate(R.layout.map_expanded_layout, null);
 			picViewExpanded = (ImageView)viewOnMarkerExpanded.findViewById(R.id.expanded_pic);		
-			
+			expandedBalloonHeader = (TextView)viewOnMarkerExpanded.findViewById(R.id.expanded_balloon_header);
 			chatIcon = (ImageView)viewOnMarkerExpanded.findViewById(R.id.chat_icon_view);
 			smsIcon = (ImageView)viewOnMarkerExpanded.findViewById(R.id.sms_icon);
 			facebookIcon = (ImageView)viewOnMarkerExpanded.findViewById(R.id.fb_icon_view);
 			buttonClose = (ImageView)viewOnMarkerExpanded.findViewById(R.id.button_close_balloon_expandedview);
+			
+			if(mUserFBName!=null)
+				expandedBalloonHeader.setText(mUserFBName);
+			else
+				expandedBalloonHeader.setText(mUserName);
 			
 			if(!ThisUserConfig.getInstance().getBool(ThisUserConfig.FBLOGGEDIN))
 			{
@@ -183,6 +191,7 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 				smsIcon.invalidate();
 				facebookIcon.setImageResource(R.drawable.fb_icon_disabled);
 				facebookIcon.invalidate();
+				
 			}
 			else if(!mUserFBInfo.FBInfoAvailable())
 			{
@@ -190,10 +199,11 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 				chatIcon.invalidate();				
 				facebookIcon.setImageResource(R.drawable.fb_icon_disabled);
 				facebookIcon.invalidate();
+				
 			}
 			
-			if(!mNearbyUser.getUserOtherInfo().isMobileNumberAvailable())
-			{
+			if(!mNearbyUser.getUserFBInfo().isPhoneAvailable())
+			{				
 				smsIcon.setImageResource(R.drawable.sms_icon_disabled);
 				smsIcon.invalidate();
 			}
@@ -229,7 +239,7 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 			facebookIcon.setOnClickListener(new OnClickListener() {				
 				@Override
 				public void onClick(View chatIconView) {
-					CommunicationHelper.getInstance().onFBIconClickWithUser((Activity)context,mUserFBID,mUserFBUsername);						
+					CommunicationHelper.getInstance().onFBIconClickWithUser((Activity)context,mUserFBID,mUserFBName);						
 				}
 			});		
 						

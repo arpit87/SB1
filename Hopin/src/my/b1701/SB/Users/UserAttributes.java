@@ -17,6 +17,7 @@ public class UserAttributes {
 	public static String DATETIME = "time";
 	public static String TIME = "time";
 	public static String MOBILENUMBER = "mobile_available";
+	public static String USERNAME = "username";
 	
 	//user loc attributes
 	public static String FIRSTNAME = "first_name";
@@ -52,6 +53,8 @@ public class UserAttributes {
 	public static String  STUDYAT = "study_at";
 	public static String  HOMETOWN = "hometown";
 	public static String  GENDER = "gender";
+	public static String  PHONE = "phone";
+	public static String  EMAIL = "email";
 
 	//chat 
 	public static String  CHATUSERID = "user_id";

@@ -42,10 +42,10 @@ public class AddThisUserSrcDstResponse extends ServerResponseBase{
             Intent getNearByUsersIntent = new Intent(context, GetNearByUsersService.class);
             context.startService(getNearByUsersIntent);
 
-            Intent checkAndDelUserReqServiceStartIntent = new Intent(context, CheckAndDeleteUserRequestService.class);
-            PendingIntent pendingIntent = PendingIntent.getService(context, 0, checkAndDelUserReqServiceStartIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-            AlarmManager alarmManager = (AlarmManager) (context.getSystemService(Context.ALARM_SERVICE));
-            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, TIME_INTERVAL, TIME_INTERVAL, pendingIntent);
+            //Intent checkAndDelUserReqServiceStartIntent = new Intent(context, CheckAndDeleteUserRequestService.class);
+            //PendingIntent pendingIntent = PendingIntent.getService(context, 0, checkAndDelUserReqServiceStartIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+            //AlarmManager alarmManager = (AlarmManager) (context.getSystemService(Context.ALARM_SERVICE));
+            //alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, TIME_INTERVAL, TIME_INTERVAL, pendingIntent);
 		} catch (JSONException e) {
 			Log.e(TAG, "Error returned by server on user add scr dst");
 			ProgressHandler.dismissDialoge();

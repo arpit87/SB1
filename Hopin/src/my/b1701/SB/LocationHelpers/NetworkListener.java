@@ -28,7 +28,7 @@ public class NetworkListener implements LocationListener{
 	public void start()
 	{
 		Log.i(TAG,"strted listening to network");
-		ToastTracker.showToast("strted listning to network");
+		//ToastTracker.showToast("strted listning to network");
 		//thisWindowBestLocation = null;
 		
 		SBLocationManager.getInstance().locManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0L, 0F, this,Platform.getInstance().getContext().getMainLooper());
@@ -61,35 +61,28 @@ public class NetworkListener implements LocationListener{
 		Log.i(TAG,"new network location acc:"+ location.getAccuracy());
 		ToastTracker.showToast("loc changed:acc:"+location.getAccuracy());
 		
-		locChangeCount = (locChangeCount+1)%LOC_CHANGE_PER_WINDOW;
+		//locChangeCount = (locChangeCount+1)%LOC_CHANGE_PER_WINDOW;
 		
 		//we are considering fixed window size of LOC_CHANGE_PER_WINDOW. So we choose most accurate location
 		//in that window
-		if(locChangeCount == 0)
-			thisWindowBestLocation = null;
+		//if(locChangeCount == 0)
+		//	thisWindowBestLocation = null;
 		
-		if(thisWindowBestLocation == null)
+		if(thisWindowBestLocation == null ||
+		   location.getAccuracy() < thisWindowBestLocation.getAccuracy() || 
+		   location.getTime()-thisWindowBestLocation.getTime()>180000 )
 		{		
-			//window starting
+			//window starting			
+			//this listener runs only when we are on map view
 			thisWindowBestLocation = location;
-			return;
-		}
-		else if(location.getAccuracy() < thisWindowBestLocation.getAccuracy() )
-		{
-			//window continuing
-			//Log.i(TAG,"thiswindowbest location:"+thisWindowBestLocation.toString());
-			thisWindowBestLocation = location;		
 			ThisUser.getInstance().setCurrentLocation(new SBLocation(location));
 			if(MapListActivityHandler.getInstance().isUpdateMap() && MapListActivityHandler.getInstance().isMapInitialized())
 			{				
+				ThisUser.getInstance().setSourceLocation(new SBLocation(location));
 				MapListActivityHandler.getInstance().updateThisUserMapOverlay();				
 			}
-				
-			Log.i(TAG,"thiswindowbest location:"+thisWindowBestLocation.toString());
-		}		
-		//location = SBLocationManager.getInstance().getCurrentBestLocation(location);
-		//LocationUpdater.getInstance().UpdateCurrentLocation(new SBLocation(location));
-		
+			
+		}	
 		
 	}
 	

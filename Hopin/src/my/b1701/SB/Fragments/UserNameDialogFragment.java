@@ -1,6 +1,8 @@
 package my.b1701.SB.Fragments;
 
 import my.b1701.SB.R;
+import my.b1701.SB.HelperClasses.ThisUserConfig;
+import my.b1701.SB.Users.ThisUser;
 import my.b1701.SB.Util.StringUtils;
 import android.app.Activity;
 import android.os.Bundle;
@@ -41,14 +43,16 @@ public class UserNameDialogFragment extends DialogFragment {
         final EditText userNameView = (EditText) dialogView.findViewById(R.id.listviewusername);
         userNameView.requestFocus();
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        getDialog().setCancelable(false);
+        getDialog().setCanceledOnTouchOutside(false);
         Button notnowButton = (Button)dialogView.findViewById(R.id.cancelenterusernamebutton);
 		// if button is clicked, close the custom dialog
-        notnowButton.setOnClickListener(new OnClickListener() {
+       /* notnowButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				dismiss();
 			}
-		});
+		});*/
 		
 		Button enterButton = (Button) dialogView.findViewById(R.id.enterusernamebutton);
 		// if button is clicked, close the custom dialog
@@ -61,7 +65,7 @@ public class UserNameDialogFragment extends DialogFragment {
                     return;
                 }
 
-                mListener.onSetUserNameClick(userNameText);
+               ThisUserConfig.getInstance().putString(ThisUserConfig.USERNAME, userNameText);
 				dismiss();
 				
 			}

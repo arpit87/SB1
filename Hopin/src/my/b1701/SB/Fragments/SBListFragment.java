@@ -29,7 +29,7 @@ public class SBListFragment extends ListFragment {
 	
 	@Override
 	public void onCreate(Bundle savedState) {
-        super.onCreate(savedState);
+        super.onCreate(null);
 		//update listview
         Log.i(TAG,"on create list view");
         nearbyUserlist = CurrentNearbyUsers.getInstance().getAllNearbyUsers();
@@ -39,13 +39,14 @@ public class SBListFragment extends ListFragment {
 			setListAdapter(adapter);
 			Log.i(TAG,"nearby users:"+nearbyUserlist.toString());
         }
-        ((MapListViewTabActivity)getActivity()).setListFrag(this);
+        MapListActivityHandler.getInstance().setListFrag(this);
 	}
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		super.onCreateView( inflater, container, null );
 		Log.i(TAG,"oncreateview listview");
-		mListViewContainer=  ((MapListViewTabActivity)getActivity()).getThisListContainerWithListView();
+		mListViewContainer=  MapListActivityHandler.getInstance().getThisListContainerWithListView();
 		return mListViewContainer;
 	}
 	

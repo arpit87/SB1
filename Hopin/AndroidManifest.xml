@@ -60,6 +60,10 @@
         </activity>
         <activity android:name=".Activities.StartButtonActivity" 
             android:theme="@android:style/Theme.NoTitleBar" 
+            android:screenOrientation="portrait" >			  
+        </activity>
+        <activity android:name=".Activities.Tutorial" 
+            android:theme="@android:style/Theme.NoTitleBar" 
             android:screenOrientation="portrait" >
 			  
         </activity>
@@ -88,7 +92,8 @@
         </activity>
            <activity android:name=".Activities.SearchInputActivity" 
             android:theme="@android:style/Theme.NoTitleBar" 
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait" 
+            >
             
         </activity>
        

@@ -30,8 +30,8 @@ public class NearbyUser {
 			userOtherInfoJObj = thisOtherUserJObj.getJSONObject(UserAttributes.OTHERINFO);
 			mUserOtherInfo = new UserOtherInfo(userOtherInfoJObj);					
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			mUserOtherInfo = new UserOtherInfo();
+			e.printStackTrace();			
 		}		
 		
 	}
@@ -55,7 +55,7 @@ public class NearbyUser {
 			userLocInfoJObj = thisOtherUserJObj.getJSONObject(UserAttributes.LOCINFO);
 			mUserLocInfo = new UserLocInfo(userLocInfoJObj);			
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
+			mUserLocInfo = new UserLocInfo();
 			e.printStackTrace();
 		}		
 		

@@ -8,15 +8,20 @@ import my.b1701.SB.Fragments.FBLoginDialogFragment;
 import my.b1701.SB.Fragments.SBListFragment;
 import my.b1701.SB.Fragments.SBMapFragment;
 import my.b1701.SB.Fragments.UserNameDialogFragment;
+import my.b1701.SB.HelperClasses.ProgressHandler;
 import my.b1701.SB.HelperClasses.SBImageLoader;
 import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.HelperClasses.ToastTracker;
 import my.b1701.SB.LocationHelpers.SBGeoPoint;
 import my.b1701.SB.LocationHelpers.SBLocationManager;
 import my.b1701.SB.Platform.Platform;
+import my.b1701.SB.Server.ServerConstants;
+import my.b1701.SB.Users.CurrentNearbyUsers;
 import my.b1701.SB.Users.ThisUser;
 import my.b1701.SB.Util.StringUtils;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -36,49 +41,30 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.google.android.maps.MapView;
 
 
-public class MapListViewTabActivity extends SherlockFragmentActivity implements UserNameDialogFragment.UserNameDialogListener {
+public class MapListViewTabActivity extends SherlockFragmentActivity  {
 	//public View mMapViewContainer;
-	ActionBar bar;
+	
 	private static final String TAG = "my.b1701.SB.Activities.MapListViewTabActivity";
 	
-	private ViewGroup mMapViewContainer;
-	private ViewGroup mListViewContainer;
+	MapListActivityHandler mapListActivityHandler = MapListActivityHandler.getInstance();
+	private ViewGroup mMapViewContainer;	
 	private SBMapView mMapView;
-	private ListView mListView;
-	ImageView mListImageView;
+	
 	
 	private ImageButton selfLocationButton = null;
 	private ToggleButton offerRideButton = null;
-	private SBMapFragment mapFrag;
-	private SBListFragment listFrag;
+	
 	ActionBar ab;
 	private boolean currentIsOfferMode;
 	
 	private FacebookConnector fbconnect;
 	FragmentManager fm = getSupportFragmentManager();
 	private boolean isMapShowing = true;
-    private TextView mDestination;
-    private TextView mUserName;
+   
     private ImageView mFbLogin;
-
-    public Fragment getListFrag() {
-		return listFrag;		
-	}
-	
-	public Fragment getMapFrag() {
-		return mapFrag;
-	}	
-	
-
-	public void setListFrag(SBListFragment listFrag) {
-		this.listFrag = listFrag;
-	}
-	
-	public void setMapFrag(SBMapFragment mapFrag) {
-		this.mapFrag = mapFrag;
-	}
 	
 	public FacebookConnector getFbConnector()
 	{
@@ -91,7 +77,7 @@ public class MapListViewTabActivity extends SherlockFragmentActivity implements 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        super.onCreate(null);
        // requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
        // requestWindowFeature((int) Window.FEATURE_ACTION_BAR & ~Window.FEATURE_ACTION_BAR_OVERLAY);
         setContentView(R.layout.maplistview);        
@@ -104,15 +90,18 @@ public class MapListViewTabActivity extends SherlockFragmentActivity implements 
         ab.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);       
         ab.setDisplayHomeAsUpEnabled(false);
         ab.setDisplayShowTitleEnabled(true);
-            
+        this.registerReceiver(mapListActivityHandler,new IntentFilter(ServerConstants.NEARBY_USER_UPDATED));    
         fbconnect = new FacebookConnector(this);
         
     }
     
+    @Override
     public void onResume(){
     	super.onResume();
     	//we update realtime when on map activity
     	SBLocationManager.getInstance().StartListeningtoNetwork(); 
+    	if(CurrentNearbyUsers.getInstance().getAllNearbyUsers()!=null)
+    		ToastTracker.showToast("current nearby user not null");
     	//MapListActivityHandler.getInstance().setUpdateMap(true);
     	//if(MapListActivityHandler.getInstance().isMapInitialized())
     	//	MapListActivityHandler.getInstance().updateThisUserMapOverlay();
@@ -120,6 +109,7 @@ public class MapListViewTabActivity extends SherlockFragmentActivity implements 
     }
 
     //test
+    @Override
 	public void onPause(){
     	super.onPause();
     	//MapListActivityHandler.getInstance().setUpdateMap(false);
@@ -128,7 +118,16 @@ public class MapListViewTabActivity extends SherlockFragmentActivity implements 
     	//mymapview.getOverlays().clear();
     	//mymapview.postInvalidate();
     }
+    
+    @Override
+    public void onDestroy()
+    {    
+    	super.onDestroy();    	
+    	this.unregisterReceiver(mapListActivityHandler);
+    	mapListActivityHandler.clearAllData();    	
+    }
 	
+		
 	/*@Override
 	  public void onBackPressed() {
 	    moveTaskToBack(true);
@@ -153,9 +152,8 @@ public class MapListViewTabActivity extends SherlockFragmentActivity implements 
         switch (menuItem.getItemId())
         {
         case R.id.menu_search:
-        	//onSearchRequested();
-	    	 Intent searchInputIntent = new Intent(this,SearchInputActivity.class);
-	   		 searchInputIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        	//onSearchRequested();        	 
+	    	 Intent searchInputIntent = new Intent(this,SearchInputActivity.class);	   		
 	   		 startActivity(searchInputIntent);
         	break;
         case R.id.fb_login_menuitem:
@@ -266,23 +264,7 @@ if (fm != null) {
     }
     
     
-    private void offerRideClick() {
-    	String message = "";
-    	currentIsOfferMode = ThisUserConfig.getInstance().getBool(ThisUserConfig.IsOfferMode);
-    	 if(!currentIsOfferMode)
-        	{
-        		message = "Enabled ride offering mode";
-        		ThisUserConfig.getInstance().putBool(ThisUserConfig.IsOfferMode,true);
-        	}
-        	else
-        	{
-        		message = "Disabled ride offering mode";
-        		ThisUserConfig.getInstance().putBool(ThisUserConfig.IsOfferMode,false);
-        	}	
-    		
-    	ToastTracker.showToast(message);		
-	}
-
+   
 	public ViewGroup getThisMapContainerWithMapView()
     {
     	if(mMapViewContainer == null)
@@ -297,15 +279,16 @@ if (fm != null) {
     		MapListActivityHandler.getInstance().setMapView(mMapView);
             MapListActivityHandler.getInstance().setUnderlyingActivity(this);
             Log.i(TAG,"initialize handler");
-            Log.i(TAG,"initialize mylocation");
-            ToastTracker.showToast("Updating location..",1);
-            MapListActivityHandler.getInstance().initMyLocation();            
+            Log.i(TAG,"initialize mylocation");           
+            MapListActivityHandler.getInstance().initMyLocation();  
+            
     		//mMapViewContainer.removeView(mMapView);
     	}
     	else
     	{
     		mMapViewContainer.addView(mMapView);
     		mMapViewContainer.addView(selfLocationButton);
+    		
     		//mMapViewContainer.addView(offerRideButton);
     		//if(currentIsOfferMode)
     		//	offerRideButton.setChecked(true);
@@ -313,67 +296,5 @@ if (fm != null) {
     	return mMapViewContainer;
     }
 
-    public ViewGroup getThisListContainerWithListView() {
-        if (mListViewContainer == null) {
-            mListViewContainer = (ViewGroup) getLayoutInflater().inflate(R.layout.nearbyuserlistview, null, false);
-            mListImageView = (ImageView) mListViewContainer.findViewById(R.id.selfthumbnail);
-            mUserName = (TextView) mListViewContainer.findViewById(R.id.UserNameInList);
-            mDestination = (TextView) mListViewContainer.findViewById(R.id.DestinationInList);
-            
-
-            mUserName.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    UserNameDialogFragment userNameDialogFragment = new UserNameDialogFragment();
-                    userNameDialogFragment.show(getSupportFragmentManager(), "UserName");
-                }
-            });
-
-          
-            mListView = (ListView) mListViewContainer.findViewById(R.id.list);
-            //mMapViewContainer.removeView(mMapView);
-        }
-
-        updateUserNameInListView();
-        updateUserPicInListView();
-        updateDestinationInListView();
-
-    	return mListViewContainer;
-    }
-
-    public void updateUserPicInListView() {
-        if (mListImageView != null) {
-            String fbPicURL = ThisUserConfig.getInstance().getString(ThisUserConfig.FBPICURL);
-            if (!StringUtils.isEmpty(fbPicURL)) {
-                SBImageLoader.getInstance().displayImageElseStub(fbPicURL, mListImageView, R.drawable.userpicicon);
-            } else {
-                mListImageView.setImageDrawable(Platform.getInstance().getContext().getResources().getDrawable(R.drawable.userpicicon));
-            }
-        }
-    }
-
-    public void updateUserNameInListView() {
-        if (mUserName != null) {
-            String userName = ThisUserConfig.getInstance().getString(ThisUserConfig.USERNAME);
-            if (StringUtils.isBlank(userName)) {
-                return;
-            }
-            mUserName.setText(userName);
-        }
-    }
-
-    public void updateDestinationInListView() {
-        if (mDestination != null) {
-            SBGeoPoint destinationGeoPoint = ThisUser.getInstance().getDestinationGeoPoint();
-            if (destinationGeoPoint != null) {
-                mDestination.setText(destinationGeoPoint.getAddress());
-            }
-        }
-    }
-
-    @Override
-    public void onSetUserNameClick(String userName) {
-        ThisUserConfig.getInstance().putString(ThisUserConfig.USERNAME, userName);
-        updateUserNameInListView();
-    }
+      
 }

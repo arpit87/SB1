@@ -14,7 +14,8 @@ public class UserOtherInfo {
 	private String type = "0";
 	private String percent_match = "0";
 	private String time ="";
-	private String mobile_available="0";
+	private String username ="";
+	
 	
 		
 	public UserOtherInfo(JSONObject jsonObject) {
@@ -33,26 +34,24 @@ public class UserOtherInfo {
 		} catch (JSONException e) {	}
 		
 		try {
-			mobile_available = allInfo.getString(UserAttributes.MOBILENUMBER);			
+			username = allInfo.getString(UserAttributes.USERNAME);			
 		} catch (JSONException e) {	}
-		
+				
 	}
 	
+	public UserOtherInfo() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public boolean isOfferingRide()
-	{
-		if(mobile_available.equals("0"))
-			return false;
-		else
-			return true;
-	}
-	
-	public boolean isMobileNumberAvailable()
 	{
 		if(type.equals("0"))
 			return false;
 		else
 			return true;
 	}
+	
+	
 	
 	public int getPercentMatch()
 	{		
@@ -67,6 +66,11 @@ public class UserOtherInfo {
 	public String getRideType()
 	{
 		return type;
+	}
+	
+	public String getUserName()
+	{
+		return username;
 	}
 
 	@Override

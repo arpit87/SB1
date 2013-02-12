@@ -72,7 +72,8 @@ public class GetMatchingNearbyUsersRequest extends SBHttpRequest{
 			}
 			
 			try {
-				jsonStr = responseHandler.handleResponse(response);
+				if(response!=null)
+					jsonStr = responseHandler.handleResponse(response);
 			} catch (ClientProtocolException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

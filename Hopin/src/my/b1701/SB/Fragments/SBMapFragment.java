@@ -2,6 +2,7 @@ package my.b1701.SB.Fragments;
 
 import my.b1701.SB.R;
 import my.b1701.SB.Activities.MapListViewTabActivity;
+import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
 import android.media.AudioRecord.OnRecordPositionUpdateListener;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -22,14 +23,15 @@ public class SBMapFragment extends Fragment implements View.OnClickListener, Vie
 	
 	@Override
 	public void onCreate(Bundle savedState) {
-        super.onCreate(savedState);
-        ((MapListViewTabActivity)getActivity()).setMapFrag(this);
+        super.onCreate(null);
+        Log.i(TAG,"oncreate,mapview");
+        MapListActivityHandler.getInstance().setMapFrag(this);
 	}
 	
 		
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		super.onCreateView( inflater, container, savedInstanceState );
+		super.onCreateView( inflater, container, null );
 		Log.i(TAG,"oncreateview,mapview");
 		mMapViewContainer = ((MapListViewTabActivity)getActivity()).getThisMapContainerWithMapView();
 		if(mMapView == null)

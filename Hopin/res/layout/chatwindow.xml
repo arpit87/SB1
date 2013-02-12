@@ -53,7 +53,7 @@
 	    android:layout_height="0px"	    
 	    android:layout_weight="1.00"
 	    android:background="#ffffffff"
-	    android:cacheColorHint="@color/black_75"
+	    android:cacheColorHint="@color/white"
 	    android:clickable="false"
 	    android:divider="@null"
 	    android:dividerHeight="0dp"

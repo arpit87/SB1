@@ -2,6 +2,7 @@ package my.b1701.SB.Server;
 
 import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
 import my.b1701.SB.HelperClasses.ProgressHandler;
+import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.Users.CurrentNearbyUsers;
 
 import org.apache.http.HttpResponse;
@@ -15,7 +16,7 @@ public class GetMatchingNearbyUsersResponse extends ServerResponseBase{
 
 
 	private static final String TAG = "my.b1701.SB.Server.GetUsersResponse";
-	public static final String NEARBY_USER_UPDATED = "my.b1701.SB.Server.NEARBYUSER_UPDATED";
+	
 	
 	public GetMatchingNearbyUsersResponse(HttpResponse response,String jobjStr) {
 		super(response,jobjStr);
@@ -39,14 +40,15 @@ public class GetMatchingNearbyUsersResponse extends ServerResponseBase{
 		//List<NearbyUser> nearbyUsers = JSONHandler.getInstance().GetNearbyUsersInfoFromJSONObject(body);		
 		Log.i(TAG,"updating nearby users");		
 		Intent notifyUpdateintent = new Intent();
-		notifyUpdateintent.setAction(NEARBY_USER_UPDATED);		
+		notifyUpdateintent.setAction(ServerConstants.NEARBY_USER_UPDATED);		
 		
 		//this broadcast is for chat window which queries for nearby users in case of incoming chat 
 		//from user which has not yet been fetched by getmatch request
-		MapListActivityHandler.getInstance().getUnderlyingActivity().sendBroadcast(notifyUpdateintent);
+		Platform.getInstance().getContext().sendBroadcast(notifyUpdateintent);
 		//this function checks internally if new users added etc and how to display
-		//Arpit 9 feb - real 
-		MapListActivityHandler.getInstance().updateNearbyUsers();
+		//here we update from sourceGeoPoint which may vary from current geo point.
+		//only add user initially updates map with current geo point 
+		//MapListActivityHandler.getInstance().updateNearbyUsers();
 		
 		//dismiss dialog if any..safe to call even if no dialog showing
 		ProgressHandler.dismissDialoge();

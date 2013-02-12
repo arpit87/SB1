@@ -36,7 +36,7 @@ public class FacebookConnector {
 	
 	private static final String TAG = "my.b1701.SB.FacebookHelpers.FacebookConnector";
 	
-	public static String [] FB_PERMISSIONS = {"user_about_me","user_education_history","user_hometown","user_work_history"};
+	public static String [] FB_PERMISSIONS = {"user_about_me","user_education_history","user_hometown","user_work_history","email"};
 	public static String FB_APP_ID = "486912421326659";
 	
 	
@@ -134,7 +134,7 @@ public class FacebookConnector {
 	private void requestUserData() {
         ToastTracker.showToast("Fetching user name, profile pic...");
         Bundle params = new Bundle();
-        params.putString("fields", "username,first_name,last_name, picture");
+        params.putString("fields", "username,first_name,last_name, picture, email");
         mAsyncRunner.request("me", params, new FBUserRequestListener());
     }
 	
@@ -169,8 +169,8 @@ public class FacebookConnector {
                 Platform.getInstance().getHandler().post(new Runnable() {
                     @Override
                     public void run() {
-                        MapListActivityHandler.getInstance().getUnderlyingActivity().updateUserNameInListView();
-                        MapListActivityHandler.getInstance().getUnderlyingActivity().updateUserPicInListView();
+                        MapListActivityHandler.getInstance().updateUserNameInListView();
+                        MapListActivityHandler.getInstance().updateUserPicInListView();
                         MapListActivityHandler.getInstance().updateThisUserMapOverlay();
                     }
                 });

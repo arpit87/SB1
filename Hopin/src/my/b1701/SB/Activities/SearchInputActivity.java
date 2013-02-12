@@ -35,6 +35,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -65,6 +66,9 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
     Button cancelFindUsers;
     Button takeRideButton;
     Button offerRideButton;
+    ToggleButton take_offer_toggle;
+    TextView Today;
+  
     
       
     //these change as user chooses time
@@ -84,31 +88,36 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.getuser_request_dialog);
+        setContentView(R.layout.getuser_request_dialog);        
         source = (AutoCompleteTextView) findViewById(R.id.getuserpopupsource);
         destination = (AutoCompleteTextView) findViewById(R.id.getuserpopupdestination);
         takeRideButton = (Button)findViewById(R.id.btn_takeride);
         offerRideButton = (Button)findViewById(R.id.btn_offerride);
         cancelFindUsers = (Button)findViewById(R.id.btn_cancelfindusers);
         //offerRide = (ToggleButton)findViewById(R.id.btn_toggle_offer);
-        //dailyCarPool = (ToggleButton)findViewById(R.id.btn_toggle_dailypool);
+        take_offer_toggle = (ToggleButton)findViewById(R.id.daily_intsa_toggle_btn);
         am_pm_toggle = (ToggleButton) findViewById(R.id.btn_am_pm_toggle);
         timeView = (TextView) findViewById(R.id.time);
-      
+        Today = (TextView) findViewById(R.id.textViewToday);
+        dailyCarPool = take_offer_toggle.isChecked();
+       
         //set source to our found location, if not found user can enter himself
         SBGeoPoint currGeopoint = ThisUser.getInstance().getCurrentGeoPoint();
         if(currGeopoint!=null)
         {
         	//String foundAddress = currGeopoint.getAddress();        
         	source.setHint("My Location");
-            try {
-                SBGeoPoint sourceGeoPoint = currGeopoint;
-                List<Address> addressList = GeoAddressProvider.geocoder.getFromLocation(sourceGeoPoint.getLatitude(), sourceGeoPoint.getLongitude(), 1);
-                ThisUser.getInstance().setSourceGeoAddress(new GeoAddress(addressList.get(0)));
-            } catch (Exception e) {
-                Log.e("GeoAddress", e.getMessage());
-            }
+        	MapListActivityHandler.getInstance().setUpdateMap(true);
+            ThisUser.getInstance().setSourceGeoPoint(currGeopoint);            
         }
+        
+        take_offer_toggle.setOnClickListener(new OnClickListener() {			
+			@Override
+			public void onClick(View arg0) {
+				boolean enable = take_offer_toggle.isChecked();
+				dateSeekbar.setEnabled(!enable);
+			}
+		});
         
         takeRideButton.setOnClickListener(new OnClickListener() {
         	
@@ -116,6 +125,8 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
 			public void onClick(View v) {       
         		takeRide = true;
         		findUsers();
+        		MapListActivityHandler.getInstance().updateSrcDstTimeInListView();
+				finish();
 			}
 		});
         
@@ -123,15 +134,17 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
         	
 			@Override
 			public void onClick(View v) {       
-				takeRide = false;
-        		findUsers();	
+				takeRide = false;				
+        		findUsers();
+        		MapListActivityHandler.getInstance().updateSrcDstTimeInListView();
+				finish();
 			}
 		});
         
         cancelFindUsers.setOnClickListener(new OnClickListener() {			
 			@Override
 			public void onClick(View arg0) {
-				finish();				
+				finish();		
 			}
 		});
         
@@ -150,6 +163,8 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
                 MapListActivityHandler.getInstance().updateThisUserMapOverlay();
                 MapListActivityHandler.getInstance().setUpdateMap(false);
                 hideSoftKeyboard();
+                source.setSelection(0);
+                source.clearFocus();
             }
         });
         source.setAdapter(new AddressAdapter(this, R.layout.address_suggestion_layout));
@@ -164,6 +179,8 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
                 }
                 setDestination(destinationAddress);
                 hideSoftKeyboard();
+                destination.setSelection(0);
+                destination.clearFocus();
             }
         });
         destination.setAdapter(new AddressAdapter(this, R.layout.address_suggestion_layout));
@@ -174,7 +191,7 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
         timeSeekbar.setOnSeekBarChangeListener(this);
         
         dateSeekbar = (SeekBar) findViewById(R.id.dateseekBar);
-        dateSeekbar.setMax(4);        
+        dateSeekbar.setMax(2);        
         
         //find current time and set seekbar to just after current
         Calendar now = Calendar.getInstance();
@@ -234,6 +251,7 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
 		else 
 			time24HrFormat = Integer.toString(hour+12) + ":" + Integer.toString(minutes);
 		
+		dailyCarPool = take_offer_toggle.isChecked(); 
 		ThisUser.getInstance().setTimeOfRequest(time24HrFormat);
 		ThisUser.getInstance().setDateOfRequest(getDate());
 		ThisUser.getInstance().set_Daily_Instant_Type(dailyCarPool?0:1);//0 daily pool,1 instant share
@@ -249,7 +267,8 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
          
         SBHttpClient.getInstance().executeRequest(addThisUserSrcDstRequest);
         saveSearch();
-        finish();			
+        
+        //moveTaskToBack(true);			
 	}
 	
 	
@@ -279,24 +298,26 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
     }
 	
 	public String getDate()
-	{
-		int dateProgress = dateSeekbar.getProgress();
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
+	{	
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Date now = new Date();  
 		Calendar cal = Calendar.getInstance();  
 		cal.setTime(now);  
 		Date travelDate = cal.getTime();
-		if(dateProgress>0 && dateProgress < 4)
+		if(!dailyCarPool)
 		{
-			cal.add(Calendar.DATE, dateProgress);   
-			travelDate = cal.getTime();
-			ToastTracker.showToast("T+"+dateProgress +" request");
+			int dateProgress = dateSeekbar.getProgress();
+			if(dateProgress>0)
+			{
+				cal.add(Calendar.DATE, dateProgress);   
+				travelDate = cal.getTime();
+				ToastTracker.showToast("T+"+dateProgress +" request");	
+			}
+			else
+				ToastTracker.showToast("Today request");	
 		}
-		else if(dateProgress == 4)
-		{
-			dailyCarPool = true;
-			ToastTracker.showToast("Daily car pool req");
-		}
+		else
+			ToastTracker.showToast("daily car pool request");
 		String date = dateFormat.format(travelDate);
 		return date;
 	}

@@ -1,15 +1,23 @@
 package my.b1701.SB.Users;
 
-import android.util.Log;
+import java.io.IOException;
+import java.util.List;
+
+import org.json.JSONException;
+
 import my.b1701.SB.LocationHelpers.SBGeoPoint;
 import my.b1701.SB.LocationHelpers.SBLocation;
 import my.b1701.SB.provider.GeoAddress;
+import my.b1701.SB.provider.GeoAddressProvider;
+import android.location.Address;
+import android.util.Log;
 
 
 public class ThisUser {
 	
 	
 	private SBLocation currlocation=null;
+	private SBLocation sourcelocation=null;
 	//private SBLocation dstlocation=null;
 
 	private SBGeoPoint currentGeoPoint=null;
@@ -74,11 +82,7 @@ public class ThisUser {
 	}
 
 	
-	public SBLocation getLocation() {
-		 Log.i(TAG,"getlocation called");
-		return currlocation;
-	}
-
+	
 	public void setCurrentLocation(SBLocation location) {
 		this.currlocation = location;		 
 		currentGeoPoint = new SBGeoPoint(location);
@@ -125,7 +129,17 @@ public class ThisUser {
 	}
 
 	public void setSourceGeoPoint(SBGeoPoint srcGeoPoint) {		
-			this.sourceGeoPoint = srcGeoPoint;		
+			this.sourceGeoPoint = srcGeoPoint;
+            try {
+            	List<Address> addressList = GeoAddressProvider.geocoder.getFromLocation(sourceGeoPoint.getLatitude(), sourceGeoPoint.getLongitude(), 1);
+				setSourceGeoAddress(new GeoAddress(addressList.get(0)));				
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 	}
 
 	public String getTimeOfRequest() {
@@ -133,7 +147,7 @@ public class ThisUser {
 	}
 
 	public void setDateOfRequest(String dateOfRequest) {
-		this.dateOfRequest = timeOfRequest;
+		this.dateOfRequest = dateOfRequest;
 	}	
 	
 	public String getDateOfRequest() {
@@ -163,4 +177,15 @@ public class ThisUser {
     public void setSourceGeoAddress(GeoAddress geoAddress) {
         this.sourceGeoAddress = geoAddress;
     }
+
+	public void setSourceLocation(SBLocation sbLocation) {
+		this.sourcelocation = sbLocation;		 
+		sourceGeoPoint = new SBGeoPoint(sbLocation);
+		Log.i(TAG,"setting source location"+sourceGeoPoint.toString());		
+	}
+	
+	public SBLocation getSourceLocation() {
+		return sourcelocation;
+				
+	}
 }

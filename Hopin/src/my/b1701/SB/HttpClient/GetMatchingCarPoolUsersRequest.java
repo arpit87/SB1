@@ -30,8 +30,7 @@ public class GetMatchingCarPoolUsersRequest  extends SBHttpRequest{
 	GetMatchingCarPoolUsersResponse getNearbyUsersResponse;
 	String jsonStr;
 	public GetMatchingCarPoolUsersRequest()
-	{
-		
+	{		
 		super();
 		queryMethod = QueryMethod.Post;
 				
@@ -41,8 +40,12 @@ public class GetMatchingCarPoolUsersRequest  extends SBHttpRequest{
 		jsonobjGetNearbyUsers = GetServerAuthenticatedJSON();;
 		try {
 			jsonobjGetNearbyUsers.put(UserAttributes.USERID, ThisUser.getInstance().getUserID());	
-			jsonobjGetNearbyUsers.put(UserAttributes.SRCADDRESS, ThisUser.getInstance().getCurrentGeoPoint().getAddress());
-			jsonobjGetNearbyUsers.put(UserAttributes.DSTADDRESS, ThisUser.getInstance().getDestinationGeoPoint().getAddress());
+			jsonobjGetNearbyUsers.put(UserAttributes.SRCLATITUDE, ThisUser.getInstance().getCurrentGeoPoint().getLatitude());
+			jsonobjGetNearbyUsers.put(UserAttributes.SRCLONGITUDE, ThisUser.getInstance().getCurrentGeoPoint().getLongitude());
+			jsonobjGetNearbyUsers.put(UserAttributes.DSTLATITUDE, ThisUser.getInstance().getDestinationGeoPoint().getLatitude());
+			jsonobjGetNearbyUsers.put(UserAttributes.DSTLONGITUDE, ThisUser.getInstance().getDestinationGeoPoint().getLongitude());
+			jsonobjGetNearbyUsers.put(UserAttributes.SRCADDRESS, ThisUser.getInstance().getSourceGeoAddress());
+			jsonobjGetNearbyUsers.put(UserAttributes.DSTADDRESS, ThisUser.getInstance().getDestinationGeoAddress());
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

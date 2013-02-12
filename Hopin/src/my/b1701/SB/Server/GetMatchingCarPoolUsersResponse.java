@@ -1,6 +1,7 @@
 package my.b1701.SB.Server;
 
 import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
+import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.Users.CurrentNearbyUsers;
 
 import org.apache.http.HttpResponse;
@@ -13,7 +14,7 @@ public class GetMatchingCarPoolUsersResponse extends ServerResponseBase{
 
 
 	private static final String TAG = "my.b1701.SB.Server.GetUsersResponse";
-	public static final String NEARBY_USER_UPDATED = "my.b1701.SB.Server.NEARBYUSER_UPDATED";
+	
 	
 	public GetMatchingCarPoolUsersResponse(HttpResponse response,String jobjStr) {
 		super(response,jobjStr);
@@ -34,7 +35,14 @@ public class GetMatchingCarPoolUsersResponse extends ServerResponseBase{
 		}
 		
 		CurrentNearbyUsers.getInstance().updateNearbyUsersFromJSON(body);		
-		MapListActivityHandler.getInstance().updateNearbyUsers();		
+		//MapListActivityHandler.getInstance().updateNearbyUsers();	
+		
+		Intent notifyUpdateintent = new Intent();
+		notifyUpdateintent.setAction(ServerConstants.NEARBY_USER_UPDATED);		
+		
+		//this broadcast is for chat window which queries for nearby users in case of incoming chat 
+		//from user which has not yet been fetched by getmatch request
+		Platform.getInstance().getContext().sendBroadcast(notifyUpdateintent);
 		
 	}
 	
