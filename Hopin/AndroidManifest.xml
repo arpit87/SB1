@@ -22,6 +22,7 @@
         android:name=".Activities.StrangerBuddy"
         android:debuggable="true"
         android:theme="@style/Theme.HopinTheme"
+        android:screenOrientation="portrait"
          >
               
        	<service android:name=".ChatService.SBChatService" 
@@ -72,9 +73,11 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity android:name=".Activities.MapListViewTabActivity"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+             android:launchMode="singleTop" >
             <meta-data android:name="android.app.default_searchable"
                        android:value=".Activities.SearchableActivity" />
+            
         </activity>
         <activity android:name=".Activities.UserPopUpActivity" 
             android:theme="@android:style/Theme.NoTitleBar" 
@@ -92,6 +95,7 @@
         </activity>
            <activity android:name=".Activities.SearchInputActivity" 
             android:theme="@android:style/Theme.NoTitleBar" 
+            android:launchMode="singleTop"
             android:screenOrientation="portrait" 
             >
             

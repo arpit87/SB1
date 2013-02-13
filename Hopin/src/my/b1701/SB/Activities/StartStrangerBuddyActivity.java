@@ -100,18 +100,17 @@ public class StartStrangerBuddyActivity extends Activity {
 	       // Platform.getInstance().getHandler().postDelayed(startMapActivity,1000 * 3); 
 		}   
         
-        
     }
     
     private void firstRun() {
 		//get user_id from the server
-		ToastTracker.showToast("Preparing for first run..");
+		ToastTracker.showToast("Preparing for first run..");		
 		String uuid = ThisAppInstallation.id(this.getBaseContext());
 		ThisAppConfig.getInstance().putString(ThisAppConfig.APPUUID,uuid);
-		Intent show_tutorial = new Intent(this,Tutorial.class);
-		show_tutorial.putExtra("uuid", uuid);
-		startActivity(show_tutorial);		
-		
+		//with uuid means first time start
+		showSBMapViewActivity.putExtra("uuid", uuid);
+		startActivity(showSBMapViewActivity);			
+		finish();
 	}
     
    
@@ -131,7 +130,7 @@ public class StartStrangerBuddyActivity extends Activity {
     public void onStop()
     {   	
     	super.onStop();    
-    	finish();
+    	
     }
     
     private class GetNetworkLocationFixTask extends TimerTask

@@ -408,7 +408,7 @@ public void clearAllData()
 		mapView.removeAllViews();
 		mapView.getOverlays().clear();
 	}
-	if(listFrag.getListAdapter()!=null)
+	if(listFrag!=null && listFrag.getListAdapter()!=null)
 	{		
 		((NearbyUsersListViewAdapter)listFrag.getListAdapter()).clear();
 	}

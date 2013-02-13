@@ -38,6 +38,7 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarChangeListener{
@@ -68,9 +69,6 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
     Button offerRideButton;
     ToggleButton take_offer_toggle;
     TextView Today;
-  
-    
-      
     //these change as user chooses time
     String hourStr = "";
 	String minstr = "";	
@@ -79,6 +77,7 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
 	
 	boolean dailyCarPool = false;
 	boolean takeRide = false;
+	boolean destinationSet = false;
 
 	public void saveSuggestion(GeoAddress geoAddress) {
         geoAddress.resetLocalityIfNull();
@@ -122,7 +121,12 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
         takeRideButton.setOnClickListener(new OnClickListener() {
         	
 			@Override
-			public void onClick(View v) {       
+			public void onClick(View v) { 
+				if(!destinationSet)
+				{
+					ToastTracker.showToast("Please set destination");
+					return;
+				}
         		takeRide = true;
         		findUsers();
         		MapListActivityHandler.getInstance().updateSrcDstTimeInListView();
@@ -133,7 +137,12 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
         offerRideButton.setOnClickListener(new OnClickListener() {
         	
 			@Override
-			public void onClick(View v) {       
+			public void onClick(View v) { 
+				if(!destinationSet)
+				{
+					ToastTracker.showToast("Please set destination");
+					return;
+				}
 				takeRide = false;				
         		findUsers();
         		MapListActivityHandler.getInstance().updateSrcDstTimeInListView();
@@ -181,6 +190,7 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
                 hideSoftKeyboard();
                 destination.setSelection(0);
                 destination.clearFocus();
+                destinationSet = true;
             }
         });
         destination.setAdapter(new AddressAdapter(this, R.layout.address_suggestion_layout));
@@ -311,13 +321,12 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
 			{
 				cal.add(Calendar.DATE, dateProgress);   
 				travelDate = cal.getTime();
-				ToastTracker.showToast("T+"+dateProgress +" request");	
+				//ToastTracker.showToast("T+"+dateProgress +" request");	
 			}
-			else
-				ToastTracker.showToast("Today request");	
+			
 		}
 		else
-			ToastTracker.showToast("daily car pool request");
+			ToastTracker.showToast("Daily car pool request");
 		String date = dateFormat.format(travelDate);
 		return date;
 	}

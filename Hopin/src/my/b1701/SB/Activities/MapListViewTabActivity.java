@@ -93,7 +93,19 @@ public class MapListViewTabActivity extends SherlockFragmentActivity  {
         this.registerReceiver(mapListActivityHandler,new IntentFilter(ServerConstants.NEARBY_USER_UPDATED));    
         fbconnect = new FacebookConnector(this);
         
+        Intent i = getIntent();
+        if(i.hasExtra("uuid"))
+        {         	
+        	Bundle b = i.getExtras();
+        	String uuid = b.getString("uuid");
+        	Intent show_tutorial = new Intent(this,Tutorial.class);
+    		show_tutorial.putExtra("uuid", uuid);
+    		startActivity(show_tutorial);
+        } 
+        
     }
+    
+    
     
     @Override
     public void onResume(){
@@ -153,7 +165,8 @@ public class MapListViewTabActivity extends SherlockFragmentActivity  {
         {
         case R.id.menu_search:
         	//onSearchRequested();        	 
-	    	 Intent searchInputIntent = new Intent(this,SearchInputActivity.class);	   		
+	    	 Intent searchInputIntent = new Intent(this,SearchInputActivity.class);	
+	    	 searchInputIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 	   		 startActivity(searchInputIntent);
         	break;
         case R.id.fb_login_menuitem:

@@ -259,18 +259,6 @@
 </RelativeLayout>
 </RelativeLayout>
 
-<LinearLayout
-    android:id="@+id/extrashareinfolayout"
-    android:layout_height="wrap_content"
-     android:layout_width="fill_parent"      
-     android:padding="10dip" 
-     android:orientation="horizontal"
-     android:gravity="center"  
-     android:layout_marginTop="10dip"  
-     >  
-     
-     
-     </LinearLayout>
  </LinearLayout>      
       
    <LinearLayout
