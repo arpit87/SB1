@@ -4,6 +4,7 @@ import my.b1701.SB.R;
 import my.b1701.SB.ChatService.SBChatService;
 import my.b1701.SB.HelperClasses.ProgressHandler;
 import my.b1701.SB.Server.GetMatchingNearbyUsersResponse;
+import my.b1701.SB.Server.ServerConstants;
 import my.b1701.SB.Users.CurrentNearbyUsers;
 import my.b1701.SB.Users.NearbyUser;
 import android.app.Activity;
@@ -40,7 +41,7 @@ public class SBBroadcastReceiver extends BroadcastReceiver{
 			//context.stopService(new Intent(context, SBChatService.class));
 		    }
 		}
-		else if(intentAction.equals(GetMatchingNearbyUsersResponse.NEARBY_USER_UPDATED))
+		else if(intentAction.equals(ServerConstants.NEARBY_USER_UPDATED))
 		{
 			//this is done to handle if chat comes in from a user who is not yet visible to this user
 			//then getnearbyuser called which fires intent after updation and then we proceed in chat
