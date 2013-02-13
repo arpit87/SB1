@@ -48,6 +48,12 @@ public class NearbyUsersListViewAdapter extends BaseAdapter{
 		// TODO Auto-generated method stub
 		return position;
 	}
+	
+	public void clear()
+	{		
+		mNearbyUsers.clear();
+		notifyDataSetChanged();
+	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {

@@ -41,7 +41,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -69,8 +71,7 @@ public class MapListActivityHandler  extends BroadcastReceiver{
 	PopupWindow fbPopupWindow = null;
 	View fbloginlayout = null;
 	ViewGroup popUpView = null;
-	ViewGroup mListViewContainer;
-	private ListView mListView;
+	ViewGroup mListViewContainer;	
 	ImageView mListImageView;
 	private TextView mDestination;
 	private TextView mSource;
@@ -407,8 +408,10 @@ public void clearAllData()
 		mapView.removeAllViews();
 		mapView.getOverlays().clear();
 	}
-	if(mListView!=null)
-		mListView.removeAllViews();
+	if(listFrag.getListAdapter()!=null)
+	{		
+		((NearbyUsersListViewAdapter)listFrag.getListAdapter()).clear();
+	}
 	if(mSource!=null)
 		mSource.setText(R.string.source_listview);
 	if(mDestination!=null)
@@ -434,8 +437,8 @@ public ViewGroup getThisListContainerWithListView() {
         mListImageView = (ImageView) mListViewContainer.findViewById(R.id.selfthumbnail);
         mUserName = (TextView) mListViewContainer.findViewById(R.id.my_name_listview);
         mDestination = (TextView) mListViewContainer.findViewById(R.id.my_destination_listview);
-        mSource =  (TextView) mListViewContainer.findViewById(R.id.my_source_listview);         
-        mListView = (ListView) mListViewContainer.findViewById(R.id.list);
+        mSource =  (TextView) mListViewContainer.findViewById(R.id.my_source_listview);        
+       
         mtime = (TextView) mListViewContainer.findViewById(R.id.my_time_listview); 
         updateUserNameInListView();
         updateUserPicInListView();
@@ -459,7 +462,8 @@ public void updateUserPicInListView() {
 public void updateUserNameInListView() {
     if (mUserName != null) {
         String userName = ThisUserConfig.getInstance().getString(ThisUserConfig.USERNAME);
-        if (userName==null) {
+        if (userName=="") {
+        	ToastTracker.showToast("haaw..username null!!");
             return;
         }
         mUserName.setText(userName);
@@ -473,8 +477,7 @@ public void updateSrcDstTimeInListView() {
         mListImageView = (ImageView) mListViewContainer.findViewById(R.id.selfthumbnail);
         mUserName = (TextView) mListViewContainer.findViewById(R.id.my_name_listview);
         mDestination = (TextView) mListViewContainer.findViewById(R.id.my_destination_listview);
-        mSource =  (TextView) mListViewContainer.findViewById(R.id.my_source_listview);         
-        mListView = (ListView) mListViewContainer.findViewById(R.id.list);
+        mSource =  (TextView) mListViewContainer.findViewById(R.id.my_source_listview);
         mtime = (TextView) mListViewContainer.findViewById(R.id.my_time_listview); 
 	}
 	
