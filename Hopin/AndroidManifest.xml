@@ -101,7 +101,7 @@
             
         </activity>
        
-       <activity android:name=".Activities.HistoryActivity"
+       <activity android:name=".Activities.SBHistoryActivity"
                  android:theme="@android:style/Theme.NoTitleBar"
                  android:screenOrientation="portrait" />
 

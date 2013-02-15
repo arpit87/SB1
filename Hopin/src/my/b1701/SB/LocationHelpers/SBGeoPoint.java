@@ -1,7 +1,14 @@
 package my.b1701.SB.LocationHelpers;
 
+import java.io.IOException;
+import java.util.List;
+
+import android.location.Address;
+
 import com.google.android.maps.GeoPoint;
 import my.b1701.SB.HelperClasses.Constants;
+import my.b1701.SB.provider.GeoAddress;
+import my.b1701.SB.provider.GeoAddressProvider;
 
 
 public class SBGeoPoint extends GeoPoint{
@@ -17,6 +24,22 @@ public class SBGeoPoint extends GeoPoint{
 		this.longi = longi;
         this.subLocality = subLocality;
         this.address = address;
+	}
+	
+	public SBGeoPoint(int lati, int longi) {
+		super(lati, longi);
+		this.lati=lati;
+		this.longi = longi;
+	try {
+        List<Address> addressList = GeoAddressProvider.geocoder.getFromLocation(lati/1e6, longi/1e6, 1);
+        if (addressList != null  && !addressList.isEmpty()) {
+            Address addr = addressList.get(0);
+            this.subLocality = addr.getSubLocality();
+            this.address = GeoAddress.constructAddressLine(addr);
+        }
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
 	}
 
 	public SBGeoPoint(SBLocation location) {

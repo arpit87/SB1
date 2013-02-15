@@ -21,7 +21,7 @@ public class HistoryContentProvider extends ContentProvider {
     private static final int DATABASE_VERSION = 1;
     private static final String mDatabaseName = "history.db";
     private static final String mTableName = "history";
-    private static final String ORDER_BY = "date DESC";
+   // private static final String ORDER_BY = "date DESC";
     private static final int URI_MATCH_DB_FETCH_ONLY = 1;
     public static final String DB_FETCH_ONLY ="db_fetch_only";
     private static final String LIMIT = "10";
@@ -44,7 +44,12 @@ public class HistoryContentProvider extends ContentProvider {
                     ",timeOfRequest TEXT" +
                     ",dailyInstantType INTEGER" +
                     ",takeOffer INTEGER" +
-                    ",date LONG" +
+                    ",freq TEXT" +
+                    ",reqDate TEXT" +
+                    ",srclati INTEGER" +
+                    ",srclongi INTEGER" +
+                    ",dstlati INTEGER" +
+                    ",dstlongi INTEGER" +
                     ");");
             db.execSQL(builder.toString());
         }
@@ -76,7 +81,7 @@ public class HistoryContentProvider extends ContentProvider {
         Log.e(TAG, match + "");
         if (match == URI_MATCH_DB_FETCH_ONLY){
             Cursor cSavedSug = db.query(mTableName, projection,
-                    selection, selectionArgs, null, null, ORDER_BY, LIMIT);
+                    selection, selectionArgs, null, null, null, LIMIT);
             Log.e(TAG, "Count: " + cSavedSug.getCount());
             cSavedSug.setNotificationUri(getContext().getContentResolver(), uri);
             return  cSavedSug;

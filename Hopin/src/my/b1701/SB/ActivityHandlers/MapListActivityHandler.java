@@ -8,6 +8,7 @@ import java.util.logging.SimpleFormatter;
 
 import my.b1701.SB.R;
 import my.b1701.SB.Activities.MapListViewTabActivity;
+import my.b1701.SB.Adapter.NearbyUsersListViewAdapter;
 import my.b1701.SB.CustomViewsAndListeners.SBMapView;
 import my.b1701.SB.Fragments.FBLoginDialogFragment;
 import my.b1701.SB.Fragments.SBListFragment;
@@ -28,6 +29,7 @@ import my.b1701.SB.Server.ServerConstants;
 import my.b1701.SB.Users.CurrentNearbyUsers;
 import my.b1701.SB.Users.NearbyUser;
 import my.b1701.SB.Users.ThisUser;
+import my.b1701.SB.Util.StringUtils;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -206,6 +208,7 @@ public class MapListActivityHandler  extends BroadcastReceiver{
 		}
 		ThisUser.getInstance().setCurrentLocation(thisCurrLoc);
 		ThisUser.getInstance().setSourceLocation(thisCurrLoc);
+		MapListActivityHandler.getInstance().setUpdateMap(true);
 		updateThisUserMapOverlay();
 	}
 		
@@ -494,18 +497,7 @@ public void updateSrcDstTimeInListView() {
     String date_time = ThisUser.getInstance().getDateAndTimeOfRequest();
     if(date_time != "")
     {
-    	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-    	Date date;
-		try {
-			date = formatter.parse(date_time);
-			formatter.applyPattern("h:mm a, EEE, MMM d");
-	    	String newFormat = formatter.format(date);
-	    	mtime.setText("Time: "+newFormat);
-		} catch (ParseException e) {
-			
-			e.printStackTrace();
-		}
-    	
+    	mtime.setText("Time: "+StringUtils.formatDate("yyyy-MM-dd HH:mm", "h:mm a, EEE, MMM d", date_time));
     }
 }
 		

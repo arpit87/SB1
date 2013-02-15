@@ -17,14 +17,17 @@ import my.b1701.SB.HttpClient.SBHttpClient;
 import my.b1701.SB.HttpClient.SBHttpRequest;
 import my.b1701.SB.LocationHelpers.SBGeoPoint;
 import my.b1701.SB.Users.ThisUser;
+import my.b1701.SB.Util.StringUtils;
 import my.b1701.SB.provider.CustomSuggestionProvider;
 import my.b1701.SB.provider.GeoAddress;
 import my.b1701.SB.provider.GeoAddressProvider;
 import my.b1701.SB.provider.HistoryContentProvider;
 import my.b1701.SB.provider.SearchRecentSuggestions;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.location.Address;
 import android.net.Uri;
 import android.os.Bundle;
@@ -52,7 +55,12 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
             "timeOfRequest",
             "dailyInstantType",
             "takeOffer",
-            "date"};
+            "freq",
+            "reqDate",
+            "srclati",
+            "srclongi",
+            "dstlati",
+            "dstlongi"};
 
     SearchRecentSuggestions searchRecentSuggestions = new SearchRecentSuggestions(this, CustomSuggestionProvider.AUTHORITY, CustomSuggestionProvider.MODE);
 
@@ -74,6 +82,7 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
 	String minstr = "";	
 	int hour;
 	int minutes;
+	String mDateProgress = "Today";
 	
 	boolean dailyCarPool = false;
 	boolean takeRide = false;
@@ -99,15 +108,36 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
         timeView = (TextView) findViewById(R.id.time);
         Today = (TextView) findViewById(R.id.textViewToday);
         dailyCarPool = take_offer_toggle.isChecked();
-       
-        //set source to our found location, if not found user can enter himself
-        SBGeoPoint currGeopoint = ThisUser.getInstance().getCurrentGeoPoint();
-        if(currGeopoint!=null)
+        
+        Intent i = getIntent();
+        if(i.hasExtra("source"))
         {
-        	//String foundAddress = currGeopoint.getAddress();        
-        	source.setHint("My Location");
-        	MapListActivityHandler.getInstance().setUpdateMap(true);
-            ThisUser.getInstance().setSourceGeoPoint(currGeopoint);            
+        	//though setting this but we are not parsing this text to get latitude longi
+        	//it should be set before firing this intent from whereever
+        	Bundle b = i.getExtras();
+        	String sourceFromIntent = i.getStringExtra("source");
+        	source.setText(sourceFromIntent);
+        	MapListActivityHandler.getInstance().setUpdateMap(false);
+        }else
+        {       
+	        //set source to our found location, if not found user can enter himself
+	        SBGeoPoint currGeopoint = ThisUser.getInstance().getCurrentGeoPoint();
+	        if(currGeopoint!=null)
+	        {
+	        	//String foundAddress = currGeopoint.getAddress();        
+	        	source.setHint("My Location");
+	        	MapListActivityHandler.getInstance().setUpdateMap(true);
+	            ThisUser.getInstance().setSourceGeoPoint(currGeopoint,true);            
+	        }
+        }
+        
+        if(i.hasExtra("destination"))
+        {
+        	//though setting this but we are not parsing this text to get latitude longi
+        	//it should be set before firing this intent from whereever
+        	Bundle b = i.getExtras();
+        	String destinationFromIntent = i.getStringExtra("destination");
+        	destination.setText(destinationFromIntent);        	
         }
         
         take_offer_toggle.setOnClickListener(new OnClickListener() {			
@@ -291,7 +321,7 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
         String address = geoAddress.getAddressLine();
 
         ThisUser.getInstance().setSourceGeoAddress(geoAddress);
-        ThisUser.getInstance().setSourceGeoPoint(new SBGeoPoint(lat, lon, subLocality, address));
+        ThisUser.getInstance().setSourceGeoPoint(new SBGeoPoint(lat, lon, subLocality, address),false);
        
     }
 	
@@ -303,7 +333,7 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
         String address = geoAddress.getAddressLine();
 
         ThisUser.getInstance().setDestinationGeoAddress(geoAddress);
-        ThisUser.getInstance().setDestinationGeoPoint(new SBGeoPoint(lat, lon, subLocality, address));
+        ThisUser.getInstance().setDestinationGeoPoint(new SBGeoPoint(lat, lon, subLocality, address),false);
         
     }
 	
@@ -321,12 +351,16 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
 			{
 				cal.add(Calendar.DATE, dateProgress);   
 				travelDate = cal.getTime();
+				mDateProgress = "T+"+dateProgress;
 				//ToastTracker.showToast("T+"+dateProgress +" request");	
 			}
 			
 		}
 		else
+		{
+			mDateProgress = "Daily";
 			ToastTracker.showToast("Daily car pool request");
+		}
 		String date = dateFormat.format(travelDate);
 		return date;
 	}
@@ -346,23 +380,33 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
         }.start();
     }
 
-    private void saveHistoryBlocking() {
+   
+	private void saveHistoryBlocking() {
         ContentResolver cr = getContentResolver();
-        long now = System.currentTimeMillis();
+        String time12Hr = Integer.toString(hour) +":" + Integer.toString(minutes);
+        if(am_pm_toggle.isChecked())
+        	time12Hr = time12Hr + " AM";
+        else
+        	time12Hr = time12Hr + " PM";
 
         // Use content resolver (not cursor) to insert/update this query
         try {
             ContentValues values = new ContentValues();
             ThisUser thisUser = ThisUser.getInstance();
-            values.put(columns[0], thisUser.getSourceGeoAddress().getSubLocality());
-            values.put(columns[1], thisUser.getDestinationGeoAddress().getSubLocality());
-            values.put(columns[2], thisUser.getTimeOfRequest());
+            values.put(columns[0], thisUser.getSourceGeoAddress().getAddressLine());
+            values.put(columns[1], thisUser.getDestinationGeoAddress().getAddressLine());
+            values.put(columns[2], time12Hr );
             values.put(columns[3], thisUser.get_Daily_Instant_Type());
             values.put(columns[4], thisUser.get_Take_Offer_Type());
-            values.put(columns[5], now);
+            values.put(columns[5], mDateProgress);
+            values.put(columns[6], StringUtils.gettodayDateInFormat("d MMM"));
+            values.put(columns[7], thisUser.getSourceGeoPoint().getLatitudeE6());
+            values.put(columns[8], thisUser.getSourceGeoPoint().getLongitudeE6());
+            values.put(columns[9], thisUser.getDestinationGeoPoint().getLatitudeE6());
+            values.put(columns[10], thisUser.getDestinationGeoPoint().getLongitudeE6());
             cr.insert(mHistoryUri, values);
         } catch (RuntimeException e) {
-            Log.e(TAG, "saveHistoryQuery", e);
+            Log.e(TAG, "saveHistoryQueryerror", e);
         }
 
         // Shorten the list (if it has become too long)
@@ -380,7 +424,7 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
             if (maxEntries > 0) {
                 selection = "_id IN " +
                         "(SELECT _id FROM history" +
-                        " ORDER BY date DESC" +
+                       // " ORDER BY date DESC" +
                         " LIMIT -1 OFFSET " + String.valueOf(maxEntries) + ")";
             }
             cr.delete(mHistoryUri, selection, null);

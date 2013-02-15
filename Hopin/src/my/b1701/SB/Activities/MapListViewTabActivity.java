@@ -7,23 +7,15 @@ import my.b1701.SB.FacebookHelpers.FacebookConnector;
 import my.b1701.SB.Fragments.FBLoginDialogFragment;
 import my.b1701.SB.Fragments.SBListFragment;
 import my.b1701.SB.Fragments.SBMapFragment;
-import my.b1701.SB.Fragments.UserNameDialogFragment;
-import my.b1701.SB.HelperClasses.ProgressHandler;
-import my.b1701.SB.HelperClasses.SBImageLoader;
 import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.HelperClasses.ToastTracker;
-import my.b1701.SB.LocationHelpers.SBGeoPoint;
 import my.b1701.SB.LocationHelpers.SBLocationManager;
 import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.Server.ServerConstants;
-import my.b1701.SB.Users.CurrentNearbyUsers;
 import my.b1701.SB.Users.ThisUser;
-import my.b1701.SB.Util.StringUtils;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -31,8 +23,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -41,7 +31,6 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.google.android.maps.MapView;
 
 
 public class MapListViewTabActivity extends SherlockFragmentActivity  {
@@ -112,8 +101,8 @@ public class MapListViewTabActivity extends SherlockFragmentActivity  {
     	super.onResume();
     	//we update realtime when on map activity
     	SBLocationManager.getInstance().StartListeningtoNetwork(); 
-    	if(CurrentNearbyUsers.getInstance().getAllNearbyUsers()!=null)
-    		ToastTracker.showToast("current nearby user not null");
+    	//if(CurrentNearbyUsers.getInstance().getAllNearbyUsers()!=null)
+    	//	ToastTracker.showToast("current nearby user not null");
     	//MapListActivityHandler.getInstance().setUpdateMap(true);
     	//if(MapListActivityHandler.getInstance().isMapInitialized())
     	//	MapListActivityHandler.getInstance().updateThisUserMapOverlay();
@@ -205,7 +194,7 @@ public class MapListViewTabActivity extends SherlockFragmentActivity  {
    		// break;
             break;
      case R.id.history:
-         Intent intent = new Intent(MapListViewTabActivity.this, HistoryActivity.class);
+         Intent intent = new Intent(MapListViewTabActivity.this, SBHistoryActivity.class);
          startActivity(intent);
         } 
         return super.onOptionsItemSelected(menuItem);

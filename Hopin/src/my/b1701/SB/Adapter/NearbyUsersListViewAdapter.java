@@ -1,4 +1,4 @@
-package my.b1701.SB.ActivityHandlers;
+package my.b1701.SB.Adapter;
 
 import android.app.Activity;
 import android.content.Context;

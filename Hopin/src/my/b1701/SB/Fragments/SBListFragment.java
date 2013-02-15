@@ -2,16 +2,12 @@ package my.b1701.SB.Fragments;
 
 import java.util.List;
 
-import my.b1701.SB.Activities.MapListViewTabActivity;
 import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
-import my.b1701.SB.ActivityHandlers.NearbyUsersListViewAdapter;
-import my.b1701.SB.ChatClient.ChatWindow;
+import my.b1701.SB.Adapter.NearbyUsersListViewAdapter;
 import my.b1701.SB.HelperClasses.CommunicationHelper;
 import my.b1701.SB.HelperClasses.ToastTracker;
-import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.Users.CurrentNearbyUsers;
 import my.b1701.SB.Users.NearbyUser;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;

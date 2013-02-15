@@ -94,26 +94,27 @@ public class ThisUser {
 		return this.currlocation;
 	}
 	
-	//thr is no dst location but only geopoint
-	/*public void setDstLocation(SBLocation location) {
-		this.dstlocation = location;		 
-		destinationGeoPoint = new SBGeoPoint((int)(location.getLatitude()*1e6),(int)(location.getLongitude()*1e6));
-		Log.i(TAG,"setting location"+destinationGeoPoint.toString());
-	}*/
-
-	
-	 
-	/*
-     * Properties
-     */
 	
 	public SBGeoPoint getDestinationGeoPoint() {
 		return destinationGeoPoint;
 	}
 
-	public void setDestinationGeoPoint(SBGeoPoint sbGeoPoint) {
+	public void setDestinationGeoPoint(SBGeoPoint sbGeoPoint,boolean saveGeoAddressToo) {
 		Log.i(TAG,"setting destination location to:"+sbGeoPoint.toString());
 		this.destinationGeoPoint = sbGeoPoint;
+		if(!saveGeoAddressToo)
+			return;
+		try {
+        	List<Address> addressList = GeoAddressProvider.geocoder.getFromLocation(destinationGeoPoint.getLatitude(), destinationGeoPoint.getLongitude(), 1);
+        	if(!addressList.isEmpty())
+        		setDestinationGeoAddress(new GeoAddress(addressList.get(0)));				
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public SBGeoPoint getCurrentGeoPoint() {
@@ -128,11 +129,14 @@ public class ThisUser {
 		return sourceGeoPoint;
 	}
 
-	public void setSourceGeoPoint(SBGeoPoint srcGeoPoint) {		
+	public void setSourceGeoPoint(SBGeoPoint srcGeoPoint,boolean saveGeoAddressToo) {		
 			this.sourceGeoPoint = srcGeoPoint;
+			if(!saveGeoAddressToo)
+				return;
             try {
             	List<Address> addressList = GeoAddressProvider.geocoder.getFromLocation(sourceGeoPoint.getLatitude(), sourceGeoPoint.getLongitude(), 1);
-				setSourceGeoAddress(new GeoAddress(addressList.get(0)));				
+            	if(!addressList.isEmpty())
+            		setSourceGeoAddress(new GeoAddress(addressList.get(0)));				
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -142,6 +146,10 @@ public class ThisUser {
 			}
 	}
 
+	/**
+	 * this is in 24hr clock
+	 * @return
+	 */
 	public String getTimeOfRequest() {
 		return timeOfRequest;
 	}
@@ -179,8 +187,8 @@ public class ThisUser {
     }
 
 	public void setSourceLocation(SBLocation sbLocation) {
-		this.sourcelocation = sbLocation;		 
-		sourceGeoPoint = new SBGeoPoint(sbLocation);
+		this.sourcelocation = sbLocation;
+		setSourceGeoPoint(new SBGeoPoint(sbLocation),true);
 		Log.i(TAG,"setting source location"+sourceGeoPoint.toString());		
 	}
 	

@@ -130,7 +130,7 @@ public class StartStrangerBuddyActivity extends Activity {
     public void onStop()
     {   	
     	super.onStop();    
-    	
+    	finish();
     }
     
     private class GetNetworkLocationFixTask extends TimerTask
