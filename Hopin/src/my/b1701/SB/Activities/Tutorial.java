@@ -1,5 +1,6 @@
 package my.b1701.SB.Activities;
 
+import com.google.analytics.tracking.android.EasyTracker;
 import my.b1701.SB.R;
 import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.HttpClient.AddUserRequest;
@@ -44,5 +45,17 @@ public class Tutorial extends Activity{
 			}
 		});
 	}
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        EasyTracker.getInstance().activityStart(this);
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        EasyTracker.getInstance().activityStop(this);
+    }
 
 }

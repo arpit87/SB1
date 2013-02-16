@@ -1,5 +1,6 @@
 package my.b1701.SB.Activities;
 
+import com.google.analytics.tracking.android.EasyTracker;
 import my.b1701.SB.R;
 import my.b1701.SB.Fragments.HistoryDailyPoolFragment;
 import my.b1701.SB.Fragments.HistoryInstaShareFragment;
@@ -17,6 +18,18 @@ public class SBHistoryActivity extends FragmentActivity{
 	Button instaShare = null;
 	boolean isShowingDailyPool = false;
 		
+    @Override
+    protected void onStart(){
+        super.onStart();
+        EasyTracker.getInstance().activityStart(this);
+    }
+    
+    @Override
+    protected void onStop(){
+        super.onStop();
+        EasyTracker.getInstance().activityStop(this);
+    }
+    
 	 @Override
 	    protected void onCreate(Bundle savedInstanceState){
 		 super.onCreate(savedInstanceState);
@@ -29,6 +42,7 @@ public class SBHistoryActivity extends FragmentActivity{
 			
 			@Override
 			public void onClick(View paramView) {
+                EasyTracker.getTracker().sendEvent("ui_action", "button_press", "dailyPoolHistory_button", 1L);
 				showDailypoolHistory();
 			}
 		});
@@ -37,6 +51,7 @@ public class SBHistoryActivity extends FragmentActivity{
 				
 				@Override
 				public void onClick(View paramView) {
+                    EasyTracker.getTracker().sendEvent("ui_action", "button_press", "instaShareHistory_button", 1L);
 					showInstaHistory();
 				}
 			});

@@ -1,34 +1,24 @@
 package my.b1701.SB.Activities;
 
 
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import my.b1701.SB.R;
-import my.b1701.SB.Fragments.FBLoginDialogFragment;
-import my.b1701.SB.Fragments.UserNameDialogFragment;
-import my.b1701.SB.HelperClasses.SBConnectivity;
-import my.b1701.SB.HelperClasses.ThisAppConfig;
-import my.b1701.SB.HelperClasses.ThisAppInstallation;
-import my.b1701.SB.HelperClasses.ThisUserConfig;
-import my.b1701.SB.HelperClasses.ToastTracker;
-import my.b1701.SB.HttpClient.AddUserRequest;
-import my.b1701.SB.HttpClient.SBHttpClient;
-import my.b1701.SB.HttpClient.SBHttpRequest;
-import my.b1701.SB.LocationHelpers.SBLocation;
-import my.b1701.SB.LocationHelpers.SBLocationManager;
-import my.b1701.SB.Platform.Platform;
-import my.b1701.SB.Users.ThisUser;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+import com.google.analytics.tracking.android.EasyTracker;
+import my.b1701.SB.HelperClasses.*;
+import my.b1701.SB.LocationHelpers.SBLocation;
+import my.b1701.SB.LocationHelpers.SBLocationManager;
+import my.b1701.SB.Platform.Platform;
+import my.b1701.SB.R;
+import my.b1701.SB.Users.ThisUser;
+
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class StartStrangerBuddyActivity extends Activity {
 	
@@ -126,10 +116,16 @@ public class StartStrangerBuddyActivity extends Activity {
     	//SBLocationManager.getInstance().StopListeningtoGPS();    	
     	//SBLocationManager.getInstance().StopListeningtoNetwork();
     }
-    
+
+    public void onStart(){
+        super.onStart();
+        EasyTracker.getInstance().activityStart(this);
+    }
+
     public void onStop()
     {   	
-    	super.onStop();    
+    	super.onStop();
+        EasyTracker.getInstance().activityStop(this);
     	finish();
     }
     

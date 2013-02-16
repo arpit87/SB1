@@ -1,5 +1,6 @@
 package my.b1701.SB.Activities;
 
+import com.google.analytics.tracking.android.EasyTracker;
 import my.b1701.SB.R;
 import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
 import my.b1701.SB.CustomViewsAndListeners.SBMapView;
@@ -94,7 +95,17 @@ public class MapListViewTabActivity extends SherlockFragmentActivity  {
         
     }
     
-    
+    @Override
+    public void onStart(){
+        super.onStart();
+        EasyTracker.getInstance().activityStart(this);
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        EasyTracker.getInstance().activityStop(this);
+    }
     
     @Override
     public void onResume(){
@@ -247,6 +258,8 @@ public class MapListViewTabActivity extends SherlockFragmentActivity  {
     
     private void showMapView()
     {
+        EasyTracker.getInstance().setContext(this);
+        EasyTracker.getTracker().sendView("MapView");
     	if (fm != null) {
             
             FragmentTransaction ft = fm.beginTransaction();
@@ -257,7 +270,8 @@ public class MapListViewTabActivity extends SherlockFragmentActivity  {
     
     private void showListView()
     {
-if (fm != null) {
+        EasyTracker.getTracker().sendView("ListView");
+        if (fm != null) {
             
             FragmentTransaction ft = fm.beginTransaction();
             ft.replace(R.id.maplistviewcontent, new SBListFragment());
