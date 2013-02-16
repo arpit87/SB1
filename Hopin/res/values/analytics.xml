@@ -1,0 +1,20 @@
+<resources>
+    <!--Replace placeholder ID with your tracking ID-->
+    <string name="ga_trackingId">UA-38552153-1</string>
+
+    <!--Enable automatic activity tracking-->
+    <bool name="ga_autoActivityTracking">true</bool>
+
+    <!--Enable automatic exception tracking-->
+    <bool name="ga_reportUncaughtExceptions">true</bool>
+
+    <bool name="ga_dryRun">false</bool>
+
+    <integer name="ga_dispatchPeriod">60</integer>
+
+    <string name="my.b1701.SB.Activities.HistoryActivity">History</string>
+    <string name="my.b1701.SB.Activities.MapListViewTabActivity">MapListView</string>
+    <string name="my.b1701.SB.Activities.SearchInputActivity">FindUsers</string>
+    <string name="my.b1701.SB.Activities.StartStrangerBuddyActivity">Home</string>
+    <string name="my.b1701.SB.Activities.Tutorial">Tutorial</string>
+</resources>
