@@ -3,11 +3,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
+    <TextView
+        android:id="@+id/history_emptyList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:background="@color/white"
+        android:text="No past searches"
+        android:textSize="25dip"
+        android:textColor="@color/gray"
+        android:visibility="gone">
+        
+    </TextView>
     <ListView xmlns:android="http://schemas.android.com/apk/res/android"
               android:id="@android:id/list"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
-              
-              android:background="#D3D3D3"/>
+              android:background="@color/white"/>
 
 </LinearLayout>

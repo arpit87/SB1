@@ -1,37 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout 
-    xmlns:android="http://schemas.android.com/apk/res/android"
-     android:id="@+id/historyviewlayout"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/historyviewlayout"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" 
-    android:background="@color/white">
-   <LinearLayout 
-     android:layout_height="wrap_content"
-     android:layout_width="match_parent"
-     android:orientation="horizontal">
-    <Button 
-        android:id="@+id/history_instashare_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="Insta share"
-        android:textSize="20dip"
-        android:textStyle="bold"
-        android:textColor="@color/black"/> 
-     <Button 
-         android:id="@+id/history_dailypool_button"
-     android:layout_width="wrap_content"
-     android:layout_height="wrap_content"
-     android:layout_weight="1"
-     android:text="Daily pool"
-     android:textSize="20dip"
-     android:textStyle="bold"
-      android:textColor="@color/black"/>
- </LinearLayout>   
+    android:layout_height="fill_parent"    
+    android:background="@color/white"
+    android:gravity="center_horizontal"
+    android:orientation="vertical" >
+    
+     <TextView
+         android:id="@+id/history_header_text"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"         
+         android:paddingBottom="2.0dip"
+         android:paddingTop="2.0dip"
+         android:text="History"         
+         android:textColor="@color/black"
+         android:textSize="20dip"
+         android:textStyle="bold" />
+   <LinearLayout        
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/rounded_rectangle_background_gray"
+    android:layout_marginLeft="5dip"
+    android:layout_marginRight="5dip"
+    android:layout_marginBottom="2dip"
+    android:orientation="vertical">
+    <ToggleButton 
+        android:id="@+id/history_dailyinsta_toggle_button"
+        android:layout_width="match_parent"
+        android:layout_height="30dip"       
+        android:textOn=""
+        android:textOff=""
+        android:layout_marginTop="2dip"
+        android:background="@drawable/dailypool_toggle"        
+        /> 
+        
+        <View android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:background="@color/gray"
+            
+            />    
+    
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/historyviewcontent"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+    android:layout_height="match_parent"
+    android:layout_marginTop="5dip" />
+
+
+
+
+
 
 </LinearLayout>
+
+   
+   
+</LinearLayout>
+
+
+
+
+
+
+
+
+
+
+
+
+
