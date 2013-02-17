@@ -34,18 +34,6 @@ public class HistoryDailyPoolFragment extends ListFragment{
 	View mListViewContainer = null;
 	TextView mEmptyListTextView = null;
 	List<HistoryAdapter.HistoryItem> dailyPoolHistoryList = null;
-    private static Uri mHistoryUri = Uri.parse("content://" + HistoryContentProvider.AUTHORITY + "/db_fetch_only");
-    private static String[] columns = new String[]{ "sourceLocation",
-                                                    "destinationLocation",
-                                                    "timeOfRequest",
-                                                    "dailyInstantType",
-                                                    "takeOffer",
-                                                    "freq",
-                                                    "reqDate",
-                                                    "srclati",
-                                                    "srclongi",
-                                                    "dstlati",
-                                                    "dstlongi"};
 
     @Override
 	public void onCreate(Bundle savedInstanceState){
@@ -98,33 +86,14 @@ public class HistoryDailyPoolFragment extends ListFragment{
     	}
     }
     private List<HistoryAdapter.HistoryItem> fetchDailyPoolHistory() {
-        Log.e(TAG, "Fetching searches");
-        ContentResolver cr = getActivity().getContentResolver();
-        Cursor cursor = cr.query(mHistoryUri, columns, null, null, null);
-
-        if (cursor == null || cursor.getCount() == 0) {
-            Log.e(TAG, "Empty result");
-            return Collections.EMPTY_LIST;
-        } else {
-            List<HistoryAdapter.HistoryItem> historyItems = new ArrayList<HistoryAdapter.HistoryItem>();
-            if (cursor.moveToFirst()) {
-                do {
-                	HistoryAdapter.HistoryItem historyItem = new HistoryAdapter.HistoryItem(cursor.getString(0),
-                            cursor.getString(1), cursor.getString(2), cursor.getInt(3), cursor.getInt(4),
-                            cursor.getString(5),cursor.getString(6),cursor.getInt(7),cursor.getInt(8),cursor.getInt(9)
-                            ,cursor.getInt(10));
-                    Log.e(TAG, historyItem.getSourceLocation() + " : " + historyItem.getDestinationLocation());
-                    if(historyItem.getDailyInstantType()==0)
-                    	historyItems.add(historyItem);
-                } while (cursor.moveToNext());
-
-                cursor.close();
+        List<HistoryItem> historyItems = new ArrayList<HistoryItem>();
+        List<HistoryItem> historyItemList = ThisUser.getInstance().getHistoryItemList();
+        for (HistoryItem historyItem : historyItemList) {
+            if (historyItem.getDailyInstantType() == 0){
+                historyItems.add(historyItem);
             }
-            if(historyItems.size()>0)
-            	return historyItems;
-            else
-            	return Collections.EMPTY_LIST;
         }
+        return historyItems;
     }
 
 }

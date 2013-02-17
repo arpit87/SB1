@@ -74,15 +74,12 @@ public class HistoryContentProvider extends ContentProvider {
 
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-        Log.e(TAG, "Fetching results. uri :" + uri);
         SQLiteDatabase db = mOpenHelper.getReadableDatabase();
 
         int match = mUriMatcher.match(uri);
-        Log.e(TAG, match + "");
         if (match == URI_MATCH_DB_FETCH_ONLY){
             Cursor cSavedSug = db.query(mTableName, projection,
                     selection, selectionArgs, null, null, null, LIMIT);
-            Log.e(TAG, "Count: " + cSavedSug.getCount());
             cSavedSug.setNotificationUri(getContext().getContentResolver(), uri);
             return  cSavedSug;
         }
@@ -96,7 +93,6 @@ public class HistoryContentProvider extends ContentProvider {
 
     @Override
     public Uri insert(Uri uri, ContentValues contentValues) {
-        Log.e(TAG, "Inside insert method");
         SQLiteDatabase db = mOpenHelper.getWritableDatabase();
 
         int length = uri.getPathSegments().size();

@@ -1,28 +1,6 @@
 package my.b1701.SB.Activities;
 
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-
-import com.google.analytics.tracking.android.EasyTracker;
-import my.b1701.SB.R;
-import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
-import my.b1701.SB.Adapter.AddressAdapter;
-import my.b1701.SB.HelperClasses.ProgressHandler;
-import my.b1701.SB.HelperClasses.ToastTracker;
-import my.b1701.SB.HttpClient.AddThisUserScrDstCarPoolRequest;
-import my.b1701.SB.HttpClient.AddThisUserSrcDstRequest;
-import my.b1701.SB.HttpClient.SBHttpClient;
-import my.b1701.SB.HttpClient.SBHttpRequest;
-import my.b1701.SB.LocationHelpers.SBGeoPoint;
-import my.b1701.SB.Users.ThisUser;
-import my.b1701.SB.Util.StringUtils;
-import my.b1701.SB.provider.CustomSuggestionProvider;
-import my.b1701.SB.provider.GeoAddress;
-import my.b1701.SB.provider.GeoAddressProvider;
-import my.b1701.SB.provider.HistoryContentProvider;
-import my.b1701.SB.provider.SearchRecentSuggestions;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -33,16 +11,28 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.AutoCompleteTextView;
-import android.widget.Button;
-import android.widget.CompoundButton;
+import android.widget.*;
 import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.SeekBar;
-import android.widget.TextView;
-import android.widget.ToggleButton;
+import com.google.analytics.tracking.android.EasyTracker;
+import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
+import my.b1701.SB.Adapter.AddressAdapter;
+import my.b1701.SB.Adapter.HistoryAdapter;
+import my.b1701.SB.HelperClasses.ProgressHandler;
+import my.b1701.SB.HelperClasses.ToastTracker;
+import my.b1701.SB.HttpClient.AddThisUserScrDstCarPoolRequest;
+import my.b1701.SB.HttpClient.AddThisUserSrcDstRequest;
+import my.b1701.SB.HttpClient.SBHttpClient;
+import my.b1701.SB.HttpClient.SBHttpRequest;
+import my.b1701.SB.LocationHelpers.SBGeoPoint;
+import my.b1701.SB.R;
+import my.b1701.SB.Users.ThisUser;
+import my.b1701.SB.Util.StringUtils;
+import my.b1701.SB.provider.*;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarChangeListener{
     private static final String TAG = "my.b1701.SB.Activities.SearchInputActivity";
@@ -144,6 +134,7 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
 			
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                EasyTracker.getTracker().sendEvent("ui_action", "toggle_press", "daily_instant_toggle", 1L);
 				if(isChecked)
 				{
 					radio_group.setEnabled(false);
@@ -161,7 +152,8 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
         takeRideButton.setOnClickListener(new OnClickListener() {
         	
 			@Override
-			public void onClick(View v) { 
+			public void onClick(View v) {
+                EasyTracker.getTracker().sendEvent("ui_action", "button_press", "takeRide_button", 1L);
 				if(!destinationSet)
 				{
 					ToastTracker.showToast("Please set destination");
@@ -177,7 +169,8 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
         offerRideButton.setOnClickListener(new OnClickListener() {
         	
 			@Override
-			public void onClick(View v) { 
+			public void onClick(View v) {
+                EasyTracker.getTracker().sendEvent("ui_action", "button_press", "offerRide_button", 1L);
 				if(!destinationSet)
 				{
 					ToastTracker.showToast("Please set destination");
@@ -223,6 +216,7 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
         destination.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                EasyTracker.getTracker().sendEvent("ui_action", "autocomplete_text", "setDestination", 1L);
                 AddressAdapter.Address address= ((AddressAdapter) destination.getAdapter()).getAddress(i);
                 destinationAddress = address.getGeoAddress();
                 if (!address.isSaved()) {
@@ -343,7 +337,7 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
         String address = geoAddress.getAddressLine();
 
         ThisUser.getInstance().setSourceGeoAddress(geoAddress);
-        ThisUser.getInstance().setSourceGeoPoint(new SBGeoPoint(lat, lon, subLocality, address),false);
+        ThisUser.getInstance().setSourceGeoPoint(new SBGeoPoint(lat, lon, subLocality, address), false);
        
     }
 	
@@ -355,7 +349,7 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
         String address = geoAddress.getAddressLine();
 
         ThisUser.getInstance().setDestinationGeoAddress(geoAddress);
-        ThisUser.getInstance().setDestinationGeoPoint(new SBGeoPoint(lat, lon, subLocality, address),false);
+        ThisUser.getInstance().setDestinationGeoPoint(new SBGeoPoint(lat, lon, subLocality, address), false);
         
     }
 	
@@ -417,17 +411,22 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
 
    
 	private void saveHistoryBlocking() {
-        ContentResolver cr = getContentResolver();
-        String time12Hr = Integer.toString(hour) +":" + Integer.toString(minutes);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm a");
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR, hour);
+        calendar.set(Calendar.MINUTE, minutes);
         if(am_pm_toggle.isChecked())
-        	time12Hr = time12Hr + " AM";
+            calendar.set(Calendar.AM_PM, Calendar.AM);
         else
-        	time12Hr = time12Hr + " PM";
+            calendar.set(Calendar.AM_PM, Calendar.PM);
+
+        ContentResolver cr = getContentResolver();
+        String time12Hr = dateFormat.format(calendar.getTime());
+        ThisUser thisUser = ThisUser.getInstance();
 
         // Use content resolver (not cursor) to insert/update this query
         try {
             ContentValues values = new ContentValues();
-            ThisUser thisUser = ThisUser.getInstance();
             values.put(columns[0], thisUser.getSourceGeoAddress().getAddressLine());
             values.put(columns[1], thisUser.getDestinationGeoAddress().getAddressLine());
             values.put(columns[2], time12Hr );
@@ -446,6 +445,34 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
 
         // Shorten the list (if it has become too long)
         truncateHistory(cr, MAX_HISTORY_COUNT);
+
+        //update the inmemory cache
+        HistoryAdapter.HistoryItem historyItem = new HistoryAdapter.HistoryItem(thisUser.getSourceGeoAddress().getAddressLine(),
+                thisUser.getDestinationGeoAddress().getAddressLine(),
+                time12Hr,
+                thisUser.get_Daily_Instant_Type(),
+                thisUser.get_Take_Offer_Type(),
+                mDateProgress,
+                StringUtils.gettodayDateInFormat("d MMM"),
+                thisUser.getSourceGeoPoint().getLatitudeE6(),
+                thisUser.getSourceGeoPoint().getLongitudeE6(),
+                thisUser.getDestinationGeoPoint().getLatitudeE6(),
+                thisUser.getDestinationGeoPoint().getLongitudeE6());
+
+        addHistoryToMemory(historyItem);
+        
+    }
+
+    private void addHistoryToMemory(HistoryAdapter.HistoryItem historyItem) {
+        List<HistoryAdapter.HistoryItem> historyItemList = ThisUser.getInstance().getHistoryItemList();
+        if (historyItemList != null) {
+            historyItemList.add(0, historyItem);
+            if (historyItemList.size() > MAX_HISTORY_COUNT) {
+                for (int i = historyItemList.size(); i >= MAX_HISTORY_COUNT; i--) {
+                    historyItemList.remove(i);
+                }
+            }
+        }
     }
 
     private void truncateHistory(ContentResolver cr, int maxEntries) {

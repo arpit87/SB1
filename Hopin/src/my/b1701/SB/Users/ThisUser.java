@@ -1,16 +1,16 @@
 package my.b1701.SB.Users;
 
-import java.io.IOException;
-import java.util.List;
-
-import org.json.JSONException;
-
+import android.location.Address;
+import android.util.Log;
+import my.b1701.SB.Adapter.HistoryAdapter;
 import my.b1701.SB.LocationHelpers.SBGeoPoint;
 import my.b1701.SB.LocationHelpers.SBLocation;
 import my.b1701.SB.provider.GeoAddress;
 import my.b1701.SB.provider.GeoAddressProvider;
-import android.location.Address;
-import android.util.Log;
+import org.json.JSONException;
+
+import java.io.IOException;
+import java.util.List;
 
 
 public class ThisUser {
@@ -29,6 +29,8 @@ public class ThisUser {
 	private String dateOfRequest = "";
 	private int take_offer_type = 0; //0=>offer 1=>share
 	private int daily_instant_type = 0;//pool 0.instant 1
+
+    private List<HistoryAdapter.HistoryItem> historyItemList;
 	/*
 	 * Singleton
 	 */
@@ -196,4 +198,12 @@ public class ThisUser {
 		return sourcelocation;
 				
 	}
+
+    public List<HistoryAdapter.HistoryItem> getHistoryItemList(){
+        return historyItemList;
+    }
+
+    public void setHistoryItemList(List<HistoryAdapter.HistoryItem> historyItemList){
+        this.historyItemList = historyItemList;
+    }
 }
