@@ -396,12 +396,17 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
 
    
 	private void saveHistoryBlocking() {
-        ContentResolver cr = getContentResolver();
-        String time12Hr = Integer.toString(hour) +":" + Integer.toString(minutes);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm a");
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR, hour);
+        calendar.set(Calendar.MINUTE, minutes);
         if(am_pm_toggle.isChecked())
-        	time12Hr = time12Hr + " AM";
+            calendar.set(Calendar.AM_PM, Calendar.AM);
         else
-        	time12Hr = time12Hr + " PM";
+            calendar.set(Calendar.AM_PM, Calendar.PM);
+
+        ContentResolver cr = getContentResolver();
+        String time12Hr = dateFormat.format(calendar.getTime());
 
         // Use content resolver (not cursor) to insert/update this query
         try {

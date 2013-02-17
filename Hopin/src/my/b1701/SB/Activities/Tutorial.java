@@ -44,6 +44,14 @@ public class Tutorial extends Activity{
 				
 			}
 		});
+        
+        Button cancelEnterUsernameButton = (Button) findViewById(R.id.cancelenterusernamebutton);
+        cancelEnterUsernameButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 	}
 
     @Override
