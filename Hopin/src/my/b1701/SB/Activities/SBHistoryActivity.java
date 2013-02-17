@@ -46,6 +46,8 @@ public class SBHistoryActivity extends FragmentActivity{
     @Override
     protected void onStart(){
         super.onStart();
+        loadHistoryFromDB();
+        showInstaHistory();
         EasyTracker.getInstance().activityStart(this);
     }
     
@@ -73,9 +75,6 @@ public class SBHistoryActivity extends FragmentActivity{
 				
 			}
 		});
-
-         loadHistoryFromDB();
-         showInstaHistory();
 	 }
 	 
 	 public void showInstaHistory()
