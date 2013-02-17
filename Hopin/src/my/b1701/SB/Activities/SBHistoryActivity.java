@@ -22,7 +22,6 @@ import my.b1701.SB.Users.ThisUser;
 import my.b1701.SB.provider.HistoryContentProvider;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class SBHistoryActivity extends FragmentActivity{
@@ -102,14 +101,13 @@ public class SBHistoryActivity extends FragmentActivity{
 
     private void loadHistoryFromDB() {
         ProgressHandler.showInfiniteProgressDialoge(this, "Fetching history", "Please wait...");
-        List<HistoryAdapter.HistoryItem> historyItemList;
+        List<HistoryAdapter.HistoryItem> historyItemList = null;
         Log.e(TAG, "Fetching searches");
         ContentResolver cr = getContentResolver();
         Cursor cursor = cr.query(mHistoryUri, columns, null, null, null);
 
         if (cursor == null || cursor.getCount() == 0) {
             Log.e(TAG, "Empty result");
-            historyItemList = Collections.EMPTY_LIST;
         } else {
             List<HistoryAdapter.HistoryItem> historyItems = new ArrayList<HistoryAdapter.HistoryItem>();
             if (cursor.moveToFirst()) {
@@ -125,8 +123,10 @@ public class SBHistoryActivity extends FragmentActivity{
             }
             if(historyItems.size()>0)
                 historyItemList = historyItems;
-            else
-                historyItemList = Collections.EMPTY_LIST;
+        }
+
+        if (historyItemList == null) {
+            historyItemList = new ArrayList<HistoryAdapter.HistoryItem>();
         }
 
         ThisUser.getInstance().setHistoryItemList(historyItemList);
