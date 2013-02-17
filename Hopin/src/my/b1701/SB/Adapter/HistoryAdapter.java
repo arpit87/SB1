@@ -6,6 +6,7 @@ import my.b1701.SB.R;
 import my.b1701.SB.Activities.SearchInputActivity;
 import my.b1701.SB.LocationHelpers.SBGeoPoint;
 import my.b1701.SB.Users.ThisUser;
+import my.b1701.SB.Util.StringUtils;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -46,6 +47,7 @@ public class HistoryAdapter extends BaseAdapter{
     }
 
    
+	
 	@Override
     public View getView(int position, View convertView, ViewGroup parent) {
         final HistoryItem historyItem = historyItemList.get(position);
@@ -58,17 +60,17 @@ public class HistoryAdapter extends BaseAdapter{
         TextView destination = (TextView)view.findViewById(R.id.history_destination);        
         TextView details = (TextView)view.findViewById(R.id.history_details);     
         ImageView edit_button = (ImageView)view.findViewById(R.id.history_editbutton);
-        
+        TextView reqDateView = (TextView)view.findViewById(R.id.history_req_date);
         final String sourceStr = historyItem.getSourceLocation();
         final String dstStr = historyItem.getDestinationLocation();
         String time = historyItem.getTimeOfRequest();//HH:mm 24hr
         int type = historyItem.getDailyInstantType();//daily 0,insta 1
         String freq = historyItem.getFreq(); //yyyy-MM-dd 
-        
+        String date = historyItem.getReqDate();
         source.setText(sourceStr);
         destination.setText(dstStr);
         details.setText(freq + "@"+time);
-        
+        reqDateView.setText(date);
         edit_button.setOnClickListener(new OnClickListener() {				
 			@Override
 			public void onClick(View chatIconView) {
@@ -148,6 +150,10 @@ public class HistoryAdapter extends BaseAdapter{
             return freq;
         }
         
+        /**
+         * it of format d MMM,ie.  14 Feb
+         * @return
+         */
         public String getReqDate() {
             return reqDate;
         }

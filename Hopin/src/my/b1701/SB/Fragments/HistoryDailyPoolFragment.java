@@ -1,6 +1,5 @@
 package my.b1701.SB.Fragments;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -11,7 +10,6 @@ import my.b1701.SB.Adapter.HistoryAdapter;
 import my.b1701.SB.Adapter.HistoryAdapter.HistoryItem;
 import my.b1701.SB.HelperClasses.ProgressHandler;
 import my.b1701.SB.HttpClient.AddThisUserScrDstCarPoolRequest;
-import my.b1701.SB.HttpClient.AddThisUserSrcDstRequest;
 import my.b1701.SB.HttpClient.SBHttpClient;
 import my.b1701.SB.HttpClient.SBHttpRequest;
 import my.b1701.SB.LocationHelpers.SBGeoPoint;
@@ -28,10 +26,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class HistoryDailyPoolFragment extends ListFragment{
 	private static final String TAG = "my.b1701.SB.Activites.HistoryDailyPoolFragment";
 	HistoryAdapter adapter = null;
+	View mListViewContainer = null;
+	TextView mEmptyListTextView = null;
+	List<HistoryAdapter.HistoryItem> dailyPoolHistoryList = null;
     private static Uri mHistoryUri = Uri.parse("content://" + HistoryContentProvider.AUTHORITY + "/db_fetch_only");
     private static String[] columns = new String[]{ "sourceLocation",
                                                     "destinationLocation",
@@ -48,15 +50,22 @@ public class HistoryDailyPoolFragment extends ListFragment{
     @Override
 	public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        adapter = new HistoryAdapter(getActivity(), fetchDailyPoolHistory());
-        setListAdapter(adapter);
+        dailyPoolHistoryList = fetchDailyPoolHistory();        
+		adapter = new HistoryAdapter(getActivity(),dailyPoolHistoryList );
+		setListAdapter(adapter);
+        
     }
     
     @Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreateView( inflater, container, null );
 		Log.i(TAG,"oncreateview historylistview");
-		View mListViewContainer = inflater.inflate(R.layout.historyfrag_listview, null);
+		mListViewContainer = inflater.inflate(R.layout.historyfrag_listview, null);
+		mEmptyListTextView = (TextView)mListViewContainer.findViewById(R.id.history_emptyList);
+		if(dailyPoolHistoryList.isEmpty())
+        {
+        	mEmptyListTextView.setVisibility(View.VISIBLE);
+        }
 		return mListViewContainer;
 	}
 

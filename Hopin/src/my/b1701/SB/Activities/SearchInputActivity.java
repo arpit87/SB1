@@ -36,6 +36,10 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -64,15 +68,15 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
     AutoCompleteTextView destination;
 	ToggleButton am_pm_toggle;
 	TextView timeView;
-	SeekBar timeSeekbar;
-	SeekBar dateSeekbar;
+	SeekBar timeSeekbar;	
     GeoAddress sourceAddress;
     GeoAddress destinationAddress;
     Button cancelFindUsers;
     Button takeRideButton;
     Button offerRideButton;
     ToggleButton daily_insta_toggle;
-    TextView Today;
+    RadioGroup radio_group;
+   
     //these change as user chooses time
     String hourStr = "";
 	String minstr = "";	
@@ -98,13 +102,12 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
         takeRideButton = (Button)findViewById(R.id.btn_takeride);
         offerRideButton = (Button)findViewById(R.id.btn_offerride);
         cancelFindUsers = (Button)findViewById(R.id.btn_cancelfindusers);
-        //offerRide = (ToggleButton)findViewById(R.id.btn_toggle_offer);
+        radio_group = (RadioGroup)findViewById(R.id.search_input_radio_group);
         daily_insta_toggle = (ToggleButton)findViewById(R.id.daily_intsa_toggle_btn);
         am_pm_toggle = (ToggleButton) findViewById(R.id.btn_am_pm_toggle);
-        timeView = (TextView) findViewById(R.id.time);
-        Today = (TextView) findViewById(R.id.textViewToday);
+        timeView = (TextView) findViewById(R.id.time);        
         dailyCarPool = daily_insta_toggle.isChecked();
-        
+        radio_group.check(R.id.radiobutton_today);
         Intent i = getIntent();
         if(i.hasExtra("source"))
         {
@@ -133,23 +136,32 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
         	//it should be set before firing this intent from whereever
         	Bundle b = i.getExtras();
         	String destinationFromIntent = i.getStringExtra("destination");
-        	destination.setText(destinationFromIntent);
+        	destination.setText(destinationFromIntent);    
+        	destinationSet = true;
         }
-
-        daily_insta_toggle.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-                EasyTracker.getTracker().sendEvent("ui_action", "toggle_press", "daily_instant_toggle", 1L);
-                boolean enable = daily_insta_toggle.isChecked();
-                dateSeekbar.setEnabled(!enable);
-            }
-        });
+        
+        daily_insta_toggle.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				if(isChecked)
+				{
+					radio_group.setEnabled(false);
+					dailyCarPool = true;
+				}
+				else
+				{
+					radio_group.setEnabled(true);
+					dailyCarPool = false;
+				}
+				
+			}
+		});
         
         takeRideButton.setOnClickListener(new OnClickListener() {
         	
 			@Override
-			public void onClick(View v) {
-                EasyTracker.getTracker().sendEvent("ui_action", "button_press", "takeRide_button", 1L);
+			public void onClick(View v) { 
 				if(!destinationSet)
 				{
 					ToastTracker.showToast("Please set destination");
@@ -165,8 +177,7 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
         offerRideButton.setOnClickListener(new OnClickListener() {
         	
 			@Override
-			public void onClick(View v) {
-                EasyTracker.getTracker().sendEvent("ui_action", "button_press", "offerRide_button", 1L);
+			public void onClick(View v) { 
 				if(!destinationSet)
 				{
 					ToastTracker.showToast("Please set destination");
@@ -212,7 +223,6 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
         destination.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                EasyTracker.getTracker().sendEvent("ui_action", "autocomplete_text", "setDestination", 1L);
                 AddressAdapter.Address address= ((AddressAdapter) destination.getAdapter()).getAddress(i);
                 destinationAddress = address.getGeoAddress();
                 if (!address.isSaved()) {
@@ -227,13 +237,11 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
         });
         destination.setAdapter(new AddressAdapter(this, R.layout.address_suggestion_layout));
 
-       
+        
         timeSeekbar = (SeekBar) findViewById(R.id.timeseekBar);
         timeSeekbar.setMax(48);
-        timeSeekbar.setOnSeekBarChangeListener(this);
-        
-        dateSeekbar = (SeekBar) findViewById(R.id.dateseekBar);
-        dateSeekbar.setMax(2);        
+        timeSeekbar.setOnSeekBarChangeListener(this);       
+               
         
         //find current time and set seekbar to just after current
         Calendar now = Calendar.getInstance();
@@ -305,9 +313,9 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
 		else 
 			time24HrFormat = Integer.toString(hour+12) + ":" + Integer.toString(minutes);
 		
-		dailyCarPool = daily_insta_toggle.isChecked();
+		dailyCarPool = daily_insta_toggle.isChecked(); 
 		ThisUser.getInstance().setTimeOfRequest(time24HrFormat);
-        ThisUser.getInstance().setDateOfRequest(getDate());
+		ThisUser.getInstance().setDateOfRequest(getDate());
 		ThisUser.getInstance().set_Daily_Instant_Type(dailyCarPool?0:1);//0 daily pool,1 instant share
 		ThisUser.getInstance().set_Take_Offer_Type(takeRide?0:1);//0 take ,1 offer
 		
@@ -358,15 +366,28 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
 		Calendar cal = Calendar.getInstance();  
 		cal.setTime(now);  
 		Date travelDate = cal.getTime();
+		int dateProgress = 0;
 		if(!dailyCarPool)
 		{
-			int dateProgress = dateSeekbar.getProgress();
+			int radio_button_id = radio_group.getCheckedRadioButtonId();
+			switch(radio_button_id)
+			{
+				case R.id.radiobutton_t1:
+					dateProgress = 1;
+					break;
+				case R.id.radiobutton_t2:
+					dateProgress = 2;
+					break;
+				case R.id.radiobutton_t3:
+					dateProgress = 3;
+					break;
+			}
 			if(dateProgress>0)
 			{
 				cal.add(Calendar.DATE, dateProgress);   
 				travelDate = cal.getTime();
 				mDateProgress = "T+"+dateProgress;
-				//ToastTracker.showToast("T+"+dateProgress +" request");	
+				ToastTracker.showToast("T+"+dateProgress +" request");	
 			}
 			
 		}
@@ -396,17 +417,12 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
 
    
 	private void saveHistoryBlocking() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm a");
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR, hour);
-        calendar.set(Calendar.MINUTE, minutes);
-        if(am_pm_toggle.isChecked())
-            calendar.set(Calendar.AM_PM, Calendar.AM);
-        else
-            calendar.set(Calendar.AM_PM, Calendar.PM);
-
         ContentResolver cr = getContentResolver();
-        String time12Hr = dateFormat.format(calendar.getTime());
+        String time12Hr = Integer.toString(hour) +":" + Integer.toString(minutes);
+        if(am_pm_toggle.isChecked())
+        	time12Hr = time12Hr + " AM";
+        else
+        	time12Hr = time12Hr + " PM";
 
         // Use content resolver (not cursor) to insert/update this query
         try {

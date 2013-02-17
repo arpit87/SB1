@@ -29,10 +29,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class HistoryInstaShareFragment extends ListFragment{
 	private static final String TAG = "my.b1701.SB.Activites.HistoryInstaShareFragment";
 	HistoryAdapter adapter = null;
+	View mListViewContainer = null;
+	TextView mEmptyListTextView = null;
+	List<HistoryAdapter.HistoryItem> InstaHistoryList = null;
     private static Uri mHistoryUri = Uri.parse("content://" + HistoryContentProvider.AUTHORITY + "/db_fetch_only");
     private static String[] columns = new String[]{ "sourceLocation",
                                                     "destinationLocation",
@@ -49,8 +53,9 @@ public class HistoryInstaShareFragment extends ListFragment{
     @Override
 	public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        adapter = new HistoryAdapter(getActivity(), fetchInstaHistory());
-        setListAdapter(adapter);
+        InstaHistoryList = fetchInstaHistory();        
+    	adapter = new HistoryAdapter(getActivity(),InstaHistoryList );
+    	setListAdapter(adapter);
     }
     
     @Override
@@ -88,7 +93,12 @@ public class HistoryInstaShareFragment extends ListFragment{
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreateView( inflater, container, null );
 		Log.i(TAG,"oncreateview historylistview");
-		View mListViewContainer = inflater.inflate(R.layout.historyfrag_listview, null);
+		mListViewContainer = inflater.inflate(R.layout.historyfrag_listview, null);
+		mEmptyListTextView = (TextView)mListViewContainer.findViewById(R.id.history_emptyList);
+		if(InstaHistoryList.isEmpty())
+        {        	
+        	mEmptyListTextView.setVisibility(View.VISIBLE);        	
+        }
 		return mListViewContainer;
 	}
 
