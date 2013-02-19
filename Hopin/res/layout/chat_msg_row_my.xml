@@ -30,7 +30,7 @@
 		android:layout_marginRight="10dip"
 		android:layout_marginLeft="12dip"
 		android:textColor="@color/black"/>
-	<TextView android:id="@+id/chatmessagedate"
+	<TextView android:id="@+id/chatmessagestatusandtime"
 		android:layout_width="wrap_content" android:layout_height="wrap_content"		
 		android:autoLink="none"
 		android:text="Sending.."

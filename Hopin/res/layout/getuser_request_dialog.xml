@@ -54,7 +54,7 @@
         android:paddingLeft="10dip"
         android:selectAllOnFocus="true"
         android:singleLine="true"
-        android:completionThreshold="4"
+        android:completionThreshold="2"
         android:hint="Enter source"
         
         />   
@@ -84,7 +84,7 @@
         android:paddingLeft="10dip"
         android:selectAllOnFocus="true"
         android:singleLine="true"    
-        android:completionThreshold="4"    
+        android:completionThreshold="2"    
 		android:hint="Enter destination"
 		
         />
