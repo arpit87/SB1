@@ -16,7 +16,6 @@ import com.google.analytics.tracking.android.EasyTracker;
 import my.b1701.SB.Adapter.HistoryAdapter;
 import my.b1701.SB.Fragments.HistoryDailyPoolFragment;
 import my.b1701.SB.Fragments.HistoryInstaShareFragment;
-import my.b1701.SB.HelperClasses.ProgressHandler;
 import my.b1701.SB.R;
 import my.b1701.SB.Users.ThisUser;
 import my.b1701.SB.provider.HistoryContentProvider;
@@ -99,7 +98,6 @@ public class SBHistoryActivity extends FragmentActivity{
 	    }
 
     private void loadHistoryFromDB() {
-        ProgressHandler.showInfiniteProgressDialoge(this, "Fetching history", "Please wait...");
         List<HistoryAdapter.HistoryItem> historyItemList = null;
         Log.e(TAG, "Fetching searches");
         ContentResolver cr = getContentResolver();
@@ -129,7 +127,6 @@ public class SBHistoryActivity extends FragmentActivity{
         }
 
         ThisUser.getInstance().setHistoryItemList(historyItemList);
-        ProgressHandler.dismissDialoge();
     }
 
 

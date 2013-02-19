@@ -1,13 +1,5 @@
 package my.b1701.SB.Adapter;
 
-import java.util.List;
-
-import my.b1701.SB.R;
-import my.b1701.SB.Activities.SearchInputActivity;
-import my.b1701.SB.LocationHelpers.SBGeoPoint;
-import my.b1701.SB.Users.ThisUser;
-import my.b1701.SB.Util.StringUtils;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +10,12 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import my.b1701.SB.Activities.SearchInputActivity;
+import my.b1701.SB.LocationHelpers.SBGeoPoint;
+import my.b1701.SB.R;
+import my.b1701.SB.Users.ThisUser;
+
+import java.util.List;
 
 public class HistoryAdapter extends BaseAdapter{
 
@@ -108,7 +106,7 @@ public class HistoryAdapter extends BaseAdapter{
 
         public HistoryItem(String sourceLocation, String destinationLocation, String timeOfRequest, 
         		           int dailyInstantType, int takeOffer, String freq,String reqdate,
-        		           int srclongitude,int srclatitude,int dstlongitude,int dstlatitude) {
+        		           int srclatitude,int srclongitude,int dstlatitude,int dstlongitude) {
             this.sourceLocation = sourceLocation;
             this.destinationLocation = destinationLocation;
             this.timeOfRequest = timeOfRequest;
