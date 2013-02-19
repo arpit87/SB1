@@ -344,6 +344,7 @@ public void onResume() {
 			    	{
 			    		lastMessage.setMessage(lastMessage.getMessage().concat("\n" + m.getBody()));
 			    		lastMessage.setStatus(m.getStatus());
+			    		lastMessage.setTimestamp(m.getTimestamp());
 			    	}
 			    	else
 			    	{			    		
