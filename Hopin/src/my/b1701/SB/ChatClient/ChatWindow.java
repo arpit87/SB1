@@ -424,11 +424,15 @@ private class SBOnChatMessageListener extends IMessageListener.Stub {
 	public void processMessage(final IChatAdapter chatAdapter, final Message msg)
 			throws RemoteException {
 		
+		mHandler.post(new Runnable() {
+	 		
+		    @Override
+		    public void run() {
 		   //this means chat switched before callback but this should not happen as we are chking isOpen inchatadapter
-		   if(chatAdapter.getParticipant()!=mParticipantFBID){
-			   Log.d(TAG,"chat callback on non open chat!!!shouldnt happen as we chking isopen in adapter");
-		    	   return;
-		   }
+		  // if(chatAdapter.getParticipant()!=mParticipantFBID){
+		//	   Log.d(TAG,"chat callback on non open chat!!!shouldnt happen as we chking isopen in adapter");
+		 //   	   return;
+		 //  }
 		   
 		  if(msg.getType() == Message.MSG_TYPE_ACK)
 		  {
@@ -466,10 +470,7 @@ private class SBOnChatMessageListener extends IMessageListener.Stub {
 			    }
 		  }			  
 		  		   
-		 	mHandler.post(new Runnable() {
-		 		
-				    @Override
-				    public void run() {
+		 	
 				    	 mMessagesListAdapter.notifyDataSetChanged();				    
 				}});
 		    
