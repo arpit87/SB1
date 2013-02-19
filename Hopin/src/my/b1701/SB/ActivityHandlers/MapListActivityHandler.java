@@ -371,7 +371,8 @@ public void centreMapToPlusLilUp(SBGeoPoint centrePoint)
 		{			
 		    thisUserOverlay.updateThisUser();
 		    Log.i(TAG,"this user map overlay updated");
-		    mapView.postInvalidate();	       
+		    mapView.postInvalidate();	    
+		    //dont centre here else on every automatic update it centres
 		    //mapcontroller.animateTo(ThisUser.getInstance().getSourceGeoPoint());
 		}
 		else

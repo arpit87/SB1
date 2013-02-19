@@ -3,7 +3,9 @@ package my.b1701.SB.ChatService;
 import my.b1701.SB.R;
 import my.b1701.SB.ChatClient.ChatWindow;
 import my.b1701.SB.HelperClasses.SBConnectivity;
+import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.HelperClasses.ToastTracker;
+import my.b1701.SB.Users.ThisUser;
 
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.ConnectionListener;
@@ -163,10 +165,21 @@ class SBChatBroadcastReceiver extends BroadcastReceiver{
 		// The service will be unbinded in the destroy of the activity.
 	    }
 	} else if (intentAction.equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
-	    if (intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, false)) {
-		Toast.makeText(context, context.getString(R.string.NetworkConnectivityLost),
-		    Toast.LENGTH_SHORT).show();
+	    if (intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, false)) {		
+		//network may be temporarily lost..check if android trying to connect to other network like wifi/gprs switch(failover)
+		 String reason = intent.getStringExtra(ConnectivityManager.EXTRA_REASON);		 
+         boolean isFailover = intent.getBooleanExtra(ConnectivityManager.EXTRA_IS_FAILOVER, false);
+         Toast.makeText(context, "network lost:( "+reason+",failover:"+isFailover,  Toast.LENGTH_SHORT).show();
+        //need a reconnection mechanism        	 
 		//context.stopService(new Intent(context, SBChatService.class));
+	    }
+	    else
+	    {
+	    	//network came up again
+	    	Toast.makeText(context, "NEtwork up yippe,ll login",  Toast.LENGTH_SHORT).show();
+	    	String login = ThisUserConfig.getInstance().getString(ThisUserConfig.CHATUSERID);
+	    	String password = ThisUserConfig.getInstance().getString(ThisUserConfig.CHATPASSWORD);
+	    	mConnectionAdapter.loginAsync(login, password);
 	    }
 	} else if(intentAction.equals(SBLOGIN_TO_CHAT))
 	{

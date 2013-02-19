@@ -13,16 +13,15 @@ import my.b1701.SB.ChatService.SBChatService;
 import my.b1701.SB.FacebookHelpers.FacebookConnector;
 import my.b1701.SB.HelperClasses.AlertDialogBuilder;
 import my.b1701.SB.HelperClasses.ProgressHandler;
-import my.b1701.SB.HelperClasses.SBImageLoader;
 import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.HelperClasses.ToastTracker;
 import my.b1701.SB.HttpClient.GetMatchingNearbyUsersRequest;
 import my.b1701.SB.HttpClient.SBHttpClient;
 import my.b1701.SB.HttpClient.SBHttpRequest;
-import my.b1701.SB.Server.GetMatchingNearbyUsersResponse;
 import my.b1701.SB.Server.ServerConstants;
 import my.b1701.SB.Users.CurrentNearbyUsers;
 import my.b1701.SB.Users.NearbyUser;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ComponentName;
@@ -36,10 +35,8 @@ import android.os.RemoteException;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,6 +44,7 @@ import android.widget.Toast;
 
 public class ChatWindow extends Activity{
 	
+	private static final String CHAT_SERVER_IP = "54.243.171.212";
 	private static String TAG = "my.b1701.SB.ChatClient.ChatWindow";
 	private IXMPPAPIs xmppApis = null;
 	private TextView mContactNameTextView;
@@ -223,40 +221,50 @@ public void onResume() {
 		}
 
 		private void sendMessage() {
-		final String inputContent = mInputField.getText().toString();		
+		final String inputContent = mInputField.getText().toString();	
+		SBChatMessage lastMessage = null;
 		if(!"".equals(inputContent))
 		{
 			Message newMessage = new Message(mParticipantFBID,Message.MSG_TYPE_CHAT);
 			newMessage.setBody(inputContent);
-			newMessage.setFrom(mThiUserChatUserName+"@54.243.171.212");
-			newMessage.setSubject(mThisUserChatFullName);
+			newMessage.setFrom(mThiUserChatUserName+"@"+CHAT_SERVER_IP);
+			newMessage.setSubject(mThisUserChatFullName);			
+			newMessage.setUniqueMsgIdentifier(System.currentTimeMillis());		 
 			
-			//send msg to xmpp
-			 try {
-					if (chatAdapter == null) {
-											
-						chatAdapter = mChatManager.createChat(mParticipantFBID, mMessageListener);
-						chatAdapter.setOpen(true);
-					}
-					chatAdapter.sendMessage(newMessage);
-				    } catch (RemoteException e) {
-					Log.e(TAG, e.getMessage());
-				    }
-			 
-			 	//now update on our view
-			 	//sbchatmsg (from,to,...
-			    SBChatMessage lastMessage = null;
-			    if (mMessagesListAdapter.getCount() != 0)
-			    lastMessage = (SBChatMessage) mMessagesListAdapter.getItem(mMessagesListAdapter.getCount() - 1);
+		 	//now update on our view
+		 	//sbchatmsg (from,to,...		    
+		   /* if (mMessagesListAdapter.getCount() != 0)
+		    	lastMessage = (SBChatMessage) mMessagesListAdapter.getItem(mMessagesListAdapter.getCount() - 1);
 
-			    if (lastMessage != null && lastMessage.getInitiator().equals(mThiUserChatUserName)) {
-				lastMessage.setMessage(lastMessage.getMessage().concat("\n" + inputContent));
-				lastMessage.setTimestamp(new Date().toString());
-				mMessagesListAdapter.setMessage(mMessagesListAdapter.getCount() - 1, lastMessage);
-			    } else{
-			    mMessagesListAdapter.addMessage(new SBChatMessage(mThiUserChatUserName, mParticipantFBID, inputContent, false, new Date().toString()));
-			   }			    
-			    mMessagesListAdapter.notifyDataSetChanged();
+		    if (lastMessage != null && lastMessage.getInitiator().equals(mThiUserChatUserName)) {
+		    	lastMessage.setMessage(lastMessage.getMessage().concat("\n" + inputContent));
+		    	lastMessage.setTimestamp(new Date().toString());
+		    	lastMessage.setStatus(ChatMsgStatus.SENDING); // sendin 0;
+			mMessagesListAdapter.setMessage(mMessagesListAdapter.getCount() - 1, lastMessage);
+		    } else{
+		    mMessagesListAdapter.addMessage(new SBChatMessage(mThiUserChatUserName, mParticipantFBID, inputContent, false, new Date().toString(),ChatMsgStatus.SENDING));
+		   }			    
+		    mMessagesListAdapter.notifyDataSetChanged();*/
+			
+			mMessagesListAdapter.addMessage(new SBChatMessage(mThiUserChatUserName, mParticipantFBID,inputContent, false, new Date().toString(),
+					                                          SBChatMessage.SENDING,newMessage.getUniqueMsgIdentifier()));
+			mMessagesListAdapter.notifyDataSetChanged();
+			
+		  //send msg to xmpp
+			 try {
+				if (chatAdapter == null) {
+										
+					chatAdapter = mChatManager.createChat(mParticipantFBID, mMessageListener);
+					chatAdapter.setOpen(true);
+				}
+				chatAdapter.sendMessage(newMessage);
+			    } catch (RemoteException e) {
+			    	lastMessage = (SBChatMessage) mMessagesListAdapter.getItem(mMessagesListAdapter.getCount() - 1);
+			    	lastMessage.setStatus(SBChatMessage.SENDING_FAILED); 
+			    	mMessagesListAdapter.setMessage(mMessagesListAdapter.getCount() - 1, lastMessage);
+			    	mMessagesListAdapter.notifyDataSetChanged();
+				Log.e(TAG, e.getMessage());
+			    }
 		   
 		}			   
 		    mInputField.setText(null);
@@ -329,14 +337,17 @@ public void onResume() {
 			
 			if (m.getBody() != null) {
 			    if (lastMessage == null ) {
-				lastMessage = new SBChatMessage(m.getInitiator(), m.getReceiver(), m.getBody(), false, m.getTimestamp());
+				lastMessage = new SBChatMessage(m.getInitiator(), m.getReceiver(), m.getBody(), false, m.getTimestamp(),m.getStatus(),m.getUniqueMsgIdentifier());
 				result.add(lastMessage);
 			    } else {
 			    	if(m.getInitiator().equals(lastMessage.getInitiator()))
+			    	{
 			    		lastMessage.setMessage(lastMessage.getMessage().concat("\n" + m.getBody()));
+			    		lastMessage.setStatus(m.getStatus());
+			    	}
 			    	else
 			    	{			    		
-			    		lastMessage = new SBChatMessage(m.getInitiator(), m.getReceiver(), m.getBody(), false, m.getTimestamp());
+			    		lastMessage = new SBChatMessage(m.getInitiator(), m.getReceiver(), m.getBody(), false, m.getTimestamp(),m.getStatus(),m.getUniqueMsgIdentifier());
 			    		result.add(lastMessage);
 			    	}
 			    }
@@ -411,35 +422,60 @@ private class SBOnChatMessageListener extends IMessageListener.Stub {
 	//i.e. we open new chat window only on intent
 	@Override
 	public void processMessage(final IChatAdapter chatAdapter, final Message msg)
-			throws RemoteException {		
+			throws RemoteException {
 		
-		 	mHandler.post(new Runnable() {
+		   //this means chat switched before callback but this should not happen as we are chking isOpen inchatadapter
+		   if(chatAdapter.getParticipant()!=mParticipantFBID){
+			   Log.d(TAG,"chat callback on non open chat!!!shouldnt happen as we chking isopen in adapter");
+		    	   return;
+		   }
+		   
+		  if(msg.getType() == Message.MSG_TYPE_ACK)
+		  {
+			  //here we should receive acks of only open chats
+			  //non open chats ack update msgs in list of theie respective chatAdapter and user when next opens them
+			  //he fetches all the msgs which have been updated in adapter.
+			  mMessagesListAdapter.updateMessageStatusWithUniqueID(msg.getUniqueMsgIdentifier(), SBChatMessage.DELIVERED);
+		  }
+		  else if(msg.getType() == Message.MSG_TYPE_CHAT)
+		  {
+			  //here we can get two type of chat msg
+			  //1) self msg after status change to sent/sending failed
+			  //2) incoming msg from other user
+			  
+			  //handle 1)
+			  if(msg.getStatus() == SBChatMessage.SENT || msg.getStatus() == SBChatMessage.SENDING_FAILED)
+			  {
+				  mMessagesListAdapter.updateMessageStatusWithUniqueID(msg.getUniqueMsgIdentifier(), msg.getStatus());
+			  }
+			  else if (msg.getBody() != null) {
+				    SBChatMessage lastMessage = null;
+				    
+				    if (mMessagesListAdapter.getCount() != 0)
+				    	lastMessage = (SBChatMessage) mMessagesListAdapter.getItem(mMessagesListAdapter.getCount()-1);
 
+				    if (lastMessage != null && !lastMessage.getInitiator().equals(mThiUserChatUserName)) {
+				    	lastMessage.setMessage(lastMessage.getMessage().concat("\n" + msg.getBody()));
+				    	lastMessage.setTimestamp(msg.getTimestamp());					    
+				    	mMessagesListAdapter.setMessage(mMessagesListAdapter.getCount() - 1, lastMessage);
+				    
+				    } else if (msg.getBody() != null){
+				    	mMessagesListAdapter.addMessage(new SBChatMessage(msg.getInitiator(), msg.getReceiver(), msg.getBody(),false, msg.getTimestamp(),msg.getStatus(),msg.getUniqueMsgIdentifier()));
+				    }	   
+				
+			    }
+		  }			  
+		  		   
+		 	mHandler.post(new Runnable() {
+		 		
 				    @Override
 				    public void run() {
-					if (msg.getType() == Message.MSG_TYPE_ERROR) {
-					   // mMessagesListAdapter.notifyDataSetChanged();
-					} else if (msg.getBody() != null) {
-					    SBChatMessage lastMessage = null;
-					    
-					    if (mMessagesListAdapter.getCount() != 0)
-					    	lastMessage = (SBChatMessage) mMessagesListAdapter.getItem(mMessagesListAdapter.getCount()-1);
-
-					    if (lastMessage != null && !lastMessage.getInitiator().equals(mThiUserChatUserName)) {
-					    	lastMessage.setMessage(lastMessage.getMessage().concat("\n" + msg.getBody()));
-					    	lastMessage.setTimestamp(msg.getTimestamp());					    
-					    	mMessagesListAdapter.setMessage(mMessagesListAdapter.getCount() - 1, lastMessage);
-					    
-					    } else if (msg.getBody() != null){
-					    	mMessagesListAdapter.addMessage(new SBChatMessage(msg.getInitiator(), msg.getReceiver(), msg.getBody(),false, msg.getTimestamp()));}
-					    mMessagesListAdapter.notifyDataSetChanged();
-					
-				    }}
-				    
-				});
-		    }
+				    	 mMessagesListAdapter.notifyDataSetChanged();				    
+				}});
+		    
 	    
 	}
+}
 
 //this is the callback class to track chatmanger on ChatService
 private class ChatManagerListener extends IChatManagerListener.Stub {

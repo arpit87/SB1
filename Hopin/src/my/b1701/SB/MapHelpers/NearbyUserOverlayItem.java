@@ -45,6 +45,7 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 	private String mImageURL= "";
 	private String mUserFBID= "";
 	private String mUserName= "";
+	private String mUserID = "";
 	private String mUserFBName = "";
 	boolean isVisibleSmall = false;
 	boolean isVisibleExpanded = false;
@@ -56,6 +57,7 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 		this.mGeoPoint = user.getUserLocInfo().getGeoPoint();		
 		this.mMapView = mapView;
 		this.mUserName = user.getUserOtherInfo().getUserName();
+		this.mUserID = user.getUserLocInfo().getUserID();
 		this.mUserFBInfo = user.getUserFBInfo();
 		this.mImageURL = mUserFBInfo.getImageURL();
 		this.mUserFBID = mUserFBInfo.getFbid();
@@ -218,7 +220,7 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 			smsIcon.setOnClickListener(new OnClickListener() {				
 				@Override
 				public void onClick(View buttonClose) {
-					CommunicationHelper.getInstance().onSmsClickWithUser(mUserFBID);
+					CommunicationHelper.getInstance().onSmsClickWithUser(mUserID);
 				}
 				});
 			//SBImageLoader.getInstance().displayImageElseStub(mImageURL, picView, R.drawable.userpicicon);

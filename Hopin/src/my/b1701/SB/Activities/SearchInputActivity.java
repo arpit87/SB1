@@ -204,8 +204,10 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
                 //if user put some other location then we stop updating map
                 //though we keep listening to network listener when on mapview
                 //this helps in putting my location in search source
-                MapListActivityHandler.getInstance().updateThisUserMapOverlay();
                 MapListActivityHandler.getInstance().setUpdateMap(false);
+                MapListActivityHandler.getInstance().updateThisUserMapOverlay();
+                MapListActivityHandler.getInstance().centreMapTo(ThisUser.getInstance().getSourceGeoPoint());
+                
                 hideSoftKeyboard();
                 source.setSelection(0);
                 source.clearFocus();

@@ -1,7 +1,14 @@
 package my.b1701.SB.ChatClient;
 
+import android.annotation.SuppressLint;
 import java.util.Date;
 
+/**
+ * this class has message object for displaying on chat window.
+ * the chat list adapter has list of these messages
+ * @author arpit87
+ *
+ */
 public class SBChatMessage {
 
 	private String mName = "";
@@ -11,7 +18,16 @@ public class SBChatMessage {
 	private String mFrom = "";
 	private String mTo = "";
 	private String mTime= "";
-
+	private int mStatus ;
+	private long mUniqueIdentifier;
+	//we are not using enum as its not serializable
+	public static final int SENDING_FAILED = -1;
+	public static final int SENDING = 1;
+	public static final int SENT = 2;
+	public static final int DELIVERED = 3;
+	public static final int RECEIVED = 4;
+	public static final int OLD = 5;
+	public static final int UNKNOWN = 6;
 	
 	
 	/**
@@ -22,13 +38,14 @@ public class SBChatMessage {
 	 * @param isError if the message is an error message.
 	 * @param date the time of the message.
 	 */
-	public SBChatMessage(final String from, String to, final String message, final boolean isError,
-	    final String time) {
+	public SBChatMessage(final String from, String to, final String message, final boolean isError,final String time, int chatMsgStatus, long unique_id) {
 		mTo = to;
 		mFrom = from;	    
 	    mMessage = message;
 	    mIsError = isError;
 	    mTimestamp = time;
+	    mStatus = chatMsgStatus;
+	    mUniqueIdentifier = unique_id;
 	}
 
 	/**
@@ -109,6 +126,22 @@ public class SBChatMessage {
 	    	mTime = mTimestamp.substring(colon_at-2, colon_at+3);
 	    }
 	    return mTime;
+	}
+
+	public int getStatus() {
+		return mStatus;
+	}
+
+	public void setStatus(int mStatus) {
+		this.mStatus = mStatus;
+	}
+
+	public long getUniqueIdentifier() {
+		return mUniqueIdentifier;
+	}
+
+	public void setUniqueIdentifier(long mUniqueIdentifier) {
+		this.mUniqueIdentifier = mUniqueIdentifier;
 	}
 
    }

@@ -1,10 +1,10 @@
 package my.b1701.SB.ChatService;
 
-import java.util.Date;
 
-import my.b1701.SB.R;
-import my.b1701.SB.Platform.Platform;
 
+import my.b1701.SB.ChatClient.SBChatMessage;
+
+import org.jivesoftware.smack.packet.Message.Type;
 import org.jivesoftware.smack.packet.XMPPError;
 import org.jivesoftware.smack.util.StringUtils;
 
@@ -24,12 +24,19 @@ public static final int MSG_TYPE_NORMAL = 100;
 public static final int MSG_TYPE_CHAT = 200;
 
 /** Group chat message type. */
-public static final int MSG_TYPE_GROUP_CHAT = 300;
+public static final int MSG_TYPE_NEWUSER_BROADCAST = 300;
 
 /** Error message type. */
 public static final int MSG_TYPE_ERROR = 400;
 
 public static final int MSG_TYPE_INFO = 500;
+
+public static final int MSG_TYPE_ACK = 600;
+
+public static final String UNIQUEID = "unique_id";
+public static final String SBMSGTYPE = "sb_msg_type";
+
+
 
 /** Parcelable.Creator needs by Android. */
 public static final Parcelable.Creator<Message> CREATOR = new Parcelable.Creator<Message>() {
@@ -46,13 +53,15 @@ public Message[] newArray(int size) {
 };
 
 
-private int mType;
-private String mBody;
-private String mSubject;
-private String mTo;
-private String mFrom;
-private String mThread;
-private String mTime;
+private int mType = (int)Message.MSG_TYPE_CHAT;
+private String mBody = "";
+private String mSubject="";
+private String mTo ="";
+private String mFrom ="";
+private String mThread = "";
+private String mTime = "";
+private int mStatus = SBChatMessage.UNKNOWN;
+private long mUniqueMsgIdentifier = 0;
 
 // TODO ajouter l'erreur
 
@@ -67,7 +76,7 @@ mType = type;
 mBody = "";
 mSubject = "";
 mThread = "";
-mFrom = null;
+mFrom = "";
 mTime = "";
 }
 
@@ -84,41 +93,41 @@ this(to, MSG_TYPE_CHAT);
  * @param smackMsg Smack message packet
  */
 public Message(final org.jivesoftware.smack.packet.Message smackMsg) {
-this(smackMsg.getTo());
-switch (smackMsg.getType()) {
+mTo = smackMsg.getTo();
+mType = (Integer) smackMsg.getProperty(SBMSGTYPE);
+/*switch (smackMsg.getType()) {
     case chat:
 	mType = MSG_TYPE_CHAT;
 	break;
     case groupchat:
-	mType = MSG_TYPE_GROUP_CHAT;
+	mType = MSG_TYPE_NEWUSER_BROADCAST;
 	break;
     case normal:
 	mType = MSG_TYPE_NORMAL;
 	break;
-    // TODO gerer les message de type error
-    // this a little work around waiting for a better handling of error
-    // messages
+    case headline:
+    mType = MSG_TYPE_ACK;
     case error:
 	mType = MSG_TYPE_ERROR;
 	break;
     default:
 	Log.w(TAG, "message type error" + smackMsg.getType());
 	break;
-}
+}*/
 this.mFrom = smackMsg.getFrom();
 if (mType == MSG_TYPE_ERROR) {
     XMPPError er = smackMsg.getError();
     String msg = er.getMessage();
     if (msg != null)
-	mBody = msg;
+    	mBody = msg;
     else
-	mBody = er.getCondition();
+    	mBody = er.getCondition();
 } else {
     mBody = smackMsg.getBody();
     mSubject = smackMsg.getSubject();
     mThread = smackMsg.getThread();
     mTime = (String) smackMsg.getProperty("time");
-    
+    mUniqueMsgIdentifier = (Long) smackMsg.getProperty(UNIQUEID);
 }
 }
 
@@ -133,6 +142,8 @@ mBody = in.readString();
 mSubject = in.readString();
 mThread = in.readString();
 mFrom = in.readString();
+mStatus = in.readInt();
+mUniqueMsgIdentifier = in.readLong();
 }
 
 /**
@@ -147,16 +158,49 @@ dest.writeString(mBody);
 dest.writeString(mSubject);
 dest.writeString(mThread);
 dest.writeString(mFrom);
+dest.writeInt(mStatus);
+dest.writeLong(mUniqueMsgIdentifier);
 }
 
 /**
  * Get the type of the message.
+ * like ACK,CHAT
  * @return the type of the message.
  */
 public int getType() {
 return mType;
 }
 
+/**
+ * there is a mapping to smack msg type to ours msg type
+ * we have ACK msg as headline smack msg
+ * @return
+ */
+/*
+public Type getSmackType() {
+	Type smackMsgType = org.jivesoftware.smack.packet.Message.Type.normal;
+	switch (mType) {
+		case MSG_TYPE_CHAT:
+			smackMsgType = org.jivesoftware.smack.packet.Message.Type.chat;
+		break;
+		case MSG_TYPE_NEWUSER_BROADCAST:
+			smackMsgType = org.jivesoftware.smack.packet.Message.Type.groupchat ;
+		break;
+		case MSG_TYPE_NORMAL:
+			smackMsgType = org.jivesoftware.smack.packet.Message.Type.normal;
+		break;
+		case MSG_TYPE_ACK:
+			smackMsgType = org.jivesoftware.smack.packet.Message.Type.headline;
+		case MSG_TYPE_ERROR:
+			smackMsgType = org.jivesoftware.smack.packet.Message.Type.error;
+		break;
+		default:
+		Log.w(TAG, "message type error" );
+		break;
+	}
+	return smackMsgType;
+}
+*/
 /**
  * Set the type of the message.
  * @param type the type to set
@@ -269,6 +313,22 @@ return 0;
 public String getTimestamp() {
 	// TODO Auto-generated method stub
 	return mTime;
+}
+
+public int getStatus() {
+	return mStatus;
+}
+
+public void setStatus(int sent) {
+	this.mStatus = sent;
+}
+
+public long getUniqueMsgIdentifier() {
+	return mUniqueMsgIdentifier;
+}
+
+public void setUniqueMsgIdentifier(long l) {
+	this.mUniqueMsgIdentifier = l;
 }
 
 }

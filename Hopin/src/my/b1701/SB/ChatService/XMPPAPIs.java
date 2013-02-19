@@ -65,8 +65,8 @@ public class XMPPAPIs extends IXMPPAPIs.Stub {
 
 	@Override
 	public boolean tryingLogging() throws RemoteException {
-		// TODO Auto-generated method stub
-		return mConnectionAdapter.tryinLogging;
+		
+		return mConnectionAdapter.tryinLogging.get();
 	}
 
 	

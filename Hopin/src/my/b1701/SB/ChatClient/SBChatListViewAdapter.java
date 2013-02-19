@@ -1,6 +1,7 @@
 package my.b1701.SB.ChatClient;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import my.b1701.SB.R;
@@ -9,6 +10,7 @@ import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.Users.CurrentNearbyUsers;
 import my.b1701.SB.Users.NearbyUser;
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,9 +24,11 @@ import android.widget.TextView;
 public class SBChatListViewAdapter extends BaseAdapter {
 
 	List<SBChatMessage> mListMessages = new ArrayList<SBChatMessage>();
+	HashMap<Long,SBChatMessage> mHashMapSentNotDeliveredMsgs = new HashMap<Long,SBChatMessage>();
 	String selfFBId = ThisUserConfig.getInstance().getString(ThisUserConfig.FBUID);
 	String selfFirstName = ThisUserConfig.getInstance().getString(ThisUserConfig.FB_FIRSTNAME);
 	String selfImageURL = ThisUserConfig.getInstance().getString(ThisUserConfig.FBPICURL);
+	int chatMsgStatus = SBChatMessage.UNKNOWN ; 
 	/**
 	 * Returns the number of messages contained in the messages list.
 	 * @return The number of messages contained in the messages list.
@@ -40,6 +44,20 @@ public class SBChatListViewAdapter extends BaseAdapter {
 	
 	public void addMessage(SBChatMessage msg) {
 	     mListMessages.add(msg);
+	     //save all msgs that user is sending in a hash map to update their status
+	     if(msg.getStatus() == SBChatMessage.SENDING)
+	    	 mHashMapSentNotDeliveredMsgs.put(msg.getUniqueIdentifier(), msg);
+	}
+	
+	public void updateMessageStatusWithUniqueID(long unique_ID,int status) {
+		
+	     SBChatMessage msg = mHashMapSentNotDeliveredMsgs.get(unique_ID);
+	     if(msg!=null)
+	     {
+	    	 msg.setStatus(status);
+	    	 if(status == SBChatMessage.DELIVERED)
+	    		 mHashMapSentNotDeliveredMsgs.remove(msg);
+	     }		
 	}
 	
 	public void clearList()
@@ -81,13 +99,15 @@ public class SBChatListViewAdapter extends BaseAdapter {
 	 * @param parent The parent that this view will eventually be attached to.
 	 * @return A View corresponding to the data at the specified position.
 	 */
+
 	public View getView(int position, View convertView, ViewGroup parent) {
 	    View chatRowView;
 	    TextView msgText ;
-	    TextView msgDate ;
+	    TextView msgStatus ;
 	    ImageView imgView ;
 	    String imageURL = "";
-	    
+	    String statusText = "";
+	    String time = "";
 		LayoutInflater inflater = (LayoutInflater) Platform.getInstance().getContext().getSystemService(Platform.getInstance().getContext().LAYOUT_INFLATER_SERVICE);
 		
 	    SBChatMessage msg = mListMessages.get(position);	
@@ -114,24 +134,47 @@ public class SBChatListViewAdapter extends BaseAdapter {
 		    }*/
 	    }  
 	    	msgText = (TextView) chatRowView.findViewById(R.id.chatmessagetext);
-	    	msgDate = (TextView) chatRowView.findViewById(R.id.chatmessagedate);
+	    	msgStatus = (TextView) chatRowView.findViewById(R.id.chatmessagestatusandtime);
 	    	imgView = (ImageView) chatRowView.findViewById(R.id.chat_msg_pic);
 	    	SBImageLoader.getInstance().displayImageElseStub(imageURL, imgView, R.drawable.userpicicon);
 		    msgText.setText(msg.getMessage());
-		   
-		    //registerForContextMenu(msgText);
-		   	    
+		    
 		    if (msg.getTimestamp() != null) {
-			String time = msg.getTime();
-			msgDate.setText("@"+time);
+				time = msg.getTime();				
+			    }
+		    
+		    chatMsgStatus = msg.getStatus();		    
+		    switch(chatMsgStatus)
+		    {
+		        case SBChatMessage.SENDING_FAILED:
+		    	statusText = "Sending failed";
+		    	break;
+		    	case SBChatMessage.SENDING: //sending
+		    	statusText = "Sending..";
+		    	break;
+		    	case SBChatMessage.SENT:
+		    	statusText = "Sent@"+time;
+		    	break;
+		    	case SBChatMessage.DELIVERED:
+		    	statusText = "Delivered@"+time;
+			    break;	
+		    	case SBChatMessage.RECEIVED:
+			    statusText = "@"+time;
+				break;
+		    	case SBChatMessage.OLD:
+				statusText = "@"+time;
+				break;
+				default:
+				statusText = "";
 		    }
-	     
-	    
+		    //registerForContextMenu(msgText);
+		    msgStatus.setText(statusText);
+		    
 	    if (msg.isError()) {
 		String err = "#some error occured!";
 		msgText.setText(err);
 		msgText.setTextColor(Color.RED);
-		msgDate.setError("");
+		msgStatus.setError("");
 	    }
 	    return chatRowView;
 	}

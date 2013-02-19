@@ -36,10 +36,11 @@ public class CommunicationHelper {
 		return instance;
 	}
 	
-	public void onChatClickWithUser(String userID)
+	public void onChatClickWithUser(String userFBID)
 	{
 		//chat username and id are set only after successful addition to chat server
 		//if these missing =?not yet added on chat server
+		
 		String thiUserChatUserName = ThisUserConfig.getInstance().getString(ThisUserConfig.CHATUSERID);
 		String thisUserChatPassword = ThisUserConfig.getInstance().getString(ThisUserConfig.CHATPASSWORD);
 		
@@ -67,14 +68,16 @@ public class CommunicationHelper {
 			//Intent fbLoginIntent = new Intent(context,LoginActivity.class);			
 			//MapListActivityHandler.getInstance().getUnderlyingActivity().startActivity(fbLoginIntent);
 		}	
-		else
+		else if(userFBID != "")
 		{
 			Intent startChatIntent = new Intent(Platform.getInstance().getContext(),ChatWindow.class);					
 			startChatIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP
 		 			| Intent.FLAG_ACTIVITY_NEW_TASK);
-			startChatIntent.putExtra("participant", userID);
+			startChatIntent.putExtra("participant", userFBID);
 			context.startActivity(startChatIntent);
 		}
+		else
+			ToastTracker.showToast("Not available, user not FB logged in");
 	
 	}
 	
@@ -85,25 +88,27 @@ public class CommunicationHelper {
 			//make popup 
 			MapListActivityHandler.getInstance().fbloginpromptpopup_show(true);
 		}
-		else
+		else if(userID!="" )
 		{
 			SmsDialogFragment sms_dialog = new SmsDialogFragment(userID);
 			sms_dialog.show(MapListActivityHandler.getInstance().getUnderlyingActivity().getSupportFragmentManager(), "sms_dialog");						
 		}
 	}
 	
-	public void onFBIconClickWithUser(Activity underLyingActivity, String userID, String userName)
+	public void onFBIconClickWithUser(Activity underLyingActivity, String userFBID, String userFBName)
 	{
 		if(!ThisUserConfig.getInstance().getBool(ThisUserConfig.FBLOGGEDIN))
 		{
 			//make popup 
 			MapListActivityHandler.getInstance().fbloginpromptpopup_show(true);
 		}
-		else
+		else if(userFBID!="" || userFBName !="")
 		{
 			FacebookConnector fbconnect = new FacebookConnector(underLyingActivity);
-			fbconnect.openFacebookPage(userID,userName);
+			fbconnect.openFacebookPage(userFBID,userFBName);
 		}
+		else
+			ToastTracker.showToast("Not available, user not FB logged in");
 	}
 	
 
