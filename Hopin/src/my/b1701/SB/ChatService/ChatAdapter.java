@@ -29,7 +29,7 @@ import android.util.Log;
 
 	private static final int HISTORY_MAX_SIZE = 50;
     private static final String TAG = "my.b1701.SB.ChatService.ChatAdapter";
-    private AtomicBoolean mIsOpen = new AtomicBoolean(false);
+    private Boolean mIsOpen = false;
     private final Chat mSmackChat;
     private final String mParticipant;    
     private final List<Message> mMessages; 
@@ -88,7 +88,7 @@ import android.util.Log;
 		
 	@Override
 	public void setOpen(boolean value) throws RemoteException {
-		mIsOpen.set(value);
+		mIsOpen = value;
 		
 	}
 
@@ -115,7 +115,7 @@ import android.util.Log;
 		public void processMessage(Chat chat, org.jivesoftware.smack.packet.Message message) {
 		    Message msg = new Message(message);		    
 		    Log.d(TAG, "new msg " + msg.getBody());	
-		    Log.d(TAG, "chat is open?"+mIsOpen.get()) ;
+		    Log.d(TAG, "chat is open?"+mIsOpen) ;
 		    //if broadcast message from new user then do getMatch req
 		    if(msg.getType() == Message.MSG_TYPE_NEWUSER_BROADCAST)
 		    {
@@ -142,7 +142,7 @@ import android.util.Log;
 		    	{
 		    		Log.d(TAG, "got ack but not msg uniqid: "+msg.getUniqueMsgIdentifier()) ;
 		    	}
-		    	if(mIsOpen.get())
+		    	if(mIsOpen)
 			    {
 			       Log.i(TAG, "chat is open,sending ack to window ") ;
 				   callListeners(msg);
@@ -156,7 +156,7 @@ import android.util.Log;
 			    if (mMessages.size() == HISTORY_MAX_SIZE)
 				    mMessages.remove(0);				
 		    	mMessages.add(msg);
-			    if(mIsOpen.get())
+			    if(mIsOpen)
 			    {
 			    	Log.i(TAG, "chat is open") ;
 				    callListeners(msg);
@@ -208,7 +208,7 @@ import android.util.Log;
 
 	@Override
 	public boolean isOpen() throws RemoteException {
-		return mIsOpen.get();		
+		return mIsOpen;		
 	}
 
 	@Override
