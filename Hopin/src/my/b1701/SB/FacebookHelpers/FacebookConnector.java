@@ -101,8 +101,7 @@ public class FacebookConnector {
     class LoginDialogListener implements DialogListener {
 	    public void onComplete(Bundle values) {	    	
 	    	ThisUserConfig.getInstance().putString(ThisUserConfig.FBACCESSTOKEN, facebook.getAccessToken());
-        	ThisUserConfig.getInstance().putLong(ThisUserConfig.FBACCESSEXPIRES, facebook.getAccessExpires()); 
-        	ThisUserConfig.getInstance().putBool(ThisUserConfig.FBLOGGEDIN, true);
+        	ThisUserConfig.getInstance().putLong(ThisUserConfig.FBACCESSEXPIRES, facebook.getAccessExpires());         	
         	ToastTracker.showToast("Authentication successsful");
         	requestUserData();        	
         }    
@@ -125,9 +124,9 @@ public class FacebookConnector {
     private void sendAddFBAndChatInfoToServer(String fbid) {
     	//this should only be called from fbpostloginlistener to ensure we have fbid
     	Log.i(TAG,"in sendAddFBAndChatInfoToServer");
-    	 SBHttpRequest chatServiceAddUserRequest = new ChatServiceCreateUser(fbid);
+    	SBHttpRequest chatServiceAddUserRequest = new ChatServiceCreateUser(fbid);
      	SBHttpClient.getInstance().executeRequest(chatServiceAddUserRequest);
-		SBHttpRequest sendFBInfoRequest = new SaveFBInfoRequest(ThisUserConfig.getInstance().getString(ThisUserConfig.USERID), ThisUserConfig.getInstance().getString(ThisUserConfig.FBUID), ThisUserConfig.getInstance().getString(ThisUserConfig.FBACCESSTOKEN));
+		SBHttpRequest sendFBInfoRequest = new SaveFBInfoRequest(ThisUserConfig.getInstance().getString(ThisUserConfig.USERID), fbid, ThisUserConfig.getInstance().getString(ThisUserConfig.FBACCESSTOKEN));
 		SBHttpClient.getInstance().executeRequest(sendFBInfoRequest);			
 	}
 		
@@ -158,11 +157,14 @@ public class FacebookConnector {
 	            ThisUserConfig.getInstance().putString(ThisUserConfig.FBUSERNAME, username);
 	            ThisUserConfig.getInstance().putString(ThisUserConfig.FB_FIRSTNAME, first_name);
 	            ThisUserConfig.getInstance().putString(ThisUserConfig.FB_LASTNAME, last_name);
-                if (StringUtils.isEmpty(ThisUserConfig.getInstance().getString(ThisUserConfig.USERNAME))) {
-                    ThisUserConfig.getInstance().putString(ThisUserConfig.USERNAME, first_name+" "+last_name);
+                ThisUserConfig.getInstance().putString(ThisUserConfig.USERNAME, first_name+" "+last_name);
+                if(!StringUtils.isBlank(id))
+                {
+                	ThisUserConfig.getInstance().putBool(ThisUserConfig.FBLOGGEDIN, true);
+                	sendAddFBAndChatInfoToServer(id);                	
                 }
 	            //id getting delayed in writing to file and not getting picked in call to server so pass as argument	           
-	            sendAddFBAndChatInfoToServer(id);
+	            
 	            Log.i(TAG,"fbpicurl:"+jsonObject.getString("picture"));	           
 	            //Bitmap bmp = FBUtility.getBitmap(ThisUserConfig.getInstance().getString(ThisUserConfig.FBPICURL));
 	            //Store.getInstance().saveBitmapToFile(bmp,ThisUserConfig.FBPICFILENAME);

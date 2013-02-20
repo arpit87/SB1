@@ -195,7 +195,7 @@ public void onResume() {
 	    	if(thisNearbyUser != null)
 	    	{
 	    		String travelInfo = "";
-		    	mContactNameTextView.setText(thisNearbyUser.getUserFBInfo().getName());
+		    	mContactNameTextView.setText(thisNearbyUser.getUserFBInfo().getFullName());
 		    	//SBImageLoader.getInstance().displayImageElseStub(thisNearbyUser.getUserFBInfo().getImageURL(), mContactPic,R.drawable.userpicicon);
 		    	travelInfo = thisNearbyUser.getUserLocInfo().getUserSrcLocality() +" to "+thisNearbyUser.getUserLocInfo().getUserDstLocality() ;
 		    	mContactDestination.setText(travelInfo);

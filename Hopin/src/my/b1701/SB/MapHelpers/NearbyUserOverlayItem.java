@@ -10,6 +10,7 @@ import my.b1701.SB.LocationHelpers.SBGeoPoint;
 import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.Users.NearbyUser;
 import my.b1701.SB.Users.UserFBInfo;
+import my.b1701.SB.Util.StringUtils;
 import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
@@ -61,7 +62,7 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 		this.mUserFBInfo = user.getUserFBInfo();
 		this.mImageURL = mUserFBInfo.getImageURL();
 		this.mUserFBID = mUserFBInfo.getFbid();
-		this.mUserFBName = mUserFBInfo.getFirstName()+" "+mUserFBInfo.getLastName();
+		this.mUserFBName = mUserFBInfo.getFullName();
 		this.mNearbyUser = user;
 		createAndDisplaySmallView();
 		/*Drawable icon= Platform.getInstance().getContext().getResources().getDrawable(R.drawable.green_marker);
@@ -136,7 +137,7 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 		hometown = (TextView)viewOnMarkerExpanded.findViewById(R.id.expanded_from);
 		gender = (TextView)viewOnMarkerExpanded.findViewById(R.id.expanded_gender);
 		
-		name_str = mNearbyUser.getUserFBInfo().getName();
+		name_str = mNearbyUser.getUserFBInfo().getFullName();
 		worksat_str = mNearbyUser.getUserFBInfo().getWorksAt();
 		studiedat_str = mNearbyUser.getUserFBInfo().getStudiedAt();
 		hometown_str = mNearbyUser.getUserFBInfo().getHometown();
@@ -180,7 +181,7 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 			facebookIcon = (ImageView)viewOnMarkerExpanded.findViewById(R.id.fb_icon_view);
 			buttonClose = (ImageView)viewOnMarkerExpanded.findViewById(R.id.button_close_balloon_expandedview);
 			
-			if(mUserFBName!=null)
+			if(!StringUtils.isBlank(mUserFBName))
 				expandedBalloonHeader.setText(mUserFBName);
 			else
 				expandedBalloonHeader.setText(mUserName);

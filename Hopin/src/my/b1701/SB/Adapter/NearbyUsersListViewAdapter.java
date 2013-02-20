@@ -16,6 +16,7 @@ import my.b1701.SB.Users.NearbyUser;
 import my.b1701.SB.Users.UserFBInfo;
 import my.b1701.SB.Users.UserLocInfo;
 import my.b1701.SB.Users.UserOtherInfo;
+import my.b1701.SB.Util.StringUtils;
 
 import java.util.List;
 
@@ -72,7 +73,9 @@ public class NearbyUsersListViewAdapter extends BaseAdapter{
         final UserFBInfo thisUserFBInfo = thisUser.getUserFBInfo();
         UserLocInfo thisUserLocInfo = thisUser.getUserLocInfo();
         UserOtherInfo thisUserOtherInfo = thisUser.getUserOtherInfo();
-        String name = thisUserFBInfo.getName();
+        String name = thisUserFBInfo.getFullName();
+        if(StringUtils.isBlank(name))
+        	name = thisUserOtherInfo.getUserName();
         String source = thisUserLocInfo.getUserSrcAddress();
         String destination = thisUserLocInfo.getUserDstAddress();
         String time = thisUserOtherInfo.getTime();

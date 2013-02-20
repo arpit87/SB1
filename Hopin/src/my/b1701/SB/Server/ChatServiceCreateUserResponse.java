@@ -34,6 +34,7 @@ public class ChatServiceCreateUserResponse extends ServerResponseBase{
 				String password = body.getString("password");
 				ToastTracker.showToast("chtusr:"+username);
 				Log.i(TAG, "chat user created usrname:"+username + " pass:"+password);
+				
 				ThisUserConfig.getInstance().putString(ThisUserConfig.CHATUSERID, username);
 				ThisUserConfig.getInstance().putString(ThisUserConfig.CHATPASSWORD, password);
 				

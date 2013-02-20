@@ -110,7 +110,7 @@ public class UserFBInfo {
 			return false;
     }
 
-    public String getName() {
+    public String getFullName() {
         return firstName + " " + lastName;
     }
 
