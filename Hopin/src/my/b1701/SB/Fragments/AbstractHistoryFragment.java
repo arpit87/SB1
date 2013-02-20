@@ -16,6 +16,7 @@ import my.b1701.SB.HttpClient.AddThisUserSrcDstRequest;
 import my.b1701.SB.HttpClient.SBHttpClient;
 import my.b1701.SB.HttpClient.SBHttpRequest;
 import my.b1701.SB.LocationHelpers.SBGeoPoint;
+import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.R;
 import my.b1701.SB.Users.ThisUser;
 import my.b1701.SB.Util.StringUtils;
@@ -54,7 +55,7 @@ public abstract class AbstractHistoryFragment extends ListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        super.onCreateView( inflater, container, null );
+        super.onCreateView(inflater, container, null);
         mListViewContainer = inflater.inflate(R.layout.historyfrag_listview, null);
         mEmptyListTextView = (TextView)mListViewContainer.findViewById(R.id.history_emptyList);
         if(historyList.isEmpty())
@@ -97,6 +98,13 @@ public abstract class AbstractHistoryFragment extends ListFragment {
             ThisUser.getInstance().setDateOfRequest(StringUtils.gettodayDateInFormat("yyyy-MM-dd"));
             ThisUser.getInstance().set_Daily_Instant_Type(getDailyInstantType());//0 daily pool,1 instant share
             ThisUser.getInstance().set_Take_Offer_Type(takeride);//0 take ,1 offer
+
+            Platform.getInstance().getHandler().post(new Runnable() {
+                @Override
+                public void run() {
+                    MapListActivityHandler.getInstance().updateSrcDstTimeInListView();
+                }
+            });
 
             Log.i(TAG, "Executing query");
             SBHttpRequest addThisUserSrcDstRequest= new AddThisUserSrcDstRequest();

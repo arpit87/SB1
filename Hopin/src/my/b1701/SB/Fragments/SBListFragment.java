@@ -1,13 +1,5 @@
 package my.b1701.SB.Fragments;
 
-import java.util.List;
-
-import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
-import my.b1701.SB.Adapter.NearbyUsersListViewAdapter;
-import my.b1701.SB.HelperClasses.CommunicationHelper;
-import my.b1701.SB.HelperClasses.ToastTracker;
-import my.b1701.SB.Users.CurrentNearbyUsers;
-import my.b1701.SB.Users.NearbyUser;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
@@ -15,6 +7,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
+import my.b1701.SB.Adapter.NearbyUsersListViewAdapter;
+import my.b1701.SB.HelperClasses.CommunicationHelper;
+import my.b1701.SB.HelperClasses.ToastTracker;
+import my.b1701.SB.Users.CurrentNearbyUsers;
+import my.b1701.SB.Users.NearbyUser;
+
+import java.util.List;
 
 public class SBListFragment extends ListFragment {
 	
@@ -37,7 +37,15 @@ public class SBListFragment extends ListFragment {
         }
         MapListActivityHandler.getInstance().setListFrag(this);
 	}
-	
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        MapListActivityHandler.getInstance().updateUserNameInListView();
+        MapListActivityHandler.getInstance().updateUserPicInListView();
+        MapListActivityHandler.getInstance().updateSrcDstTimeInListView();
+    }
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreateView( inflater, container, null );

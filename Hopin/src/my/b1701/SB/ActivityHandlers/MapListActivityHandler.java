@@ -444,8 +444,6 @@ public ViewGroup getThisListContainerWithListView() {
         mSource =  (TextView) mListViewContainer.findViewById(R.id.my_source_listview);        
        
         mtime = (TextView) mListViewContainer.findViewById(R.id.my_time_listview); 
-        updateUserNameInListView();
-        updateUserPicInListView();
         //mMapViewContainer.removeView(mMapView);
     }    
 
@@ -496,7 +494,7 @@ public void updateSrcDstTimeInListView() {
     }    
     
     String date_time = ThisUser.getInstance().getDateAndTimeOfRequest();
-    if(date_time != "")
+    if(!StringUtils.isBlank(date_time))
     {
     	mtime.setText("Time: "+StringUtils.formatDate("yyyy-MM-dd HH:mm", "h:mm a, EEE, MMM d", date_time));
     }
