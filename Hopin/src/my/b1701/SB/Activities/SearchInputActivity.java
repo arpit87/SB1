@@ -50,7 +50,9 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
             "srclati",
             "srclongi",
             "dstlati",
-            "dstlongi"};
+            "dstlongi",
+            "date"
+    };
 
     SearchRecentSuggestions searchRecentSuggestions = new SearchRecentSuggestions(this, CustomSuggestionProvider.AUTHORITY, CustomSuggestionProvider.MODE);
 
@@ -440,6 +442,7 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
             values.put(columns[8], thisUser.getSourceGeoPoint().getLongitudeE6());
             values.put(columns[9], thisUser.getDestinationGeoPoint().getLatitudeE6());
             values.put(columns[10], thisUser.getDestinationGeoPoint().getLongitudeE6());
+            values.put(columns[11], System.currentTimeMillis());
             cr.insert(mHistoryUri, values);
         } catch (RuntimeException e) {
             Log.e(TAG, "saveHistoryQueryerror", e);
@@ -470,7 +473,7 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
         if (historyItemList != null) {
             historyItemList.add(0, historyItem);
             if (historyItemList.size() > MAX_HISTORY_COUNT) {
-                for (int i = historyItemList.size(); i >= MAX_HISTORY_COUNT; i--) {
+                for (int i = historyItemList.size() - 1; i >= MAX_HISTORY_COUNT; i--) {
                     historyItemList.remove(i);
                 }
             }
@@ -488,7 +491,7 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
             if (maxEntries > 0) {
                 selection = "_id IN " +
                         "(SELECT _id FROM history" +
-                       // " ORDER BY date DESC" +
+                        " ORDER BY date DESC" +
                         " LIMIT -1 OFFSET " + String.valueOf(maxEntries) + ")";
             }
             cr.delete(mHistoryUri, selection, null);
