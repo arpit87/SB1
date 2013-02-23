@@ -1,14 +1,11 @@
 package my.b1701.SB.HttpClient;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-
+import android.util.Log;
 import my.b1701.SB.Server.GetMatchingNearbyUsersResponse;
 import my.b1701.SB.Server.ServerConstants;
 import my.b1701.SB.Server.ServerResponseBase;
 import my.b1701.SB.Users.ThisUser;
 import my.b1701.SB.Users.UserAttributes;
-
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -19,11 +16,12 @@ import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.annotation.SuppressLint;
-import android.util.Log;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 public class GetMatchingNearbyUsersRequest extends SBHttpRequest{
-	
+
+    public static final String URL = ServerConstants.SERVER_ADDRESS + ServerConstants.REQUESTSERVICE + "/getMatches/";
 	
 	HttpPost httpQueryGetNearbyUsers;	
 	JSONObject jsonobjGetNearbyUsers;
@@ -37,8 +35,7 @@ public class GetMatchingNearbyUsersRequest extends SBHttpRequest{
 		queryMethod = QueryMethod.Post;
 				
 		//prepare getnearby request		
-		url1 = ServerConstants.SERVER_ADDRESS + ServerConstants.REQUESTSERVICE + "/getMatches/";
-		httpQueryGetNearbyUsers = new HttpPost(url1);
+		httpQueryGetNearbyUsers = new HttpPost(URL);
 		jsonobjGetNearbyUsers = GetServerAuthenticatedJSON();;
 		try {
 			jsonobjGetNearbyUsers.put(UserAttributes.USERID, ThisUser.getInstance().getUserID());			

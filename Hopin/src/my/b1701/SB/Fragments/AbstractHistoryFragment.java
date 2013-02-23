@@ -107,7 +107,7 @@ public abstract class AbstractHistoryFragment extends ListFragment {
             });
 
             Log.i(TAG, "Executing query");
-            SBHttpRequest addThisUserSrcDstRequest= new AddThisUserSrcDstRequest();
+            SBHttpRequest addThisUserSrcDstRequest= new AddThisUserSrcDstRequest(historyItem.getSourceLocation(), historyItem.getDestinationLocation());
             SBHttpClient.getInstance().executeRequest(addThisUserSrcDstRequest);
             return null;
         }

@@ -1,19 +1,12 @@
 package my.b1701.SB.HttpClient;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-
+import android.util.Log;
 import my.b1701.SB.HelperClasses.ThisAppConfig;
 import my.b1701.SB.Server.AddUserResponse;
 import my.b1701.SB.Server.ServerConstants;
 import my.b1701.SB.Server.ServerResponseBase;
-import my.b1701.SB.Users.ThisUser;
-import my.b1701.SB.Users.UserAttributes;
-
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -22,10 +15,12 @@ import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.util.Log;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 public class AddUserRequest extends SBHttpRequest{
-	
+	public static final String URL = ServerConstants.SERVER_ADDRESS+ServerConstants.USERSERVICE+"/addUser/";
+
 	HttpPost httpQuery;
 	JSONObject jsonobj;	
 	String uuid;
@@ -38,9 +33,9 @@ public class AddUserRequest extends SBHttpRequest{
 		super();
 		this.uuid=uuid;		
 		queryMethod = QueryMethod.Get;	
-		url1 = ServerConstants.SERVER_ADDRESS+ServerConstants.USERSERVICE+"/addUser/";
+
 		jsonobj=new JSONObject();
-		httpQuery =  new HttpPost(url1);
+		httpQuery =  new HttpPost(URL);
 		
 		try {
 			jsonobj.put(ThisAppConfig.APPUUID, uuid);		
@@ -55,8 +50,8 @@ public class AddUserRequest extends SBHttpRequest{
 		builder.authority(ServerConstants.SERVER_ADDRESS);
 		builder.path(ServerConstants.USERSERVICE+"/addUser/");
 		builder.appendQueryParameter(ThisAppConfig.APPUUID, uuid);
-		url1 = builder.build().toString();		
-		httpQuery =  new HttpGet(url1);*/
+		url = builder.build().toString();
+		httpQuery =  new HttpGet(url);*/
 		
 		StringEntity postEntityUser = null;
 		try {

@@ -1,14 +1,11 @@
 package my.b1701.SB.HttpClient;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-
+import android.util.Log;
 import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.Server.ChatServiceCreateUserResponse;
 import my.b1701.SB.Server.ServerConstants;
 import my.b1701.SB.Server.ServerResponseBase;
 import my.b1701.SB.Users.UserAttributes;
-
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -19,11 +16,13 @@ import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.util.Log;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 public class ChatServiceCreateUser extends SBHttpRequest{
 		
 		private final String TAG = "my.b1701.SB.HttpClient.ChatServiceCreateUser";
+        public static final String URL = ServerConstants.SERVER_ADDRESS + ServerConstants.CHATSERVICE + "/createUser/";
 		HttpPost httpQueryAddRequest;	
 		JSONObject jsonobjAddRequest = new JSONObject();
 		HttpClient httpclient = new DefaultHttpClient();
@@ -37,8 +36,7 @@ public class ChatServiceCreateUser extends SBHttpRequest{
 			//2) getUsersRequest to get users
 			super();
 			queryMethod = QueryMethod.Post;
-			url1 = ServerConstants.SERVER_ADDRESS + ServerConstants.CHATSERVICE + "/createUser/";
-			httpQueryAddRequest =  new HttpPost(url1);		
+			httpQueryAddRequest =  new HttpPost(URL);
 			try {
 				//sometime fb id not written to file yet bfr this call happens so passing in as argument!!
 				jsonobjAddRequest.put(UserAttributes.CHATUSERID, ThisUserConfig.getInstance().getString(ThisUserConfig.USERID));

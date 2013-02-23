@@ -1,13 +1,10 @@
 package my.b1701.SB.HttpClient;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-
+import android.util.Log;
 import my.b1701.SB.Server.SaveFBInfoResponse;
 import my.b1701.SB.Server.ServerConstants;
 import my.b1701.SB.Server.ServerResponseBase;
 import my.b1701.SB.Users.UserAttributes;
-
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -19,10 +16,12 @@ import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.util.Log;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 public class SaveFBInfoRequest extends SBHttpRequest{
-	
+
+    public static final String URL = ServerConstants.SERVER_ADDRESS + ServerConstants.USERDETAILSSERVICE + "/saveFBInfo/";
 	HttpPost httpQuery;	
 	UrlEncodedFormEntity formEntity;
 	HttpClient httpclient = new DefaultHttpClient();	
@@ -36,8 +35,7 @@ public class SaveFBInfoRequest extends SBHttpRequest{
 		queryMethod = QueryMethod.Post;
 				
 		//prepare getnearby request		
-		url1 = ServerConstants.SERVER_ADDRESS + ServerConstants.USERDETAILSSERVICE + "/saveFBInfo/";
-		httpQuery = new HttpPost(url1);
+		httpQuery = new HttpPost(URL);
 		jsonobj = GetServerAuthenticatedJSON();
 		try {
 			jsonobj.put(UserAttributes.USERID, user_id);	

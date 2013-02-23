@@ -4,8 +4,6 @@ import my.b1701.SB.HelperClasses.ThisAppConfig;
 import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.Server.ServerResponseBase;
 import my.b1701.SB.Users.ThisUser;
-
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.impl.client.BasicResponseHandler;
@@ -22,18 +20,13 @@ public abstract class SBHttpRequest {
 	}
 	
 	QueryMethod queryMethod = null;
-	//we are allowing upto 3 consecutive syncd requests for now
-	String url1 = null;
-	String url2 = null;
-	String url3 = null;
-	HttpEntity queryEntity = null;	
+	String url = null;
 	HttpResponse response = null;
 	
 	// Create a response handler
     ResponseHandler<String> responseHandler = new BasicResponseHandler();
     	
-	public ServerResponseBase execute() {
-		return null;}
+	public abstract ServerResponseBase execute();
 	
 	//do not add this to initial add user request
 	public JSONObject GetServerAuthenticatedJSON()

@@ -2,12 +2,12 @@ package my.b1701.SB.Activities;
 
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.*;
-import android.location.Address;
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.Intent;
 import android.location.Geocoder;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -18,7 +18,6 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import com.google.analytics.tracking.android.EasyTracker;
 import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
 import my.b1701.SB.Adapter.HistoryAdapter;
-import my.b1701.SB.HelperClasses.AlertDialogBuilder;
 import my.b1701.SB.HelperClasses.ProgressHandler;
 import my.b1701.SB.HelperClasses.ToastTracker;
 import my.b1701.SB.HttpClient.AddThisUserScrDstCarPoolRequest;
@@ -29,7 +28,6 @@ import my.b1701.SB.LocationHelpers.SBGeoPoint;
 import my.b1701.SB.R;
 import my.b1701.SB.Users.ThisUser;
 import my.b1701.SB.Util.StringUtils;
-import my.b1701.SB.provider.GeoAddress;
 import my.b1701.SB.provider.HistoryContentProvider;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -48,7 +46,6 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
     private static final String TAG = "my.b1701.SB.Activities.SearchInputActivity";
     private static final int MAX_HISTORY_COUNT = 10;
     private static Uri mHistoryUri = Uri.parse("content://" + HistoryContentProvider.AUTHORITY + "/history");
-    private static final int MAX_TRIES = 5;
     private static final String GOOGLE_PLACES_URL = "https://maps.googleapis.com/maps/api/place/autocomplete/json";
     private static final String API_KEY = "AIzaSyAbahSqDp47FsP_U60bwXdknL_cAUgalrw";
 
@@ -71,8 +68,8 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
 	ToggleButton am_pm_toggle;
 	TextView timeView;
 	SeekBar timeSeekbar;
-    //GeoAddress sourceAddress;
-    //GeoAddress destinationAddress;
+    String sourceAddress;
+    String destinationAddress;
     Button cancelFindUsers;
     Button takeRideButton;
     Button offerRideButton;
@@ -204,27 +201,10 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 EasyTracker.getTracker().sendEvent("ui_action", "autocomplete_text", "setSource", 1L);
-                GeoAddress geoAddress = convertToGeoaddress((String) adapterView.getItemAtPosition(i));
-                /*SetSourceAddressTask task = new SetSourceAddressTask();
-                task.execute(sourceAddress);*/
-                if (geoAddress != null) {
-                    Log.e(TAG, geoAddress.toString());
-                    geoAddress.resetLocalityIfNull();
-                    Log.e(TAG, geoAddress.toString());
-                    setSource(geoAddress);
-                    //if user put some other location then we stop updating map
-                    //though we keep listening to network listener when on mapview
-                    //this helps in putting my location in search source
-                    MapListActivityHandler.getInstance().setUpdateMap(false);
-                    MapListActivityHandler.getInstance().updateThisUserMapOverlay();
-                    MapListActivityHandler.getInstance().centreMapTo(ThisUser.getInstance().getSourceGeoPoint());
-                    hideSoftKeyboard();
-                    source.setSelection(0);
-                    source.clearFocus();
-                } else {
-                    source.setText("");
-                    showErrorDialog("Failed to get Source address", "Please try again...");
-                }
+                sourceAddress =(String) adapterView.getItemAtPosition(i);
+                hideSoftKeyboard();
+                source.setSelection(0);
+                source.clearFocus();
             }
         });
         source.setAdapter(placesAutoCompleteAdapter);
@@ -233,20 +213,11 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 EasyTracker.getTracker().sendEvent("ui_action", "autocomplete_text", "setDestination", 1L);
-                GeoAddress geoAddress = convertToGeoaddress((String) adapterView.getItemAtPosition(i));
-                /*SetDestinationAddressTask task = new SetDestinationAddressTask();
-                task.execute(destinationAddress);*/
-                if (geoAddress != null) {
-                    geoAddress.resetLocalityIfNull();
-                    setDestination(geoAddress);
-                    hideSoftKeyboard();
-                    destination.setSelection(0);
-                    destination.clearFocus();
-                    destinationSet = true;
-                } else {
-                    destination.setText("");
-                    showErrorDialog("Failed to get Destination address", "Please try again...");
-                }
+                destinationAddress = (String) adapterView.getItemAtPosition(i);
+                hideSoftKeyboard();
+                destination.setSelection(0);
+                destination.clearFocus();
+                destinationSet = true;
             }
         });
         destination.setAdapter(placesAutoCompleteAdapter);
@@ -274,84 +245,6 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
         geocoder = new Geocoder(this.getApplicationContext(), Locale.getDefault());
     }
 
-/*    private class SetSourceAddressTask extends AsyncTask<String, Void, GeoAddress>{
-
-        @Override
-        protected GeoAddress doInBackground(String... strings) {
-            return convertToGeoaddress(strings[0]);
-        }
-
-        @Override
-        protected void onPostExecute(GeoAddress geoAddress) {
-            if (geoAddress != null){
-                geoAddress.resetLocalityIfNull();
-                setSource(geoAddress);
-                //if user put some other location then we stop updating map
-                //though we keep listening to network listener when on mapview
-                //this helps in putting my location in search source
-                MapListActivityHandler.getInstance().setUpdateMap(false);
-                MapListActivityHandler.getInstance().updateThisUserMapOverlay();
-                MapListActivityHandler.getInstance().centreMapTo(ThisUser.getInstance().getSourceGeoPoint());
-                hideSoftKeyboard();
-                source.setSelection(0);
-                source.clearFocus();
-            } else {
-                source.setText("");
-                showErrorDialog("Failed to get Source address", "Please try again...");
-            }
-        }
-    }
-
-    private class SetDestinationAddressTask extends AsyncTask<String, Void, GeoAddress>{
-
-        @Override
-        protected GeoAddress doInBackground(String... strings) {
-            return convertToGeoaddress(strings[0]);
-        }
-
-        @Override
-        protected void onPostExecute(GeoAddress geoAddress) {
-            if (geoAddress != null) {
-                geoAddress.resetLocalityIfNull();
-                setDestination(geoAddress);
-                hideSoftKeyboard();
-                destination.setSelection(0);
-                destination.clearFocus();
-                destinationSet = true;
-            } else {
-                destination.setText("");
-                showErrorDialog("Failed to get Destination address", "Please try again...");
-            }
-        }
-    }
-*/
-    private void showErrorDialog(String title, String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(title).setMessage(message);
-        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                return;
-            }
-        });
-        builder.create().show();
-    }
-
-    private GeoAddress convertToGeoaddress(String address) {
-        Log.e(TAG, "Converting address : "+ address);
-        int count = 0;
-        while (count < MAX_TRIES) {
-            try {
-                List<Address> addresses = geocoder.getFromLocationName(address, 1);
-                return new GeoAddress(addresses.get(0));
-            } catch (Exception e) {
-                Log.e(TAG, e.getMessage());
-            }
-        }
-
-        return null;
-    }
-    
     @Override
     public void onStart(){
         super.onStart();
@@ -416,42 +309,16 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
 		ProgressHandler.showInfiniteProgressDialoge(MapListActivityHandler.getInstance().getUnderlyingActivity(), "Fetching users", "Please wait..");
 		SBHttpRequest addThisUserSrcDstRequest;
 		if(dailyCarPool)        		
-			addThisUserSrcDstRequest = new AddThisUserScrDstCarPoolRequest();        		
+			addThisUserSrcDstRequest = new AddThisUserScrDstCarPoolRequest(sourceAddress, destinationAddress);
 		else
-			addThisUserSrcDstRequest = new AddThisUserSrcDstRequest();        		
+			addThisUserSrcDstRequest = new AddThisUserSrcDstRequest(sourceAddress, destinationAddress);
          
         SBHttpClient.getInstance().executeRequest(addThisUserSrcDstRequest);
         saveSearch();
         
         //moveTaskToBack(true);			
 	}
-	
-	
-	public void setSource(GeoAddress geoAddress) {
-		//track user only if real time req
-				
-        int lat = (int) (geoAddress.getLatitude() * 1e6);
-        int lon = (int) (geoAddress.getLongitude() * 1e6);
-        String subLocality = geoAddress.getSubLocality();
-        String address = geoAddress.getAddressLine();
 
-        ThisUser.getInstance().setSourceGeoAddress(geoAddress);
-        ThisUser.getInstance().setSourceGeoPoint(new SBGeoPoint(lat, lon, subLocality, address), false);
-       
-    }
-	
-	public void setDestination(GeoAddress geoAddress) {
-        
-        int lat = (int) (geoAddress.getLatitude() * 1e6);
-        int lon = (int) (geoAddress.getLongitude() * 1e6);
-        String subLocality = geoAddress.getSubLocality();
-        String address = geoAddress.getAddressLine();
-
-        ThisUser.getInstance().setDestinationGeoAddress(geoAddress);
-        ThisUser.getInstance().setDestinationGeoPoint(new SBGeoPoint(lat, lon, subLocality, address), false);
-        
-    }
-	
 	public String getDate()
 	{	
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -509,12 +376,12 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
     }
 
    
-	private void saveHistoryBlocking() {
+	private void saveHistoryBlocking() {/*
         SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm a");
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR, hour);
         calendar.set(Calendar.MINUTE, minutes);
-        if(am_pm_toggle.isChecked())
+        if (am_pm_toggle.isChecked())
             calendar.set(Calendar.AM_PM, Calendar.AM);
         else
             calendar.set(Calendar.AM_PM, Calendar.PM);
@@ -528,7 +395,7 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
             ContentValues values = new ContentValues();
             values.put(columns[0], thisUser.getSourceGeoAddress().getAddressLine());
             values.put(columns[1], thisUser.getDestinationGeoAddress().getAddressLine());
-            values.put(columns[2], time12Hr );
+            values.put(columns[2], time12Hr);
             values.put(columns[3], thisUser.get_Daily_Instant_Type());
             values.put(columns[4], thisUser.get_Take_Offer_Type());
             values.put(columns[5], mDateProgress);
@@ -560,8 +427,8 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
                 thisUser.getDestinationGeoPoint().getLongitudeE6());
 
         addHistoryToMemory(historyItem);
-        
-    }
+
+    */}
 
     private void addHistoryToMemory(HistoryAdapter.HistoryItem historyItem) {
         LinkedList<HistoryAdapter.HistoryItem> historyItemList = ThisUser.getInstance().getHistoryItemList();
