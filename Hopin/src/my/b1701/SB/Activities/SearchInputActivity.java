@@ -2,10 +2,12 @@ package my.b1701.SB.Activities;
 
 
 import android.app.Activity;
-import android.content.ContentResolver;
-import android.content.ContentValues;
-import android.content.Intent;
+import android.app.AlertDialog;
+import android.content.*;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -15,8 +17,8 @@ import android.widget.*;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import com.google.analytics.tracking.android.EasyTracker;
 import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
-import my.b1701.SB.Adapter.AddressAdapter;
 import my.b1701.SB.Adapter.HistoryAdapter;
+import my.b1701.SB.HelperClasses.AlertDialogBuilder;
 import my.b1701.SB.HelperClasses.ProgressHandler;
 import my.b1701.SB.HelperClasses.ToastTracker;
 import my.b1701.SB.HttpClient.AddThisUserScrDstCarPoolRequest;
@@ -27,18 +29,28 @@ import my.b1701.SB.LocationHelpers.SBGeoPoint;
 import my.b1701.SB.R;
 import my.b1701.SB.Users.ThisUser;
 import my.b1701.SB.Util.StringUtils;
-import my.b1701.SB.provider.*;
+import my.b1701.SB.provider.GeoAddress;
+import my.b1701.SB.provider.HistoryContentProvider;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarChangeListener{
     private static final String TAG = "my.b1701.SB.Activities.SearchInputActivity";
     private static final int MAX_HISTORY_COUNT = 10;
     private static Uri mHistoryUri = Uri.parse("content://" + HistoryContentProvider.AUTHORITY + "/history");
-    private static Uri mGeoAddressUri = Uri.parse("content://" + GeoAddressProvider.AUTHORITY + "/history");
+    private static final int MAX_TRIES = 5;
+    private static final String GOOGLE_PLACES_URL = "https://maps.googleapis.com/maps/api/place/autocomplete/json";
+    private static final String API_KEY = "AIzaSyAbahSqDp47FsP_U60bwXdknL_cAUgalrw";
 
     private static String[] columns = new String[]{ "sourceLocation",
             "destinationLocation",
@@ -54,15 +66,13 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
             "date"
     };
 
-    SearchRecentSuggestions searchRecentSuggestions = new SearchRecentSuggestions(this, CustomSuggestionProvider.AUTHORITY, CustomSuggestionProvider.MODE);
-
     AutoCompleteTextView source;
     AutoCompleteTextView destination;
 	ToggleButton am_pm_toggle;
 	TextView timeView;
-	SeekBar timeSeekbar;	
-    GeoAddress sourceAddress;
-    GeoAddress destinationAddress;
+	SeekBar timeSeekbar;
+    //GeoAddress sourceAddress;
+    //GeoAddress destinationAddress;
     Button cancelFindUsers;
     Button takeRideButton;
     Button offerRideButton;
@@ -79,11 +89,7 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
 	boolean dailyCarPool = false;
 	boolean takeRide = false;
 	boolean destinationSet = false;
-
-	public void saveSuggestion(GeoAddress geoAddress) {
-        geoAddress.resetLocalityIfNull();
-        searchRecentSuggestions.saveRecentQuery(geoAddress.getAddressLine(), geoAddress.getJson());
-    }
+    Geocoder geocoder;
 
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -192,48 +198,58 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
 				finish();		
 			}
 		});
-        
+
+        PlacesAutoCompleteAdapter placesAutoCompleteAdapter = new PlacesAutoCompleteAdapter(this, R.layout.address_suggestion_layout);
         source.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 EasyTracker.getTracker().sendEvent("ui_action", "autocomplete_text", "setSource", 1L);
-                AddressAdapter.Address address = ((AddressAdapter) source.getAdapter()).getAddress(i);
-                sourceAddress = address.getGeoAddress();
-                if (!address.isSaved()) {
-                    saveSuggestion(sourceAddress);
+                GeoAddress geoAddress = convertToGeoaddress((String) adapterView.getItemAtPosition(i));
+                /*SetSourceAddressTask task = new SetSourceAddressTask();
+                task.execute(sourceAddress);*/
+                if (geoAddress != null) {
+                    Log.e(TAG, geoAddress.toString());
+                    geoAddress.resetLocalityIfNull();
+                    Log.e(TAG, geoAddress.toString());
+                    setSource(geoAddress);
+                    //if user put some other location then we stop updating map
+                    //though we keep listening to network listener when on mapview
+                    //this helps in putting my location in search source
+                    MapListActivityHandler.getInstance().setUpdateMap(false);
+                    MapListActivityHandler.getInstance().updateThisUserMapOverlay();
+                    MapListActivityHandler.getInstance().centreMapTo(ThisUser.getInstance().getSourceGeoPoint());
+                    hideSoftKeyboard();
+                    source.setSelection(0);
+                    source.clearFocus();
+                } else {
+                    source.setText("");
+                    showErrorDialog("Failed to get Source address", "Please try again...");
                 }
-                setSource(sourceAddress);
-                //if user put some other location then we stop updating map
-                //though we keep listening to network listener when on mapview
-                //this helps in putting my location in search source
-                MapListActivityHandler.getInstance().setUpdateMap(false);
-                MapListActivityHandler.getInstance().updateThisUserMapOverlay();
-                MapListActivityHandler.getInstance().centreMapTo(ThisUser.getInstance().getSourceGeoPoint());
-                
-                hideSoftKeyboard();
-                source.setSelection(0);
-                source.clearFocus();
             }
         });
-        source.setAdapter(new AddressAdapter(this, R.layout.address_suggestion_layout));
+        source.setAdapter(placesAutoCompleteAdapter);
 
         destination.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 EasyTracker.getTracker().sendEvent("ui_action", "autocomplete_text", "setDestination", 1L);
-                AddressAdapter.Address address= ((AddressAdapter) destination.getAdapter()).getAddress(i);
-                destinationAddress = address.getGeoAddress();
-                if (!address.isSaved()) {
-                    saveSuggestion(destinationAddress);
+                GeoAddress geoAddress = convertToGeoaddress((String) adapterView.getItemAtPosition(i));
+                /*SetDestinationAddressTask task = new SetDestinationAddressTask();
+                task.execute(destinationAddress);*/
+                if (geoAddress != null) {
+                    geoAddress.resetLocalityIfNull();
+                    setDestination(geoAddress);
+                    hideSoftKeyboard();
+                    destination.setSelection(0);
+                    destination.clearFocus();
+                    destinationSet = true;
+                } else {
+                    destination.setText("");
+                    showErrorDialog("Failed to get Destination address", "Please try again...");
                 }
-                setDestination(destinationAddress);
-                hideSoftKeyboard();
-                destination.setSelection(0);
-                destination.clearFocus();
-                destinationSet = true;
             }
         });
-        destination.setAdapter(new AddressAdapter(this, R.layout.address_suggestion_layout));
+        destination.setAdapter(placesAutoCompleteAdapter);
 
         
         timeSeekbar = (SeekBar) findViewById(R.id.timeseekBar);
@@ -255,8 +271,87 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
         
         timeSeekbar.setProgress((progress+1)%48);
 
+        geocoder = new Geocoder(this.getApplicationContext(), Locale.getDefault());
     }
 
+/*    private class SetSourceAddressTask extends AsyncTask<String, Void, GeoAddress>{
+
+        @Override
+        protected GeoAddress doInBackground(String... strings) {
+            return convertToGeoaddress(strings[0]);
+        }
+
+        @Override
+        protected void onPostExecute(GeoAddress geoAddress) {
+            if (geoAddress != null){
+                geoAddress.resetLocalityIfNull();
+                setSource(geoAddress);
+                //if user put some other location then we stop updating map
+                //though we keep listening to network listener when on mapview
+                //this helps in putting my location in search source
+                MapListActivityHandler.getInstance().setUpdateMap(false);
+                MapListActivityHandler.getInstance().updateThisUserMapOverlay();
+                MapListActivityHandler.getInstance().centreMapTo(ThisUser.getInstance().getSourceGeoPoint());
+                hideSoftKeyboard();
+                source.setSelection(0);
+                source.clearFocus();
+            } else {
+                source.setText("");
+                showErrorDialog("Failed to get Source address", "Please try again...");
+            }
+        }
+    }
+
+    private class SetDestinationAddressTask extends AsyncTask<String, Void, GeoAddress>{
+
+        @Override
+        protected GeoAddress doInBackground(String... strings) {
+            return convertToGeoaddress(strings[0]);
+        }
+
+        @Override
+        protected void onPostExecute(GeoAddress geoAddress) {
+            if (geoAddress != null) {
+                geoAddress.resetLocalityIfNull();
+                setDestination(geoAddress);
+                hideSoftKeyboard();
+                destination.setSelection(0);
+                destination.clearFocus();
+                destinationSet = true;
+            } else {
+                destination.setText("");
+                showErrorDialog("Failed to get Destination address", "Please try again...");
+            }
+        }
+    }
+*/
+    private void showErrorDialog(String title, String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(title).setMessage(message);
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                return;
+            }
+        });
+        builder.create().show();
+    }
+
+    private GeoAddress convertToGeoaddress(String address) {
+        Log.e(TAG, "Converting address : "+ address);
+        int count = 0;
+        while (count < MAX_TRIES) {
+            try {
+                List<Address> addresses = geocoder.getFromLocationName(address, 1);
+                return new GeoAddress(addresses.get(0));
+            } catch (Exception e) {
+                Log.e(TAG, e.getMessage());
+            }
+        }
+
+        return null;
+    }
+    
     @Override
     public void onStart(){
         super.onStart();
@@ -469,13 +564,11 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
     }
 
     private void addHistoryToMemory(HistoryAdapter.HistoryItem historyItem) {
-        List<HistoryAdapter.HistoryItem> historyItemList = ThisUser.getInstance().getHistoryItemList();
+        LinkedList<HistoryAdapter.HistoryItem> historyItemList = ThisUser.getInstance().getHistoryItemList();
         if (historyItemList != null) {
-            historyItemList.add(0, historyItem);
-            if (historyItemList.size() > MAX_HISTORY_COUNT) {
-                for (int i = historyItemList.size() - 1; i >= MAX_HISTORY_COUNT; i--) {
-                    historyItemList.remove(i);
-                }
+            historyItemList.addFirst(historyItem);
+            while (historyItemList.size() > MAX_HISTORY_COUNT) {
+                historyItemList.removeLast();
             }
         }
     }
@@ -500,4 +593,100 @@ public class SearchInputActivity extends Activity implements SeekBar.OnSeekBarCh
         }
     }
 
+    private ArrayList<String> autocomplete(String input) {
+        ArrayList<String> resultList = null;
+
+        HttpURLConnection conn = null;
+        StringBuilder jsonResults = new StringBuilder();
+        try {
+            StringBuilder sb = new StringBuilder(GOOGLE_PLACES_URL);
+            sb.append("?sensor=false&key=" + API_KEY);
+            sb.append("&components=country:in");
+            sb.append("&input=" + URLEncoder.encode(input, "utf8"));
+
+            URL url = new URL(sb.toString());
+            conn = (HttpURLConnection) url.openConnection();
+            InputStreamReader in = new InputStreamReader(conn.getInputStream());
+
+            // Load the results into a StringBuilder
+            int read;
+            char[] buff = new char[1024];
+            while ((read = in.read(buff)) != -1) {
+                jsonResults.append(buff, 0, read);
+            }
+        } catch (MalformedURLException e) {
+            Log.e(TAG, "Error processing Places API URL", e);
+            return resultList;
+        } catch (IOException e) {
+            Log.e(TAG, "Error connecting to Places API", e);
+            return resultList;
+        } finally {
+            if (conn != null) {
+                conn.disconnect();
+            }
+        }
+
+        try {
+            // Create a JSON object hierarchy from the results
+            JSONObject jsonObj = new JSONObject(jsonResults.toString());
+            JSONArray predsJsonArray = jsonObj.getJSONArray("predictions");
+
+            // Extract the Place descriptions from the results
+            resultList = new ArrayList<String>(predsJsonArray.length());
+            for (int i = 0; i < predsJsonArray.length(); i++) {
+                resultList.add(predsJsonArray.getJSONObject(i).getString("description"));
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, "Cannot process JSON results", e);
+        }
+
+        return resultList;
+    }
+
+    private class PlacesAutoCompleteAdapter extends ArrayAdapter<String> implements Filterable {
+        private ArrayList<String> resultList;
+
+        public PlacesAutoCompleteAdapter(Context context, int textViewResourceId) {
+            super(context, textViewResourceId);
+        }
+
+        @Override
+        public int getCount() {
+            return resultList.size();
+        }
+
+        @Override
+        public String getItem(int index) {
+            return resultList.get(index);
+        }
+
+        @Override
+        public Filter getFilter() {
+            Filter filter = new Filter() {
+                @Override
+                protected FilterResults performFiltering(CharSequence constraint) {
+                    FilterResults filterResults = new FilterResults();
+                    if (constraint != null) {
+                        // Retrieve the autocomplete results.
+                        resultList = autocomplete(constraint.toString());
+
+                        // Assign the data to the FilterResults
+                        filterResults.values = resultList;
+                        filterResults.count = resultList.size();
+                    }
+                    return filterResults;
+                }
+
+                @Override
+                protected void publishResults(CharSequence constraint, FilterResults results) {
+                    if (results != null && results.count > 0) {
+                        notifyDataSetChanged();
+                    }
+                    else {
+                        notifyDataSetInvalidated();
+                    }
+                }};
+            return filter;
+        }
+    }
 }

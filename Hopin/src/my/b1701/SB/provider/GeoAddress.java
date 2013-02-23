@@ -83,7 +83,7 @@ public class GeoAddress {
 
     public void resetLocalityIfNull(){
     	Log.e(TAG, "resetLocalityIfNull called:"+this.subLocality);
-        if (this.subLocality.equals("null")){
+        if (this.subLocality == null || this.subLocality.equals("null")){
             List<Address> addressList = null;
             Log.e(TAG, "sublocality null");
             try {

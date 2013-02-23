@@ -20,8 +20,7 @@ import my.b1701.SB.R;
 import my.b1701.SB.Users.ThisUser;
 import my.b1701.SB.provider.HistoryContentProvider;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
 
 public class SBHistoryActivity extends FragmentActivity{
     public static final String TAG = "my.b1701.SB.Activites.SBHistoryActivity";
@@ -98,7 +97,7 @@ public class SBHistoryActivity extends FragmentActivity{
 	    }
 
     private void loadHistoryFromDB() {
-        List<HistoryAdapter.HistoryItem> historyItemList = null;
+        LinkedList<HistoryAdapter.HistoryItem> historyItemList = null;
         Log.e(TAG, "Fetching searches");
         ContentResolver cr = getContentResolver();
         Cursor cursor = cr.query(mHistoryUri, columns, null, null, null);
@@ -106,7 +105,7 @@ public class SBHistoryActivity extends FragmentActivity{
         if (cursor == null || cursor.getCount() == 0) {
             Log.e(TAG, "Empty result");
         } else {
-            List<HistoryAdapter.HistoryItem> historyItems = new ArrayList<HistoryAdapter.HistoryItem>();
+            LinkedList<HistoryAdapter.HistoryItem> historyItems = new LinkedList<HistoryAdapter.HistoryItem>();
             if (cursor.moveToFirst()) {
                 do {
                     HistoryAdapter.HistoryItem historyItem = new HistoryAdapter.HistoryItem(cursor.getString(0),
@@ -123,7 +122,7 @@ public class SBHistoryActivity extends FragmentActivity{
         }
 
         if (historyItemList == null) {
-            historyItemList = new ArrayList<HistoryAdapter.HistoryItem>();
+            historyItemList = new LinkedList<HistoryAdapter.HistoryItem>();
         }
 
         ThisUser.getInstance().setHistoryItemList(historyItemList);

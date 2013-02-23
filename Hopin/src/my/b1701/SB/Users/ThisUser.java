@@ -10,6 +10,7 @@ import my.b1701.SB.provider.GeoAddressProvider;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -30,7 +31,7 @@ public class ThisUser {
 	private int take_offer_type = 0; //0=>offer 1=>share
 	private int daily_instant_type = 0;//pool 0.instant 1
 
-    private List<HistoryAdapter.HistoryItem> historyItemList;
+    private LinkedList<HistoryAdapter.HistoryItem> historyItemList;
 	/*
 	 * Singleton
 	 */
@@ -199,11 +200,11 @@ public class ThisUser {
 				
 	}
 
-    public List<HistoryAdapter.HistoryItem> getHistoryItemList(){
+    public LinkedList<HistoryAdapter.HistoryItem> getHistoryItemList(){
         return historyItemList;
     }
 
-    public void setHistoryItemList(List<HistoryAdapter.HistoryItem> historyItemList){
+    public void setHistoryItemList(LinkedList<HistoryAdapter.HistoryItem> historyItemList){
         this.historyItemList = historyItemList;
     }
 }
